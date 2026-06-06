@@ -1,13 +1,6 @@
-const AIRDROP_CONTRACT = "0xFc3e9CdDcBCb87612F9A2F38CC79b6785A4739fB";
+const AIRDROP_CONTRACT = "0x30120Ed9B0BefCF99729ec493A6E14797e113944";
 
-const ETH_CHAIN_ID = "0x1";
-
-const ETH_RPC_URLS = [
-  "https://ethereum.publicnode.com",
-  "https://rpc.ankr.com/eth",
-  "https://eth.llamarpc.com",
-  "https://cloudflare-eth.com"
-];
+const BSC_CHAIN_ID = "0x38";
 
 const ABI = [
   "function claim(address referrer) external payable",
@@ -17,11 +10,9 @@ const ABI = [
 ];
 
 let provider;
-let readProvider;
 let signer;
 let userAddress;
 let contract;
-let readContract;
 
 const connectBtn = document.getElementById("connectBtn");
 const claimBtn = document.getElementById("claimBtn");
@@ -48,23 +39,7 @@ function getWalletProvider() {
   return null;
 }
 
-function createFastReadProvider() {
-  const providers = ETH_RPC_URLS.map((url, index) => {
-    return {
-      provider: new ethers.providers.JsonRpcProvider(url, {
-        name: "homestead",
-        chainId: 1
-      }),
-      priority: index + 1,
-      weight: 1,
-      stallTimeout: 1200
-    };
-  });
-
-  return new ethers.providers.FallbackProvider(providers, 1);
-}
-
-async function switchToETH() {
+async function switchToBSC() {
   const walletProvider = getWalletProvider();
 
   if (!walletProvider) {
@@ -74,7 +49,7 @@ async function switchToETH() {
   try {
     await walletProvider.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: ETH_CHAIN_ID }]
+      params: [{ chainId: BSC_CHAIN_ID }]
     });
   } catch (error) {
     if (error.code === 4902) {
@@ -82,15 +57,15 @@ async function switchToETH() {
         method: "wallet_addEthereumChain",
         params: [
           {
-            chainId: ETH_CHAIN_ID,
-            chainName: "Ethereum Mainnet",
+            chainId: BSC_CHAIN_ID,
+            chainName: "BNB Smart Chain",
             nativeCurrency: {
-              name: "Ether",
-              symbol: "ETH",
+              name: "BNB",
+              symbol: "BNB",
               decimals: 18
             },
-            rpcUrls: ETH_RPC_URLS,
-            blockExplorerUrls: ["https://etherscan.io"]
+            rpcUrls: ["https://bsc-dataseed.binance.org/"],
+            blockExplorerUrls: ["https://bscscan.com"]
           }
         ]
       });
@@ -120,13 +95,9 @@ async function setupWalletAfterConnected() {
   const walletProvider = getWalletProvider();
 
   provider = new ethers.providers.Web3Provider(walletProvider);
-  readProvider = createFastReadProvider();
-
   signer = provider.getSigner();
   userAddress = await signer.getAddress();
-
   contract = new ethers.Contract(AIRDROP_CONTRACT, ABI, signer);
-  readContract = new ethers.Contract(AIRDROP_CONTRACT, ABI, readProvider);
 
   localStorage.setItem("wallet_connected", "true");
   localStorage.setItem("wallet_address", userAddress);
@@ -137,17 +108,15 @@ async function setupWalletAfterConnected() {
 
 async function loadContractData() {
   try {
-    const fastContract = readContract || contract;
-    const [fee, enabled, hasClaimed] = await Promise.all([
-      fastContract.claimFee(),
-      fastContract.claimEnabled(),
-      fastContract.claimed(userAddress)
-    ]);
+    const fee = await contract.claimFee();
 
     // 手续费仍然正常读取和支付，只是不在前端页面展示。
     if (claimFeeText) {
-      claimFeeText.innerText = `${ethers.utils.formatEther(fee)} ETH`;
+      claimFeeText.innerText = `${ethers.utils.formatEther(fee)} BNB`;
     }
+
+    const enabled = await contract.claimEnabled();
+    const hasClaimed = await contract.claimed(userAddress);
 
     if (!enabled) {
       claimStatus.innerText = "Claim Closed";
@@ -164,7 +133,6 @@ async function loadContractData() {
     if (claimFeeText) {
       claimFeeText.innerText = "Load Failed";
     }
-    claimStatus.innerText = "Load Failed";
   }
 }
 
@@ -177,7 +145,7 @@ async function connectWallet() {
   }
 
   try {
-    await switchToETH();
+    await switchToBSC();
 
     provider = new ethers.providers.Web3Provider(walletProvider);
     await provider.send("eth_requestAccounts", []);
@@ -187,7 +155,7 @@ async function connectWallet() {
     showMessage("Wallet connected successfully.");
   } catch (error) {
     console.error(error);
-    showMessage("Wallet connection failed. Please switch to Ethereum Mainnet.");
+    showMessage("Wallet connection failed.");
   }
 }
 
@@ -208,7 +176,7 @@ async function autoConnectWallet() {
       return;
     }
 
-    await switchToETH();
+    await switchToBSC();
     await setupWalletAfterConnected();
 
     showMessage("Wallet connected successfully.");
@@ -233,7 +201,6 @@ function listenWalletChange() {
     } else {
       userAddress = null;
       contract = null;
-      readContract = null;
       localStorage.removeItem("wallet_connected");
       localStorage.removeItem("wallet_address");
       connectBtn.innerText = "Connect Wallet";
@@ -256,13 +223,6 @@ async function claimAirdrop() {
   }
 
   try {
-    const network = await provider.getNetwork();
-    if (network.chainId !== 1) {
-      await switchToETH();
-      showMessage("Please switch to Ethereum Mainnet and try again.");
-      return;
-    }
-
     let referrer = referrerInput.value.trim();
 
     if (!referrer || !ethers.utils.isAddress(referrer)) {
