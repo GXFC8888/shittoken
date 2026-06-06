@@ -1,5 +1,5 @@
 // Replace this with your BSC airdrop contract address after deployment.
-const AIRDROP_CONTRACT = "0xFc3e9CdDcBCb87612F9A2F38CC79b6785A4739fB";
+const AIRDROP_CONTRACT = "0x45B5004bbeF9575ebEC3C84b493Ae0D4daF53403";
 
 const BSC_CHAIN_ID_HEX = "0x38";
 const BSC_CHAIN_ID_DEC = 56;
