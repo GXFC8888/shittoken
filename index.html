@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHIT - The Real Shitcoin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><img src="shit-character.jpeg" alt="SHIT"><span>shit</span></a>
+    <button id="menuBtn" class="menu">☰</button>
+    <nav id="navMenu">
+      <a href="#home">home</a><a href="#about">about</a><a href="#airdrop">airdrop</a><a href="#buy">how to buy</a><a href="#tokenomics">tokenomics</a>
+    </nav>
+    <a class="pill desktop-buy" href="#airdrop">claim now</a>
+  </header>
+
+  <main>
+    <section id="home" class="hero panel">
+      <div class="hero-copy">
+        <div class="mini-logo">shit</div>
+        <p>The real shitcoin has arrived. Everyone talks shit — now you can own it. Built for loud memes, unserious energy, and community-first chaos.</p>
+        <div class="hero-actions"><a class="btn dark" href="#airdrop">claim airdrop</a><a class="btn light" href="#buy">how to buy</a></div>
+      </div>
+      <img class="hero-img" src="shit-character.jpeg" alt="SHIT character">
+    </section>
+
+    <section id="about" class="about section">
+      <img class="about-img" src="shit-character.jpeg" alt="SHIT character">
+      <div>
+        <h2>about</h2>
+        <p>Shit is tired of watching the market recycle the same old dog, frog, and copycat memes. So we made the only project honest enough to call itself SHIT.</p>
+        <p>No fake deep lore. No pretending. Just loud, funny, community-first memecoin built to embrace the chaos.</p>
+      </div>
+    </section>
+
+    <section id="airdrop" class="section claim-wrap">
+      <h2>claim airdrop</h2>
+      <div class="claim-card">
+        <div class="claim-left"><img src="shit-character.jpeg" alt="SHIT"><h3>free $SHIT</h3><p>Connect your BSC wallet and claim your airdrop. Share your referral link and invite more wallets into the shitshow.</p></div>
+        <div class="claim-right">
+          <div class="status"><span>Wallet</span><strong id="walletText">Not connected</strong></div>
+          <div class="status hidden-fee"><span>Claim fee</span><strong id="claimFeeText">Hidden</strong></div>
+          <label>Referrer address</label>
+          <input id="referrerInput" placeholder="Optional: 0x..." />
+          <button id="connectBtn" class="btn full dark">connect wallet</button>
+          <button id="claimBtn" class="btn full gold" disabled>claim $SHIT</button>
+          <p id="message" class="message"></p>
+          <div id="refBox" class="refbox hidden"><label>Your referral link</label><input id="refLink" readonly><button id="copyBtn" class="btn full light">copy link</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="buy" class="section buy">
+      <h2>how to buy</h2>
+      <div class="steps">
+        <div class="step"><b>1</b><div><h3>create a wallet</h3><p>Download MetaMask or your wallet of choice and create a secure BSC wallet.</p></div></div>
+        <div class="step"><b>2</b><div><h3>get some BNB</h3><p>Buy BNB on an exchange and send it to your wallet for gas and swaps.</p></div></div>
+        <div class="step"><b>3</b><div><h3>go to PancakeSwap</h3><p>Open PancakeSwap, connect your wallet, and paste the $SHIT token address.</p></div></div>
+        <div class="step"><b>4</b><div><h3>swap for $SHIT</h3><p>Confirm the trade and welcome to the sewer.</p></div></div>
+      </div>
+    </section>
+
+    <section id="tokenomics" class="section tokenomics">
+      <h2>tokenomics</h2>
+      <div class="supply">token supply:<br><strong>1,000,000,000,000,000</strong></div>
+      <div class="tok-grid"><div>0%<span>tax</span></div><div>∞<span>meme power</span></div><div>100%<span>community driven</span></div></div>
+    </section>
+
+    <footer class="footer"><img src="shit-character.jpeg" alt="SHIT"><span>shit</span><p>$SHIT is a meme coin for entertainment purposes only.</p></footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
