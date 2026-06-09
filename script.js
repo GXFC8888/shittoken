@@ -48,8 +48,44 @@ function showMessage(text) {
 function getReadableError(error) {
   if (!error) return "Unknown error";
 
-  if (error.code === 4001) return "User rejected the request.";
-  if (error.code === -32002) return "Wallet request already pending. Please open your wallet.";
+  const rawMessage = [
+    error.data && error.data.message,
+    error.error && error.error.message,
+    error.reason,
+    error.message,
+    String(error)
+  ].filter(Boolean).join(" ");
+
+  const lowerMessage = rawMessage.toLowerCase();
+
+  if (error.code === 4001 || lowerMessage.includes("user rejected")) {
+    return "User rejected the request.";
+  }
+
+  if (error.code === -32002 || lowerMessage.includes("already pending")) {
+    return "Wallet request already pending. Please open your wallet.";
+  }
+
+  if (lowerMessage.includes("insufficient allowance")) {
+    return "Insufficient allowance. Please contact the project owner or try again later.";
+  }
+
+  if (lowerMessage.includes("already claimed")) {
+    return "This wallet has already claimed.";
+  }
+
+  if (lowerMessage.includes("claim is currently closed") || lowerMessage.includes("claim closed")) {
+    return "Airdrop claim is currently closed.";
+  }
+
+  if (lowerMessage.includes("insufficient funds")) {
+    return "Insufficient BNB for claim fee or gas.";
+  }
+
+  if (lowerMessage.includes("cannot use your own address") || lowerMessage.includes("self referrer")) {
+    return "You cannot use your own address as referrer.";
+  }
+
   if (error.data && error.data.message) return error.data.message;
   if (error.error && error.error.message) return error.error.message;
   if (error.reason) return error.reason;

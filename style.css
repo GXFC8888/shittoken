@@ -689,3 +689,60 @@ input:focus {
     font-size: 14px;
   }
 }
+
+/* Mobile overflow protection for long wallet errors, hashes and referral links */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+main,
+section,
+.claim-wrap,
+.claim-card,
+.claim-left,
+.claim-right,
+.refbox,
+.status,
+.message,
+input {
+  max-width: 100%;
+}
+
+.message,
+.refbox input,
+.status strong,
+#refLink,
+#walletText {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.claim-card {
+  overflow: hidden;
+}
+
+@media (max-width: 760px) {
+  .claim-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .claim-right {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .message {
+    max-width: 100%;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  input {
+    min-width: 0;
+  }
+}
+
