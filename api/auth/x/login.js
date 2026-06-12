@@ -1,5 +1,5 @@
-import { serialize } from "cookie";
 import { getOAuthClient } from "../../../lib/x.js";
+import { supabase } from "../../../lib/supabase.js";
 
 export default async function handler(req, res) {
   try {
@@ -18,19 +18,23 @@ export default async function handler(req, res) {
       }
     );
 
-    const cookieOptions = {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 10
-    };
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-    res.setHeader("Set-Cookie", [
-      serialize("x_code_verifier", codeVerifier, cookieOptions),
-      serialize("x_state", state, cookieOptions),
-      serialize("airdrop_wallet", wallet, cookieOptions)
-    ]);
+    const { error } = await supabase.from("oauth_states").upsert(
+      {
+        state,
+        code_verifier: codeVerifier,
+        wallet_address: wallet,
+        expires_at: expiresAt
+      },
+      {
+        onConflict: "state"
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
 
     return res.redirect(url);
   } catch (err) {
