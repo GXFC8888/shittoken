@@ -67,10 +67,13 @@
       <div class="claim-card">
         <div class="claim-left">
           <img src="shit-character.jpeg" alt="SHIT">
-          <h3>free $SHIT</h3>
+          <h3>shitpost to earn</h3>
           <p>
-            Connect your BNB Smart Chain wallet and claim your airdrop.
-            Share your referral link and invite more wallets into the shitshow.
+            Connect your wallet, connect X, open the mission post, then like,
+            repost, and leave your own comment. Come back here to verify and claim.
+          </p>
+          <p class="claim-note">
+            1 post = 1 drop. Each wallet and X account can claim each mission once.
           </p>
         </div>
 
@@ -80,30 +83,29 @@
             <strong id="walletText">Not connected</strong>
           </div>
 
-          <div class="status hidden-fee">
-            <span>Claim fee</span>
-            <strong id="feeText">Hidden</strong>
+          <div class="status">
+            <span>X account</span>
+            <strong id="xStatusText">Not connected</strong>
           </div>
-
-          <label>Referral</label>
-          <input id="referrerInput" placeholder="Optional wallet: 0x..." />
 
           <button id="connectBtn" class="btn full dark" type="button">
             connect wallet
           </button>
 
-          <button id="claimBtn" class="btn full gold" type="button" disabled>
-            claim $SHIT
+          <button id="connectXBtn" class="btn full light" type="button" disabled>
+            connect X
+          </button>
+
+          <button id="refreshTasksBtn" class="btn full gold" type="button" disabled>
+            refresh missions
           </button>
 
           <p id="message" class="message"></p>
 
-          <div id="refBox" class="refbox hidden">
-            <label>Your referral link</label>
-            <input id="refLink" readonly>
-            <button id="copyBtn" class="btn full light" type="button">
-              copy link
-            </button>
+          <div id="missionsList" class="missions-list">
+            <div class="mission-card muted">
+              Connect your wallet to load airdrop missions.
+            </div>
           </div>
         </div>
       </div>

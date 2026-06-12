@@ -1,6 +1,3 @@
-// Replace this with your BSC airdrop contract address after deployment.
-const AIRDROP_CONTRACT = "0x81f9047279F8DCcB1BCbC51c176fA12b232e6F21";
-
 const BSC_CHAIN_ID_HEX = "0x38";
 const BSC_CHAIN_ID_DEC = 56;
 
@@ -12,37 +9,33 @@ const BSC_RPC_URLS = [
   "https://rpc.ankr.com/bsc"
 ];
 
-const ABI = [
-  "function claim(address referrer) external payable",
-  "function claimFee() external view returns (uint256)",
-  "function claimed(address user) external view returns (bool)",
-  "function claimEnabled() external view returns (bool)"
-];
-
 let provider = null;
-let readProvider = null;
 let signer = null;
 let userAddress = null;
-let contract = null;
-let readContract = null;
-let contractLoaded = false;
-let isClaiming = false;
-let isLoading = false;
+let currentTasks = [];
+let currentProgress = [];
+let isLoadingTasks = false;
+let isVerifying = false;
 
 const connectBtn = document.getElementById("connectBtn");
-const claimBtn = document.getElementById("claimBtn");
-const referrerInput = document.getElementById("referrerInput");
-const refLink = document.getElementById("refLink");
-const copyBtn = document.getElementById("copyBtn");
+const connectXBtn = document.getElementById("connectXBtn");
+const refreshTasksBtn = document.getElementById("refreshTasksBtn");
+const missionsList = document.getElementById("missionsList");
 const message = document.getElementById("message");
 const walletText = document.getElementById("walletText");
-const feeText = document.getElementById("feeText");
-const refBox = document.getElementById("refBox");
+const xStatusText = document.getElementById("xStatusText");
 const menuBtn = document.getElementById("menuBtn");
 const navMenu = document.getElementById("navMenu");
 
-function showMessage(text) {
-  if (message) message.innerText = text || "";
+function showMessage(text, type = "") {
+  if (!message) return;
+
+  message.innerText = text || "";
+  message.classList.remove("ok", "err");
+
+  if (type) {
+    message.classList.add(type);
+  }
 }
 
 function getReadableError(error) {
@@ -66,24 +59,12 @@ function getReadableError(error) {
     return "Wallet request already pending. Please open your wallet.";
   }
 
-  if (lowerMessage.includes("insufficient allowance")) {
-    return "Insufficient allowance. Please contact the project owner or try again later.";
-  }
-
   if (lowerMessage.includes("already claimed")) {
-    return "This wallet has already claimed.";
-  }
-
-  if (lowerMessage.includes("claim is currently closed") || lowerMessage.includes("claim closed")) {
-    return "Airdrop claim is currently closed.";
+    return "Already claimed.";
   }
 
   if (lowerMessage.includes("insufficient funds")) {
-    return "Insufficient BNB for claim fee or gas.";
-  }
-
-  if (lowerMessage.includes("cannot use your own address") || lowerMessage.includes("self referrer")) {
-    return "You cannot use your own address as referrer.";
+    return "Insufficient BNB for gas.";
   }
 
   if (error.data && error.data.message) return error.data.message;
@@ -98,35 +79,18 @@ function shortAddress(address) {
   return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected";
 }
 
-function setClaimButton(text, disabled) {
-  if (!claimBtn) return;
-  claimBtn.innerText = text;
-  claimBtn.disabled = disabled;
-}
-
 function getWalletProvider() {
   if (window.okxwallet && window.okxwallet.ethereum) return window.okxwallet.ethereum;
   if (window.ethereum) return window.ethereum;
   return null;
 }
 
-function createFastReadProvider() {
-  const providers = BSC_RPC_URLS.map((url, index) => ({
-    provider: new ethers.providers.JsonRpcProvider(url, {
-      name: "bnb-smart-chain",
-      chainId: BSC_CHAIN_ID_DEC
-    }),
-    priority: index + 1,
-    weight: 1,
-    stallTimeout: 1500
-  }));
-
-  return new ethers.providers.FallbackProvider(providers, 1);
-}
-
 async function switchToBSC() {
   const walletProvider = getWalletProvider();
-  if (!walletProvider) throw new Error("No wallet provider found");
+
+  if (!walletProvider) {
+    throw new Error("No wallet provider found");
+  }
 
   try {
     await walletProvider.request({
@@ -155,30 +119,70 @@ async function switchToBSC() {
   }
 }
 
-function getReferrerFromUrl() {
-  if (!referrerInput) return;
+function getXStorageKey(address) {
+  return address ? `shit_x_connected_${address.toLowerCase()}` : "";
+}
 
+function isXConnected() {
+  if (!userAddress) return false;
+  return localStorage.getItem(getXStorageKey(userAddress)) === "true";
+}
+
+function setXConnected(address) {
+  if (!address) return;
+  localStorage.setItem(getXStorageKey(address), "true");
+}
+
+function clearUrlParams() {
+  const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
+  window.history.replaceState({}, document.title, cleanUrl);
+}
+
+function handleReturnFromX() {
   const params = new URLSearchParams(window.location.search);
-  const ref = params.get("ref");
 
-  if (ref && ethers.utils.isAddress(ref)) {
-    referrerInput.value = ref;
+  if (params.get("x_connected") === "1") {
+    const pendingWallet = localStorage.getItem("pending_x_wallet");
+
+    if (pendingWallet) {
+      setXConnected(pendingWallet);
+      localStorage.removeItem("pending_x_wallet");
+    }
+
+    showMessage("X account connected. Open the mission post, comment, then verify.", "ok");
+    clearUrlParams();
+  }
+
+  const xError = params.get("x_error");
+
+  if (xError === "already_bound") {
+    showMessage("This X account is already bound to another wallet.", "err");
+    clearUrlParams();
   }
 }
 
 function updateWalletUI() {
-  if (!userAddress) return;
-
-  if (connectBtn) connectBtn.innerText = shortAddress(userAddress);
-  if (walletText) walletText.innerText = shortAddress(userAddress);
-
-  if (refLink) {
-    const currentUrl = window.location.origin + window.location.pathname;
-    refLink.value = `${currentUrl}?ref=${userAddress}`;
+  if (connectBtn) {
+    connectBtn.innerText = userAddress ? shortAddress(userAddress) : "connect wallet";
   }
 
-  if (refBox) {
-    refBox.classList.remove("hidden");
+  if (walletText) {
+    walletText.innerText = userAddress ? shortAddress(userAddress) : "Not connected";
+  }
+
+  const connectedX = isXConnected();
+
+  if (xStatusText) {
+    xStatusText.innerText = connectedX ? "Connected" : "Not connected";
+  }
+
+  if (connectXBtn) {
+    connectXBtn.disabled = !userAddress;
+    connectXBtn.innerText = connectedX ? "reconnect X" : "connect X";
+  }
+
+  if (refreshTasksBtn) {
+    refreshTasksBtn.disabled = !userAddress;
   }
 }
 
@@ -186,164 +190,45 @@ function resetWalletUI() {
   userAddress = null;
   provider = null;
   signer = null;
-  contract = null;
-  readContract = null;
-  contractLoaded = false;
-  isClaiming = false;
-  isLoading = false;
+  currentTasks = [];
+  currentProgress = [];
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
 
-  if (connectBtn) connectBtn.innerText = "connect wallet";
-  if (walletText) walletText.innerText = "Not connected";
-  if (refLink) refLink.value = "";
-  if (refBox) refBox.classList.add("hidden");
-  if (feeText) feeText.innerText = "--";
-
-  setClaimButton("claim $SHIT", true);
+  updateWalletUI();
+  renderMissions();
 }
 
 async function setupWalletAfterConnected() {
   const walletProvider = getWalletProvider();
-  if (!walletProvider) throw new Error("No wallet provider found");
+
+  if (!walletProvider) {
+    throw new Error("No wallet provider found");
+  }
 
   provider = new ethers.providers.Web3Provider(walletProvider, "any");
   signer = provider.getSigner();
   userAddress = await signer.getAddress();
 
-  contract = new ethers.Contract(AIRDROP_CONTRACT, ABI, signer);
-
-  // Main read: wallet provider
-  readContract = new ethers.Contract(AIRDROP_CONTRACT, ABI, provider);
-
-  // Backup read provider
-  if (!readProvider) {
-    readProvider = createFastReadProvider();
-  }
-
   localStorage.setItem("wallet_connected", "true");
   localStorage.setItem("wallet_address", userAddress);
 
   updateWalletUI();
-  await loadContractData();
-}
-
-async function readContractDataWithFallback() {
-  const walletReadContract = readContract || contract;
-
-  try {
-    return await Promise.all([
-      walletReadContract.claimFee(),
-      walletReadContract.claimEnabled(),
-      walletReadContract.claimed(userAddress)
-    ]);
-  } catch (walletReadError) {
-    console.warn("Wallet provider read failed, trying fallback RPC:", walletReadError);
-
-    if (!readProvider) {
-      readProvider = createFastReadProvider();
-    }
-
-    const fallbackContract = new ethers.Contract(AIRDROP_CONTRACT, ABI, readProvider);
-
-    return await Promise.all([
-      fallbackContract.claimFee(),
-      fallbackContract.claimEnabled(),
-      fallbackContract.claimed(userAddress)
-    ]);
-  }
-}
-
-async function checkContractCode() {
-  try {
-    const code = await provider.getCode(AIRDROP_CONTRACT);
-    if (code && code !== "0x") return true;
-  } catch (error) {
-    console.warn("Wallet provider getCode failed, trying fallback RPC:", error);
-  }
-
-  if (!readProvider) {
-    readProvider = createFastReadProvider();
-  }
-
-  const fallbackCode = await readProvider.getCode(AIRDROP_CONTRACT);
-  return fallbackCode && fallbackCode !== "0x";
-}
-
-async function loadContractData() {
-  if (isLoading) return;
-  isLoading = true;
-  contractLoaded = false;
-
-  if (!userAddress) {
-    if (walletText) walletText.innerText = "Not connected";
-    setClaimButton("claim $SHIT", true);
-    isLoading = false;
-    return;
-  }
-
-  try {
-    setClaimButton("loading...", true);
-
-    if (!ethers.utils.isAddress(AIRDROP_CONTRACT)) {
-      throw new Error("Invalid airdrop contract address.");
-    }
-
-    const network = await provider.getNetwork();
-
-    if (network.chainId !== BSC_CHAIN_ID_DEC) {
-      await switchToBSC();
-      await setupWalletAfterConnected();
-      isLoading = false;
-      return;
-    }
-
-    const hasCode = await checkContractCode();
-
-    if (!hasCode) {
-      throw new Error("No contract found on BNB Smart Chain at this address.");
-    }
-
-    const [fee, enabled, hasClaimed] = await readContractDataWithFallback();
-
-    contractLoaded = true;
-
-    if (feeText) {
-      feeText.innerText = ethers.utils.formatEther(fee) + " BNB";
-    }
-
-    if (!enabled) {
-      setClaimButton("claim closed", true);
-      showMessage("Airdrop claim is currently closed.");
-    } else if (hasClaimed) {
-      setClaimButton("claimed", true);
-      showMessage("This wallet has already claimed.");
-    } else {
-      setClaimButton("claim $SHIT", false);
-      showMessage("Wallet connected successfully on BNB Smart Chain.");
-    }
-  } catch (error) {
-    console.error(error);
-    const detail = getReadableError(error);
-
-    setClaimButton("retry load", false);
-    showMessage("Load failed: " + detail);
-  } finally {
-    isLoading = false;
-  }
+  await loadTasks();
 }
 
 async function connectWallet() {
   const walletProvider = getWalletProvider();
 
   if (!walletProvider) {
-    showMessage("Please open this page in MetaMask, OKX Wallet, TokenPocket, Trust Wallet or another Web3 wallet browser.");
+    showMessage("Please open this page in MetaMask, OKX Wallet, TokenPocket, Trust Wallet or another Web3 wallet browser.", "err");
     return;
   }
 
   try {
     if (connectBtn) connectBtn.disabled = true;
+
     showMessage("Connecting wallet...");
 
     await switchToBSC();
@@ -352,11 +237,14 @@ async function connectWallet() {
     await provider.send("eth_requestAccounts", []);
 
     await setupWalletAfterConnected();
+
+    showMessage("Wallet connected. Now connect X and complete the mission.", "ok");
   } catch (error) {
     console.error(error);
-    showMessage("Wallet connection failed: " + getReadableError(error));
+    showMessage("Wallet connection failed: " + getReadableError(error), "err");
   } finally {
     if (connectBtn) connectBtn.disabled = false;
+    updateWalletUI();
   }
 }
 
@@ -392,14 +280,14 @@ function listenWalletChange() {
     if (accounts && accounts.length > 0) {
       try {
         await setupWalletAfterConnected();
-        showMessage("Wallet account changed.");
+        showMessage("Wallet account changed.", "ok");
       } catch (error) {
         console.error(error);
-        showMessage("Wallet account changed, please reconnect.");
+        showMessage("Wallet account changed, please reconnect.", "err");
       }
     } else {
       resetWalletUI();
-      showMessage("Wallet disconnected.");
+      showMessage("Wallet disconnected.", "err");
     }
   });
 
@@ -413,124 +301,266 @@ function listenWalletChange() {
   });
 }
 
-async function claimAirdrop() {
-  if (isClaiming) return;
-
-  if (!contract || !userAddress) {
-    showMessage("Please connect wallet first.");
+async function connectX() {
+  if (!userAddress) {
+    showMessage("Please connect wallet first.", "err");
     return;
   }
 
-  if (!contractLoaded) {
-    await loadContractData();
+  localStorage.setItem("pending_x_wallet", userAddress.toLowerCase());
+  window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(userAddress)}`;
+}
+
+function getProgressForTask(taskId) {
+  return currentProgress.find((item) => Number(item.task_id) === Number(taskId));
+}
+
+function getMissionState(task) {
+  const progress = getProgressForTask(task.id);
+
+  if (progress && progress.claimed) {
+    return {
+      label: "Claimed",
+      className: "claimed"
+    };
+  }
+
+  if (progress && progress.claimable) {
+    return {
+      label: "Ready to claim",
+      className: "ready"
+    };
+  }
+
+  if (progress && progress.verified) {
+    return {
+      label: "Verified",
+      className: "ready"
+    };
+  }
+
+  return {
+    label: "Not verified",
+    className: "pending"
+  };
+}
+
+async function loadTasks() {
+  if (isLoadingTasks) return;
+
+  isLoadingTasks = true;
+
+  try {
+    if (missionsList) {
+      missionsList.innerHTML = `<div class="mission-card muted">Loading missions...</div>`;
+    }
+
+    const walletQuery = userAddress ? `?wallet=${encodeURIComponent(userAddress)}` : "";
+    const response = await fetch(`/api/tasks${walletQuery}`);
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Failed to load missions");
+    }
+
+    currentTasks = data.tasks || [];
+    currentProgress = data.progress || [];
+
+    renderMissions();
+  } catch (error) {
+    console.error(error);
+
+    if (missionsList) {
+      missionsList.innerHTML = `<div class="mission-card muted">Failed to load missions. Please try again.</div>`;
+    }
+
+    showMessage("Load missions failed: " + getReadableError(error), "err");
+  } finally {
+    isLoadingTasks = false;
+    updateWalletUI();
+  }
+}
+
+function renderMissions() {
+  if (!missionsList) return;
+
+  if (!userAddress) {
+    missionsList.innerHTML = `<div class="mission-card muted">Connect your wallet to load airdrop missions.</div>`;
+    return;
+  }
+
+  if (!currentTasks.length) {
+    missionsList.innerHTML = `<div class="mission-card muted">No active missions yet.</div>`;
+    return;
+  }
+
+  missionsList.innerHTML = currentTasks.map((task) => {
+    const state = getMissionState(task);
+    const tweetUrl = `https://x.com/i/web/status/${task.tweet_id}`;
+    const progress = getProgressForTask(task.id);
+    const isClaimed = Boolean(progress && progress.claimed);
+
+    return `
+      <div class="mission-card">
+        <div class="mission-top">
+          <div>
+            <strong>${escapeHtml(task.title || `Mission ${task.id}`)}</strong>
+            <span>Reward: ${escapeHtml(task.reward_amount || "1")} drop</span>
+          </div>
+          <em class="${state.className}">${state.label}</em>
+        </div>
+
+        <p>
+          Like, repost, and comment on the official X post. Then come back here
+          and verify your mission.
+        </p>
+
+        <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
+          ${tweetUrl}
+        </a>
+
+        <div class="mission-actions">
+          <button class="btn full light" type="button" onclick="openXTask('${task.tweet_id}', ${task.id})">
+            open X task
+          </button>
+          <button class="btn full gold" type="button" onclick="verifyAndClaim(${task.id})" ${isClaimed ? "disabled" : ""}>
+            ${isClaimed ? "claimed" : "verify & claim"}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+async function copySuggestedComment() {
+  const text = "I joined the $SHIT shitshow 💩";
+
+  try {
+    await navigator.clipboard.writeText(text);
+    showMessage("Suggested comment copied. You can still write your own comment on X.", "ok");
+  } catch (error) {
+    showMessage("Open X and leave your own comment.", "ok");
+  }
+}
+
+function openXTask(tweetId, taskId) {
+  localStorage.setItem("pending_x_task_id", String(taskId));
+  copySuggestedComment();
+
+  const webUrl = `https://x.com/i/web/status/${tweetId}`;
+  const userAgent = navigator.userAgent || "";
+
+  if (/Android/i.test(userAgent)) {
+    const fallbackUrl = encodeURIComponent(webUrl);
+    window.location.href =
+      `intent://x.com/i/web/status/${tweetId}` +
+      `#Intent;scheme=https;package=com.twitter.android;` +
+      `S.browser_fallback_url=${fallbackUrl};end`;
+    return;
+  }
+
+  if (/iPhone|iPad|iPod/i.test(userAgent)) {
+    const startedAt = Date.now();
+    window.location.href = `twitter://status?id=${tweetId}`;
+
+    setTimeout(() => {
+      if (Date.now() - startedAt < 1800) {
+        window.location.href = webUrl;
+      }
+    }, 1200);
+
+    return;
+  }
+
+  window.open(webUrl, "_blank", "noopener,noreferrer");
+}
+
+async function verifyAndClaim(taskId) {
+  if (isVerifying) return;
+
+  if (!userAddress) {
+    showMessage("Please connect wallet first.", "err");
+    return;
+  }
+
+  if (!isXConnected()) {
+    showMessage("Please connect X first.", "err");
     return;
   }
 
   try {
-    isClaiming = true;
-    setClaimButton("checking...", true);
+    isVerifying = true;
+    showMessage("Checking your X comment...");
 
-    const network = await provider.getNetwork();
-
-    if (network.chainId !== BSC_CHAIN_ID_DEC) {
-      await switchToBSC();
-      await setupWalletAfterConnected();
-      showMessage("Switched to BNB Smart Chain. Please claim again.");
-      return;
-    }
-
-    let referrer = ethers.constants.AddressZero;
-
-    if (referrerInput) {
-      const inputReferrer = referrerInput.value.trim();
-
-      if (inputReferrer && ethers.utils.isAddress(inputReferrer)) {
-        referrer = inputReferrer;
-      }
-    }
-
-    if (referrer.toLowerCase() === userAddress.toLowerCase()) {
-      showMessage("You cannot use your own address as referrer.");
-      setClaimButton("claim $SHIT", false);
-      return;
-    }
-
-    const hasClaimed = await contract.claimed(userAddress);
-
-    if (hasClaimed) {
-      setClaimButton("claimed", true);
-      showMessage("This wallet has already claimed.");
-      return;
-    }
-
-    const enabled = await contract.claimEnabled();
-
-    if (!enabled) {
-      setClaimButton("claim closed", true);
-      showMessage("Airdrop claim is currently closed.");
-      return;
-    }
-
-    const fee = await contract.claimFee();
-
-    setClaimButton("claiming...", true);
-
-    const tx = await contract.claim(referrer, {
-      value: fee
+    const verifyResponse = await fetch("/api/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        wallet: userAddress,
+        taskId
+      })
     });
 
-    showMessage("Transaction submitted: " + tx.hash);
+    const verifyData = await verifyResponse.json();
 
-    await tx.wait();
+    if (!verifyResponse.ok || !verifyData.success) {
+      throw new Error(verifyData.message || verifyData.error || "Mission not verified yet");
+    }
 
-    contractLoaded = false;
-    setClaimButton("claimed", true);
-    showMessage("Claim successful!");
+    showMessage("Mission verified. Recording claim...", "ok");
+
+    const claimResponse = await fetch("/api/claim", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        wallet: userAddress,
+        taskId
+      })
+    });
+
+    const claimData = await claimResponse.json();
+
+    if (!claimResponse.ok || !claimData.success) {
+      throw new Error(claimData.error || "Claim failed");
+    }
+
+    showMessage("Claim recorded. Your mission is complete.", "ok");
+    await loadTasks();
   } catch (error) {
     console.error(error);
-
-    const detail = getReadableError(error);
-
-    showMessage("Claim failed: " + detail);
-
-    if (contractLoaded) {
-      setClaimButton("claim $SHIT", false);
-    } else {
-      setClaimButton("retry load", false);
-    }
+    showMessage(getReadableError(error), "err");
+    await loadTasks();
   } finally {
-    isClaiming = false;
+    isVerifying = false;
   }
 }
 
-if (copyBtn) {
-  copyBtn.addEventListener("click", async () => {
-    if (!refLink || !refLink.value) {
-      showMessage("Please connect wallet first.");
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(refLink.value);
-      showMessage("Referral link copied.");
-    } catch (error) {
-      try {
-        refLink.select();
-        document.execCommand("copy");
-        showMessage("Referral link copied.");
-      } catch (copyError) {
-        showMessage("Copy failed. Please copy the link manually.");
-      }
-    }
-  });
-}
+window.openXTask = openXTask;
+window.verifyAndClaim = verifyAndClaim;
 
 if (connectBtn) {
   connectBtn.addEventListener("click", connectWallet);
 }
 
-if (claimBtn) {
-  claimBtn.addEventListener("click", claimAirdrop);
+if (connectXBtn) {
+  connectXBtn.addEventListener("click", connectX);
+}
+
+if (refreshTasksBtn) {
+  refreshTasksBtn.addEventListener("click", loadTasks);
 }
 
 if (menuBtn && navMenu) {
@@ -545,8 +575,32 @@ if (menuBtn && navMenu) {
   });
 }
 
-window.addEventListener("load", () => {
-  getReferrerFromUrl();
-  autoConnectWallet();
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && userAddress) {
+    const pendingTaskId = localStorage.getItem("pending_x_task_id");
+
+    if (pendingTaskId) {
+      showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
+      localStorage.removeItem("pending_x_task_id");
+    }
+  }
+});
+
+window.addEventListener("focus", () => {
+  if (userAddress) {
+    const pendingTaskId = localStorage.getItem("pending_x_task_id");
+
+    if (pendingTaskId) {
+      showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
+      localStorage.removeItem("pending_x_task_id");
+    }
+  }
+});
+
+window.addEventListener("load", async () => {
+  handleReturnFromX();
+  renderMissions();
+  await autoConnectWallet();
   listenWalletChange();
+  updateWalletUI();
 });
