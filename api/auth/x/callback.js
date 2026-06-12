@@ -1,31 +1,39 @@
-import { parse, serialize } from "cookie";
 import { getOAuthClient } from "../../../lib/x.js";
 import { supabase } from "../../../lib/supabase.js";
 
 export default async function handler(req, res) {
   try {
-    const cookies = parse(req.headers.cookie || "");
-
     const code = req.query.code;
     const state = req.query.state;
 
-    const savedState = cookies.x_state;
-    const codeVerifier = cookies.x_code_verifier;
-    const wallet = cookies.airdrop_wallet;
-
-    if (!code || !state || !savedState || !codeVerifier || !wallet) {
-      return res.status(400).send("Missing OAuth data");
+    if (!code || !state) {
+      return res.redirect(`${process.env.SITE_URL}/?x_error=missing_oauth_params`);
     }
 
-    if (state !== savedState) {
-      return res.status(400).send("Invalid OAuth state");
+    const { data: oauthState, error: stateError } = await supabase
+      .from("oauth_states")
+      .select("*")
+      .eq("state", state)
+      .maybeSingle();
+
+    if (stateError) {
+      throw stateError;
+    }
+
+    if (!oauthState) {
+      return res.redirect(`${process.env.SITE_URL}/?x_error=oauth_state_not_found`);
+    }
+
+    if (new Date(oauthState.expires_at).getTime() < Date.now()) {
+      await supabase.from("oauth_states").delete().eq("state", state);
+      return res.redirect(`${process.env.SITE_URL}/?x_error=oauth_expired`);
     }
 
     const client = getOAuthClient();
 
     const { client: loggedClient } = await client.loginWithOAuth2({
       code,
-      codeVerifier,
+      codeVerifier: oauthState.code_verifier,
       redirectUri: process.env.X_REDIRECT_URI
     });
 
@@ -33,7 +41,7 @@ export default async function handler(req, res) {
 
     const xUserId = me.data.id;
     const xUsername = me.data.username;
-    const walletAddress = wallet.toLowerCase();
+    const walletAddress = oauthState.wallet_address.toLowerCase();
 
     const { data: existingXUser } = await supabase
       .from("users")
@@ -46,10 +54,11 @@ export default async function handler(req, res) {
       existingXUser.wallet_address &&
       existingXUser.wallet_address.toLowerCase() !== walletAddress
     ) {
+      await supabase.from("oauth_states").delete().eq("state", state);
       return res.redirect(`${process.env.SITE_URL}/?x_error=already_bound`);
     }
 
-    await supabase.from("users").upsert(
+    const { error: upsertError } = await supabase.from("users").upsert(
       {
         wallet_address: walletAddress,
         x_user_id: xUserId,
@@ -61,29 +70,11 @@ export default async function handler(req, res) {
       }
     );
 
-    res.setHeader("Set-Cookie", [
-      serialize("x_code_verifier", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 0
-      }),
-      serialize("x_state", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 0
-      }),
-      serialize("airdrop_wallet", "", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 0
-      })
-    ]);
+    if (upsertError) {
+      throw upsertError;
+    }
+
+    await supabase.from("oauth_states").delete().eq("state", state);
 
     return res.redirect(`${process.env.SITE_URL}/?x_connected=1`);
   } catch (err) {
