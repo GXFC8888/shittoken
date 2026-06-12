@@ -23,6 +23,7 @@ let isLoadingTasks = false;
 let isVerifying = false;
 
 const connectBtn = document.getElementById("connectBtn");
+
 const connectXBtn =
   document.getElementById("connectXBtn") ||
   document.getElementById("xConnectBtn");
@@ -177,6 +178,15 @@ function isXConnected() {
 
 function getTaskProgress(taskId) {
   return currentProgress.find((item) => Number(item.task_id) === Number(taskId));
+}
+
+function getFirstAvailableTask() {
+  if (!currentTasks.length) return null;
+
+  return currentTasks.find((task) => {
+    const progress = getTaskProgress(task.id);
+    return !(progress && progress.claimed);
+  }) || currentTasks[0];
 }
 
 function updateWalletUI() {
@@ -365,7 +375,11 @@ function connectX() {
 
   localStorage.setItem("pending_x_wallet", activeWallet);
 
-  window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
+  // After the user comes back to TokenPocket and taps refresh missions,
+  // the page will automatically open the X mission post.
+  localStorage.setItem("open_task_after_x_auth", "true");
+
+  window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
 }
 
 async function loadTasks() {
@@ -402,7 +416,19 @@ async function loadTasks() {
     renderMissions();
 
     if (activeWallet && currentXConnected) {
-      showMessage("X account connected. Open the mission post, comment, then verify.", "ok");
+      showMessage("X account connected. Opening the mission post...", "ok");
+
+      const shouldOpenTask = localStorage.getItem("open_task_after_x_auth") === "true";
+
+      if (shouldOpenTask) {
+        localStorage.removeItem("open_task_after_x_auth");
+
+        const firstTask = getFirstAvailableTask();
+
+        if (firstTask && firstTask.tweet_id) {
+          openXTask(firstTask.tweet_id);
+        }
+      }
     } else if (activeWallet && !currentXConnected) {
       showMessage("Wallet connected. Please connect X.", "err");
     } else {
@@ -543,11 +569,35 @@ function openXTask(tweetId) {
 
   localStorage.setItem("pending_x_task_id", String(tweetId));
 
-  const url = getTaskUrl(tweetId);
+  const webUrl = `https://x.com/i/web/status/${tweetId}`;
+  const ua = navigator.userAgent || "";
 
   showMessage("Opening X. Like, repost, comment, then come back and tap verify.", "ok");
 
-  window.open(url, "_blank", "noopener,noreferrer");
+  // Android: try to open X app first, fallback to x.com web.
+  if (/Android/i.test(ua)) {
+    const fallbackUrl = encodeURIComponent(webUrl);
+
+    window.location.href =
+      `intent://x.com/i/web/status/${tweetId}` +
+      `#Intent;scheme=https;package=com.twitter.android;` +
+      `S.browser_fallback_url=${fallbackUrl};end`;
+
+    return;
+  }
+
+  // iPhone / iPad: try Twitter/X app scheme first, fallback to x.com web.
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    window.location.href = `twitter://status?id=${tweetId}`;
+
+    setTimeout(() => {
+      window.location.href = webUrl;
+    }, 1200);
+
+    return;
+  }
+
+  window.open(webUrl, "_blank", "noopener,noreferrer");
 }
 
 async function verifyAndClaim(taskId) {
