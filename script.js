@@ -12,32 +12,56 @@ const BSC_RPC_URLS = [
 let provider = null;
 let signer = null;
 let userAddress = null;
+
 let currentTasks = [];
 let currentProgress = [];
 let currentXConnected = false;
 let currentXUsername = null;
+
+let isConnectingWallet = false;
 let isLoadingTasks = false;
 let isVerifying = false;
 
 const connectBtn = document.getElementById("connectBtn");
-const connectXBtn = document.getElementById("connectXBtn");
-const refreshTasksBtn = document.getElementById("refreshTasksBtn");
-const missionsList = document.getElementById("missionsList");
+const connectXBtn =
+  document.getElementById("connectXBtn") ||
+  document.getElementById("xConnectBtn");
+
+const refreshMissionsBtn =
+  document.getElementById("refreshMissionsBtn") ||
+  document.getElementById("refreshTasksBtn");
+
+const missionList =
+  document.getElementById("missionList") ||
+  document.getElementById("tasksList");
+
 const message = document.getElementById("message");
 const walletText = document.getElementById("walletText");
-const xStatusText = document.getElementById("xStatusText");
+
+const xStatusText =
+  document.getElementById("xStatusText") ||
+  document.getElementById("xAccountText");
+
 const menuBtn = document.getElementById("menuBtn");
 const navMenu = document.getElementById("navMenu");
 
-function showMessage(text, type = "") {
+function showMessage(text, type) {
   if (!message) return;
 
   message.innerText = text || "";
   message.classList.remove("ok", "err");
 
-  if (type) {
-    message.classList.add(type);
+  if (type === "ok") {
+    message.classList.add("ok");
   }
+
+  if (type === "err") {
+    message.classList.add("err");
+  }
+}
+
+function shortAddress(address) {
+  return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected";
 }
 
 function getReadableError(error) {
@@ -49,7 +73,9 @@ function getReadableError(error) {
     error.reason,
     error.message,
     String(error)
-  ].filter(Boolean).join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   const lowerMessage = rawMessage.toLowerCase();
 
@@ -61,12 +87,12 @@ function getReadableError(error) {
     return "Wallet request already pending. Please open your wallet.";
   }
 
-  if (lowerMessage.includes("already claimed")) {
-    return "Already claimed.";
-  }
-
   if (lowerMessage.includes("insufficient funds")) {
     return "Insufficient BNB for gas.";
+  }
+
+  if (lowerMessage.includes("already claimed")) {
+    return "Already claimed.";
   }
 
   if (error.data && error.data.message) return error.data.message;
@@ -77,13 +103,15 @@ function getReadableError(error) {
   return String(error);
 }
 
-function shortAddress(address) {
-  return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected";
-}
-
 function getWalletProvider() {
-  if (window.okxwallet && window.okxwallet.ethereum) return window.okxwallet.ethereum;
-  if (window.ethereum) return window.ethereum;
+  if (window.okxwallet && window.okxwallet.ethereum) {
+    return window.okxwallet.ethereum;
+  }
+
+  if (window.ethereum) {
+    return window.ethereum;
+  }
+
   return null;
 }
 
@@ -103,17 +131,19 @@ async function switchToBSC() {
     if (error && error.code === 4902) {
       await walletProvider.request({
         method: "wallet_addEthereumChain",
-        params: [{
-          chainId: BSC_CHAIN_ID_HEX,
-          chainName: "BNB Smart Chain",
-          nativeCurrency: {
-            name: "BNB",
-            symbol: "BNB",
-            decimals: 18
-          },
-          rpcUrls: BSC_RPC_URLS,
-          blockExplorerUrls: ["https://bscscan.com"]
-        }]
+        params: [
+          {
+            chainId: BSC_CHAIN_ID_HEX,
+            chainName: "BNB Smart Chain",
+            nativeCurrency: {
+              name: "BNB",
+              symbol: "BNB",
+              decimals: 18
+            },
+            rpcUrls: BSC_RPC_URLS,
+            blockExplorerUrls: ["https://bscscan.com"]
+          }
+        ]
       });
     } else {
       throw error;
@@ -122,12 +152,7 @@ async function switchToBSC() {
 }
 
 function getXStorageKey(address) {
-  return address ? `shit_x_connected_${address.toLowerCase()}` : "";
-}
-
-function isXConnected() {
-  if (!userAddress) return false;
-  return localStorage.getItem(getXStorageKey(userAddress)) === "true";
+  return `x_connected_${String(address || "").toLowerCase()}`;
 }
 
 function setXConnected(address) {
@@ -135,71 +160,70 @@ function setXConnected(address) {
   localStorage.setItem(getXStorageKey(address), "true");
 }
 
-function clearUrlParams() {
-  const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
-  window.history.replaceState({}, document.title, cleanUrl);
+function clearXConnected(address) {
+  if (!address) return;
+  localStorage.removeItem(getXStorageKey(address));
 }
 
-function handleReturnFromX() {
-  const params = new URLSearchParams(window.location.search);
+function isXConnected() {
+  if (!userAddress) return false;
 
-  if (params.get("x_connected") === "1") {
-    const pendingWallet = localStorage.getItem("pending_x_wallet");
+  if (currentXConnected) return true;
 
-    if (pendingWallet) {
-      setXConnected(pendingWallet);
-      localStorage.removeItem("pending_x_wallet");
-    }
+  return localStorage.getItem(getXStorageKey(userAddress)) === "true";
+}
 
-    showMessage("X account connected. Open the mission post, comment, then verify.", "ok");
-    clearUrlParams();
-  }
-
-  const xError = params.get("x_error");
-
-  if (xError === "already_bound") {
-    showMessage("This X account is already bound to another wallet.", "err");
-    clearUrlParams();
-  }
+function getTaskProgress(taskId) {
+  return currentProgress.find((item) => Number(item.task_id) === Number(taskId));
 }
 
 function updateWalletUI() {
+  const connectedX = isXConnected();
+
   if (connectBtn) {
     connectBtn.innerText = userAddress ? shortAddress(userAddress) : "connect wallet";
+    connectBtn.disabled = false;
   }
 
   if (walletText) {
     walletText.innerText = userAddress ? shortAddress(userAddress) : "Not connected";
   }
 
-  const connectedX = isXConnected();
-
   if (xStatusText) {
-    xStatusText.innerText = connectedX ? "Connected" : "Not connected";
+    xStatusText.innerText = connectedX
+      ? currentXUsername
+        ? `Connected @${currentXUsername}`
+        : "Connected"
+      : "Not connected";
   }
 
   if (connectXBtn) {
-    connectXBtn.disabled = !userAddress;
     connectXBtn.innerText = connectedX ? "reconnect X" : "connect X";
+    connectXBtn.disabled = !userAddress;
   }
 
-  if (refreshTasksBtn) {
-    refreshTasksBtn.disabled = !userAddress;
+  if (refreshMissionsBtn) {
+    refreshMissionsBtn.disabled = !userAddress;
   }
 }
 
 function resetWalletUI() {
-  userAddress = null;
   provider = null;
   signer = null;
+  userAddress = null;
+
   currentTasks = [];
   currentProgress = [];
+  currentXConnected = false;
+  currentXUsername = null;
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
 
   updateWalletUI();
   renderMissions();
+
+  showMessage("");
 }
 
 async function setupWalletAfterConnected() {
@@ -217,36 +241,55 @@ async function setupWalletAfterConnected() {
   localStorage.setItem("wallet_address", userAddress);
 
   updateWalletUI();
+
   await loadTasks();
 }
 
 async function connectWallet() {
+  if (isConnectingWallet) return;
+
   const walletProvider = getWalletProvider();
 
   if (!walletProvider) {
-    showMessage("Please open this page in MetaMask, OKX Wallet, TokenPocket, Trust Wallet or another Web3 wallet browser.", "err");
+    showMessage(
+      "Please open this page in TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.",
+      "err"
+    );
     return;
   }
 
   try {
-    if (connectBtn) connectBtn.disabled = true;
+    isConnectingWallet = true;
+
+    if (connectBtn) {
+      connectBtn.disabled = true;
+      connectBtn.innerText = "connecting...";
+    }
 
     showMessage("Connecting wallet...");
 
     await switchToBSC();
 
     provider = new ethers.providers.Web3Provider(walletProvider, "any");
+
     await provider.send("eth_requestAccounts", []);
 
     await setupWalletAfterConnected();
 
-    showMessage("Wallet connected. Now connect X and complete the mission.", "ok");
+    showMessage("Wallet connected.", "ok");
   } catch (error) {
     console.error(error);
     showMessage("Wallet connection failed: " + getReadableError(error), "err");
+
+    if (connectBtn) {
+      connectBtn.innerText = "connect wallet";
+    }
   } finally {
-    if (connectBtn) connectBtn.disabled = false;
-    updateWalletUI();
+    isConnectingWallet = false;
+
+    if (connectBtn) {
+      connectBtn.disabled = false;
+    }
   }
 }
 
@@ -303,187 +346,189 @@ function listenWalletChange() {
   });
 }
 
-async function connectX() {
+function connectX() {
   if (!userAddress) {
     showMessage("Please connect wallet first.", "err");
     return;
   }
 
-  localStorage.setItem("pending_x_wallet", userAddress.toLowerCase());
+  localStorage.setItem("pending_x_wallet", userAddress);
+
   window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(userAddress)}`;
-}
-
-function getProgressForTask(taskId) {
-  return currentProgress.find((item) => Number(item.task_id) === Number(taskId));
-}
-
-function getMissionState(task) {
-  const progress = getProgressForTask(task.id);
-
-  if (progress && progress.claimed) {
-    return {
-      label: "Claimed",
-      className: "claimed"
-    };
-  }
-
-  if (progress && progress.claimable) {
-    return {
-      label: "Ready to claim",
-      className: "ready"
-    };
-  }
-
-  if (progress && progress.verified) {
-    return {
-      label: "Verified",
-      className: "ready"
-    };
-  }
-
-  return {
-    label: "Not verified",
-    className: "pending"
-  };
 }
 
 async function loadTasks() {
   if (isLoadingTasks) return;
 
-  isLoadingTasks = true;
-
   try {
-    if (missionsList) {
-      missionsList.innerHTML = `<div class="mission-card muted">Loading missions...</div>`;
+    isLoadingTasks = true;
+
+    if (refreshMissionsBtn) {
+      refreshMissionsBtn.disabled = true;
+      refreshMissionsBtn.innerText = "loading...";
     }
 
     const walletQuery = userAddress ? `?wallet=${encodeURIComponent(userAddress)}` : "";
     const response = await fetch(`/api/tasks${walletQuery}`);
     const data = await response.json();
 
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || "Failed to load missions");
+    if (!data.success) {
+      throw new Error(data.detail || data.error || "Failed to load missions");
     }
 
     currentTasks = data.tasks || [];
     currentProgress = data.progress || [];
+    currentXConnected = Boolean(data.xConnected);
+    currentXUsername = data.xUsername || null;
 
-    renderMissions();
-  } catch (error) {
-    console.error(error);
-
-    if (missionsList) {
-      missionsList.innerHTML = `<div class="mission-card muted">Failed to load missions. Please try again.</div>`;
+    if (currentXConnected && userAddress) {
+      setXConnected(userAddress);
     }
 
+    updateWalletUI();
+    renderMissions();
+
+    if (userAddress && currentXConnected) {
+      showMessage("X account connected. Open the mission post, comment, then verify.", "ok");
+    } else if (userAddress && !currentXConnected) {
+      showMessage("Wallet connected. Please connect X.", "err");
+    }
+  } catch (error) {
+    console.error(error);
     showMessage("Load missions failed: " + getReadableError(error), "err");
   } finally {
     isLoadingTasks = false;
-    updateWalletUI();
+
+    if (refreshMissionsBtn) {
+      refreshMissionsBtn.disabled = !userAddress;
+      refreshMissionsBtn.innerText = "refresh missions";
+    }
   }
 }
 
+function getTaskUrl(tweetId) {
+  return `https://x.com/i/web/status/${tweetId}`;
+}
+
+function getTaskStatus(progress) {
+  if (!progress) {
+    return {
+      text: "Not verified",
+      className: "not-verified"
+    };
+  }
+
+  if (progress.claimed) {
+    return {
+      text: "Claimed",
+      className: "claimed"
+    };
+  }
+
+  if (progress.claimable || progress.verified) {
+    return {
+      text: "Ready",
+      className: "ready"
+    };
+  }
+
+  return {
+    text: "Not verified",
+    className: "not-verified"
+  };
+}
+
 function renderMissions() {
-  if (!missionsList) return;
+  if (!missionList) return;
 
   if (!userAddress) {
-    missionsList.innerHTML = `<div class="mission-card muted">Connect your wallet to load airdrop missions.</div>`;
+    missionList.innerHTML = `
+      <div class="mission-card empty">
+        <h3>Connect your wallet to load missions</h3>
+        <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
+      </div>
+    `;
     return;
   }
 
   if (!currentTasks.length) {
-    missionsList.innerHTML = `<div class="mission-card muted">No active missions yet.</div>`;
-    return;
-  }
-
-  missionsList.innerHTML = currentTasks.map((task) => {
-    const state = getMissionState(task);
-    const tweetUrl = `https://x.com/i/web/status/${task.tweet_id}`;
-    const progress = getProgressForTask(task.id);
-    const isClaimed = Boolean(progress && progress.claimed);
-
-    return `
-      <div class="mission-card">
-        <div class="mission-top">
-          <div>
-            <strong>${escapeHtml(task.title || `Mission ${task.id}`)}</strong>
-            <span>Reward: ${escapeHtml(task.reward_amount || "1")} drop</span>
-          </div>
-          <em class="${state.className}">${state.label}</em>
-        </div>
-
-        <p>
-          Like, repost, and comment on the official X post. Then come back here
-          and verify your mission.
-        </p>
-
-        <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
-          ${tweetUrl}
-        </a>
-
-        <div class="mission-actions">
-          <button class="btn full light" type="button" onclick="openXTask('${task.tweet_id}', ${task.id})">
-            open X task
-          </button>
-          <button class="btn full gold" type="button" onclick="verifyAndClaim(${task.id})" ${isClaimed ? "disabled" : ""}>
-            ${isClaimed ? "claimed" : "verify & claim"}
-          </button>
-        </div>
+    missionList.innerHTML = `
+      <div class="mission-card empty">
+        <h3>No missions yet</h3>
+        <p>Please refresh later.</p>
       </div>
     `;
-  }).join("");
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-async function copySuggestedComment() {
-  const text = "I joined the $SHIT shitshow 💩";
-
-  try {
-    await navigator.clipboard.writeText(text);
-    showMessage("Suggested comment copied. You can still write your own comment on X.", "ok");
-  } catch (error) {
-    showMessage("Open X and leave your own comment.", "ok");
-  }
-}
-
-function openXTask(tweetId, taskId) {
-  localStorage.setItem("pending_x_task_id", String(taskId));
-  copySuggestedComment();
-
-  const webUrl = `https://x.com/i/web/status/${tweetId}`;
-  const userAgent = navigator.userAgent || "";
-
-  if (/Android/i.test(userAgent)) {
-    const fallbackUrl = encodeURIComponent(webUrl);
-    window.location.href =
-      `intent://x.com/i/web/status/${tweetId}` +
-      `#Intent;scheme=https;package=com.twitter.android;` +
-      `S.browser_fallback_url=${fallbackUrl};end`;
     return;
   }
 
-  if (/iPhone|iPad|iPod/i.test(userAgent)) {
-    const startedAt = Date.now();
-    window.location.href = `twitter://status?id=${tweetId}`;
+  missionList.innerHTML = currentTasks
+    .map((task) => {
+      const progress = getTaskProgress(task.id);
+      const status = getTaskStatus(progress);
+      const taskUrl = getTaskUrl(task.tweet_id);
 
-    setTimeout(() => {
-      if (Date.now() - startedAt < 1800) {
-        window.location.href = webUrl;
-      }
-    }, 1200);
+      const verifyDisabled = progress && progress.claimed ? "disabled" : "";
+      const verifyText = progress && progress.claimed ? "claimed" : "verify & claim";
 
+      return `
+        <div class="mission-card" data-task-id="${task.id}">
+          <div class="mission-head">
+            <div>
+              <h3>${task.title || `Mission ${task.id}`}</h3>
+              <p class="reward">Reward: ${task.reward_amount || "1"} drop</p>
+            </div>
+            <span class="mission-status ${status.className}">${status.text}</span>
+          </div>
+
+          <p>
+            Like, repost, and comment on the official X post.
+            Then come back here and verify your mission.
+          </p>
+
+          <a class="mission-link" href="${taskUrl}" target="_blank" rel="noopener noreferrer">
+            ${taskUrl}
+          </a>
+
+          <div class="mission-actions">
+            <button class="btn full light open-task-btn" type="button" data-tweet-id="${task.tweet_id}">
+              open X task
+            </button>
+
+            <button class="btn full gold verify-task-btn" type="button" data-task-id="${task.id}" ${verifyDisabled}>
+              ${verifyText}
+            </button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  missionList.querySelectorAll(".open-task-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      openXTask(button.dataset.tweetId);
+    });
+  });
+
+  missionList.querySelectorAll(".verify-task-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      verifyAndClaim(button.dataset.taskId);
+    });
+  });
+}
+
+function openXTask(tweetId) {
+  if (!tweetId) {
+    showMessage("Missing tweet ID.", "err");
     return;
   }
 
-  window.open(webUrl, "_blank", "noopener,noreferrer");
+  localStorage.setItem("pending_x_task_id", String(tweetId));
+
+  const url = getTaskUrl(tweetId);
+
+  showMessage("Opening X. Like, repost, comment, then come back and tap verify.", "ok");
+
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 async function verifyAndClaim(taskId) {
@@ -494,14 +539,22 @@ async function verifyAndClaim(taskId) {
     return;
   }
 
-  if (!isXConnected()) {
-    showMessage("Please connect X first.", "err");
-    return;
-  }
-
   try {
     isVerifying = true;
-    showMessage("Checking your X comment...");
+
+    showMessage("Checking X mission...");
+
+    if (!isXConnected()) {
+      await loadTasks();
+
+      if (!isXConnected()) {
+        showMessage(
+          "Please connect X first. If you just authorized X, tap refresh missions and try again.",
+          "err"
+        );
+        return;
+      }
+    }
 
     const verifyResponse = await fetch("/api/verify", {
       method: "POST",
@@ -510,14 +563,19 @@ async function verifyAndClaim(taskId) {
       },
       body: JSON.stringify({
         wallet: userAddress,
-        taskId
+        taskId: Number(taskId)
       })
     });
 
     const verifyData = await verifyResponse.json();
 
-    if (!verifyResponse.ok || !verifyData.success) {
-      throw new Error(verifyData.message || verifyData.error || "Mission not verified yet");
+    if (!verifyData.success) {
+      showMessage(
+        verifyData.message || verifyData.error || "Mission not verified yet. Please comment and try again.",
+        "err"
+      );
+      await loadTasks();
+      return;
     }
 
     showMessage("Mission verified. Recording claim...", "ok");
@@ -529,29 +587,73 @@ async function verifyAndClaim(taskId) {
       },
       body: JSON.stringify({
         wallet: userAddress,
-        taskId
+        taskId: Number(taskId),
+        txHash: "offchain"
       })
     });
 
     const claimData = await claimResponse.json();
 
-    if (!claimResponse.ok || !claimData.success) {
-      throw new Error(claimData.error || "Claim failed");
+    if (!claimData.success) {
+      if (claimData.error && claimData.error.toLowerCase().includes("already claimed")) {
+        showMessage("Already claimed.", "ok");
+      } else {
+        showMessage(claimData.error || "Claim failed.", "err");
+      }
+
+      await loadTasks();
+      return;
     }
 
-    showMessage("Claim recorded. Your mission is complete.", "ok");
+    showMessage("Claim recorded. You are claimed for this mission.", "ok");
+
     await loadTasks();
   } catch (error) {
     console.error(error);
-    showMessage(getReadableError(error), "err");
-    await loadTasks();
+    showMessage("Verify failed: " + getReadableError(error), "err");
   } finally {
     isVerifying = false;
   }
 }
 
-window.openXTask = openXTask;
-window.verifyAndClaim = verifyAndClaim;
+function handleReturnFromX() {
+  const pendingTask = localStorage.getItem("pending_x_task_id");
+
+  if (pendingTask && userAddress) {
+    showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
+  }
+}
+
+function handleUrlStatus() {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("x_connected") === "1") {
+    showMessage("X connected. Open the mission post, comment, then verify.", "ok");
+
+    if (userAddress) {
+      setXConnected(userAddress);
+    }
+
+    const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }
+
+  const xError = params.get("x_error");
+
+  if (xError) {
+    const errorMap = {
+      already_bound: "This X account is already bound to another wallet.",
+      missing_oauth_params: "Missing X authorization data. Please connect X again.",
+      oauth_state_not_found: "X authorization expired or opened in another browser. Please connect X again.",
+      oauth_expired: "X authorization expired. Please connect X again."
+    };
+
+    showMessage(errorMap[xError] || `X connection failed: ${xError}`, "err");
+
+    const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }
+}
 
 if (connectBtn) {
   connectBtn.addEventListener("click", connectWallet);
@@ -561,8 +663,8 @@ if (connectXBtn) {
   connectXBtn.addEventListener("click", connectX);
 }
 
-if (refreshTasksBtn) {
-  refreshTasksBtn.addEventListener("click", loadTasks);
+if (refreshMissionsBtn) {
+  refreshMissionsBtn.addEventListener("click", loadTasks);
 }
 
 if (menuBtn && navMenu) {
@@ -577,32 +679,27 @@ if (menuBtn && navMenu) {
   });
 }
 
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && userAddress) {
-    const pendingTaskId = localStorage.getItem("pending_x_task_id");
-
-    if (pendingTaskId) {
-      showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
-      localStorage.removeItem("pending_x_task_id");
-    }
-  }
+window.addEventListener("focus", () => {
+  handleReturnFromX();
 });
 
-window.addEventListener("focus", () => {
-  if (userAddress) {
-    const pendingTaskId = localStorage.getItem("pending_x_task_id");
-
-    if (pendingTaskId) {
-      showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
-      localStorage.removeItem("pending_x_task_id");
-    }
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    handleReturnFromX();
   }
 });
 
 window.addEventListener("load", async () => {
-  handleReturnFromX();
-  renderMissions();
-  await autoConnectWallet();
-  listenWalletChange();
+  handleUrlStatus();
+
   updateWalletUI();
+  renderMissions();
+
+  await autoConnectWallet();
+
+  if (userAddress) {
+    await loadTasks();
+  }
+
+  listenWalletChange();
 });
