@@ -14,6 +14,8 @@ let signer = null;
 let userAddress = null;
 let currentTasks = [];
 let currentProgress = [];
+let currentXConnected = false;
+let currentXUsername = null;
 let isLoadingTasks = false;
 let isVerifying = false;
 
