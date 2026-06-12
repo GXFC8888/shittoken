@@ -166,11 +166,13 @@ function clearXConnected(address) {
 }
 
 function isXConnected() {
-  if (!userAddress) return false;
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (!activeWallet) return false;
 
   if (currentXConnected) return true;
 
-  return localStorage.getItem(getXStorageKey(userAddress)) === "true";
+  return localStorage.getItem(getXStorageKey(activeWallet)) === "true";
 }
 
 function getTaskProgress(taskId) {
@@ -178,15 +180,16 @@ function getTaskProgress(taskId) {
 }
 
 function updateWalletUI() {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
   const connectedX = isXConnected();
 
   if (connectBtn) {
-    connectBtn.innerText = userAddress ? shortAddress(userAddress) : "connect wallet";
+    connectBtn.innerText = activeWallet ? shortAddress(activeWallet) : "connect wallet";
     connectBtn.disabled = false;
   }
 
   if (walletText) {
-    walletText.innerText = userAddress ? shortAddress(userAddress) : "Not connected";
+    walletText.innerText = activeWallet ? shortAddress(activeWallet) : "Not connected";
   }
 
   if (xStatusText) {
@@ -199,15 +202,17 @@ function updateWalletUI() {
 
   if (connectXBtn) {
     connectXBtn.innerText = connectedX ? "reconnect X" : "connect X";
-    connectXBtn.disabled = !userAddress;
+    connectXBtn.disabled = !activeWallet;
   }
 
   if (refreshMissionsBtn) {
-    refreshMissionsBtn.disabled = !userAddress;
+    refreshMissionsBtn.disabled = !activeWallet;
   }
 }
 
 function resetWalletUI() {
+  const oldWallet = userAddress || localStorage.getItem("wallet_address");
+
   provider = null;
   signer = null;
   userAddress = null;
@@ -219,6 +224,10 @@ function resetWalletUI() {
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
+
+  if (oldWallet) {
+    clearXConnected(oldWallet);
+  }
 
   updateWalletUI();
   renderMissions();
@@ -347,14 +356,16 @@ function listenWalletChange() {
 }
 
 function connectX() {
-  if (!userAddress) {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (!activeWallet) {
     showMessage("Please connect wallet first.", "err");
     return;
   }
 
-  localStorage.setItem("pending_x_wallet", userAddress);
+  localStorage.setItem("pending_x_wallet", activeWallet);
 
-  window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(userAddress)}`;
+  window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
 }
 
 async function loadTasks() {
@@ -368,7 +379,9 @@ async function loadTasks() {
       refreshMissionsBtn.innerText = "loading...";
     }
 
-    const walletQuery = userAddress ? `?wallet=${encodeURIComponent(userAddress)}` : "";
+    const activeWallet = userAddress || localStorage.getItem("wallet_address") || "";
+    const walletQuery = activeWallet ? `?wallet=${encodeURIComponent(activeWallet)}` : "";
+
     const response = await fetch(`/api/tasks${walletQuery}`);
     const data = await response.json();
 
@@ -381,17 +394,19 @@ async function loadTasks() {
     currentXConnected = Boolean(data.xConnected);
     currentXUsername = data.xUsername || null;
 
-    if (currentXConnected && userAddress) {
-      setXConnected(userAddress);
+    if (currentXConnected && activeWallet) {
+      setXConnected(activeWallet);
     }
 
     updateWalletUI();
     renderMissions();
 
-    if (userAddress && currentXConnected) {
+    if (activeWallet && currentXConnected) {
       showMessage("X account connected. Open the mission post, comment, then verify.", "ok");
-    } else if (userAddress && !currentXConnected) {
+    } else if (activeWallet && !currentXConnected) {
       showMessage("Wallet connected. Please connect X.", "err");
+    } else {
+      showMessage("Connect your wallet to load missions.", "err");
     }
   } catch (error) {
     console.error(error);
@@ -399,8 +414,10 @@ async function loadTasks() {
   } finally {
     isLoadingTasks = false;
 
+    const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
     if (refreshMissionsBtn) {
-      refreshMissionsBtn.disabled = !userAddress;
+      refreshMissionsBtn.disabled = !activeWallet;
       refreshMissionsBtn.innerText = "refresh missions";
     }
   }
@@ -441,10 +458,12 @@ function getTaskStatus(progress) {
 function renderMissions() {
   if (!missionList) return;
 
-  if (!userAddress) {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (!activeWallet) {
     missionList.innerHTML = `
       <div class="mission-card empty">
-        <h3>Connect your wallet to load missions</h3>
+        <h3>Connect your wallet to load airdrop missions.</h3>
         <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
       </div>
     `;
@@ -454,8 +473,8 @@ function renderMissions() {
   if (!currentTasks.length) {
     missionList.innerHTML = `
       <div class="mission-card empty">
-        <h3>No missions yet</h3>
-        <p>Please refresh later.</p>
+        <h3>No missions loaded</h3>
+        <p>Tap refresh missions. If this stays empty, check /api/tasks.</p>
       </div>
     `;
     return;
@@ -534,7 +553,9 @@ function openXTask(tweetId) {
 async function verifyAndClaim(taskId) {
   if (isVerifying) return;
 
-  if (!userAddress) {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (!activeWallet) {
     showMessage("Please connect wallet first.", "err");
     return;
   }
@@ -562,7 +583,7 @@ async function verifyAndClaim(taskId) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        wallet: userAddress,
+        wallet: activeWallet,
         taskId: Number(taskId)
       })
     });
@@ -586,7 +607,7 @@ async function verifyAndClaim(taskId) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        wallet: userAddress,
+        wallet: activeWallet,
         taskId: Number(taskId),
         txHash: "offchain"
       })
@@ -618,8 +639,9 @@ async function verifyAndClaim(taskId) {
 
 function handleReturnFromX() {
   const pendingTask = localStorage.getItem("pending_x_task_id");
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
-  if (pendingTask && userAddress) {
+  if (pendingTask && activeWallet) {
     showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
   }
 }
@@ -630,8 +652,13 @@ function handleUrlStatus() {
   if (params.get("x_connected") === "1") {
     showMessage("X connected. Open the mission post, comment, then verify.", "ok");
 
-    if (userAddress) {
-      setXConnected(userAddress);
+    const activeWallet =
+      userAddress ||
+      localStorage.getItem("wallet_address") ||
+      localStorage.getItem("pending_x_wallet");
+
+    if (activeWallet) {
+      setXConnected(activeWallet);
     }
 
     const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
@@ -697,7 +724,9 @@ window.addEventListener("load", async () => {
 
   await autoConnectWallet();
 
-  if (userAddress) {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (activeWallet) {
     await loadTasks();
   }
 
