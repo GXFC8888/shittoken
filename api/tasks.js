@@ -10,7 +10,9 @@ export default async function handler(req, res) {
       .eq("active", true)
       .order("id", { ascending: true });
 
-    if (taskError) throw taskError;
+    if (taskError) {
+      throw taskError;
+    }
 
     let progress = [];
     let xAccount = null;
@@ -22,7 +24,9 @@ export default async function handler(req, res) {
         .eq("wallet_address", wallet)
         .maybeSingle();
 
-      if (userError) throw userError;
+      if (userError) {
+        throw userError;
+      }
 
       xAccount = userData || null;
 
@@ -31,7 +35,9 @@ export default async function handler(req, res) {
         .select("*")
         .eq("wallet_address", wallet);
 
-      if (progressError) throw progressError;
+      if (progressError) {
+        throw progressError;
+      }
 
       progress = progressData || [];
     }
@@ -45,6 +51,7 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error("Tasks error:", err);
+
     return res.status(500).json({
       success: false,
       error: "Failed to load tasks",
