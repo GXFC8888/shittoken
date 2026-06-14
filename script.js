@@ -246,7 +246,7 @@ async function setupWalletAfterConnected() {
 
   updateWalletUI();
 
-  await loadTasks();
+  await loadTasks(false);
 }
 
 async function connectWallet() {
@@ -360,10 +360,10 @@ function connectX() {
 
   localStorage.setItem("pending_x_wallet", activeWallet);
 
-  window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
+  window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
 }
 
-async function loadTasks() {
+async function loadTasks(runPendingVerify = true) {
   if (isLoadingTasks) return;
 
   try {
@@ -401,12 +401,12 @@ async function loadTasks() {
 
       const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
 
-      if (pendingVerifyTaskId) {
+      if (runPendingVerify && pendingVerifyTaskId) {
         localStorage.removeItem("pending_verify_task_id");
 
         setTimeout(() => {
           verifyAndClaim(pendingVerifyTaskId);
-        }, 500);
+        }, 600);
       }
     } else if (activeWallet && !currentXConnected) {
       showMessage("Wallet connected. Open the mission post, comment, then tap verify & claim.", "ok");
@@ -579,6 +579,30 @@ function openXTask(tweetId) {
   }, 1800);
 }
 
+function needsXAuthorization(data) {
+  const text = String(
+    data && (data.message || data.error || data.detail || "")
+  ).toLowerCase();
+
+  return (
+    text.includes("connect x") ||
+    text.includes("please connect x") ||
+    text.includes("x first") ||
+    text.includes("x account")
+  );
+}
+
+function redirectToXAuthorization(activeWallet, taskId) {
+  localStorage.setItem("pending_verify_task_id", String(taskId));
+  localStorage.setItem("pending_x_wallet", activeWallet);
+
+  showMessage("X authorization is required once. Redirecting to X...", "ok");
+
+  setTimeout(() => {
+    window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
+  }, 300);
+}
+
 async function verifyAndClaim(taskId) {
   if (isVerifying) return;
 
@@ -605,24 +629,11 @@ async function verifyAndClaim(taskId) {
       })
     });
 
-    const verifyData = await verifyResponse.json();
+    const verifyData = await verifyResponse.json().catch(() => ({}));
 
     if (!verifyData.success) {
-      const errorText = String(
-        verifyData.message || verifyData.error || ""
-      ).toLowerCase();
-
-      if (
-        errorText.includes("connect x") ||
-        errorText.includes("please connect x") ||
-        errorText.includes("x first")
-      ) {
-        localStorage.setItem("pending_verify_task_id", String(taskId));
-        localStorage.setItem("pending_x_wallet", activeWallet);
-
-        showMessage("X authorization is required once. Redirecting to X...", "ok");
-
-        window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
+      if (needsXAuthorization(verifyData) || verifyResponse.status === 400) {
+        redirectToXAuthorization(activeWallet, taskId);
         return;
       }
 
@@ -631,7 +642,7 @@ async function verifyAndClaim(taskId) {
         "err"
       );
 
-      await loadTasks();
+      await loadTasks(false);
       return;
     }
 
@@ -649,7 +660,7 @@ async function verifyAndClaim(taskId) {
       })
     });
 
-    const claimData = await claimResponse.json();
+    const claimData = await claimResponse.json().catch(() => ({}));
 
     if (!claimData.success) {
       if (claimData.error && claimData.error.toLowerCase().includes("already claimed")) {
@@ -658,13 +669,13 @@ async function verifyAndClaim(taskId) {
         showMessage(claimData.error || "Claim failed.", "err");
       }
 
-      await loadTasks();
+      await loadTasks(false);
       return;
     }
 
     showMessage("Claim recorded. You are claimed for this mission.", "ok");
 
-    await loadTasks();
+    await loadTasks(false);
   } catch (error) {
     console.error(error);
     showMessage("Verify failed: " + getReadableError(error), "err");
@@ -727,7 +738,9 @@ if (connectXBtn) {
 }
 
 if (refreshMissionsBtn) {
-  refreshMissionsBtn.addEventListener("click", loadTasks);
+  refreshMissionsBtn.addEventListener("click", () => {
+    loadTasks(true);
+  });
 }
 
 if (menuBtn && navMenu) {
@@ -763,7 +776,7 @@ window.addEventListener("load", async () => {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (activeWallet) {
-    await loadTasks();
+    await loadTasks(true);
   }
 
   listenWalletChange();
