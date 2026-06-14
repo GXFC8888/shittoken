@@ -55,12 +55,16 @@ async function findUserInPaginatedUsers(path, tweetId, xUserId) {
   while (page < maxPages) {
     page += 1;
 
-    const data = await xGet(path.replace(":tweetId", tweetId), {
+    const params = {
       max_results: 100,
-      "user.fields": "id,username",
-      pagination_token: paginationToken
-    });
+      "user.fields": "id,username"
+    };
 
+    if (paginationToken) {
+      params.pagination_token = paginationToken;
+    }
+
+    const data = await xGet(path.replace(":tweetId", tweetId), params);
     const users = data.data || [];
 
     if (users.some((user) => String(user.id) === String(xUserId))) {
@@ -75,6 +79,24 @@ async function findUserInPaginatedUsers(path, tweetId, xUserId) {
   }
 
   return false;
+}
+
+async function safeCheck(name, checkFn) {
+  try {
+    const result = await checkFn();
+
+    return {
+      ok: Boolean(result),
+      error: null
+    };
+  } catch (error) {
+    console.error(`${name} check failed:`, error);
+
+    return {
+      ok: false,
+      error: error.message || String(error)
+    };
+  }
 }
 
 async function hasLiked(tweetId, xUserId) {
@@ -103,13 +125,17 @@ async function hasCommented(tweetId, xUserId, xUsername) {
   while (page < maxPages) {
     page += 1;
 
-    const data = await xGet("/tweets/search/recent", {
+    const params = {
       query,
       max_results: 100,
-      "tweet.fields": "author_id,conversation_id,created_at",
-      pagination_token: paginationToken
-    });
+      "tweet.fields": "author_id,conversation_id,created_at"
+    };
 
+    if (paginationToken) {
+      params.pagination_token = paginationToken;
+    }
+
+    const data = await xGet("/tweets/search/recent", params);
     const tweets = data.data || [];
 
     const found = tweets.some((tweet) => {
@@ -197,17 +223,27 @@ export default async function handler(req, res) {
     const tweetId = String(task.tweet_id);
     const xUserId = String(user.x_user_id);
     const xUsername = String(user.x_username).replace("@", "");
-
-    const [liked, reposted, commented] = await Promise.all([
-      hasLiked(tweetId, xUserId),
-      hasReposted(tweetId, xUserId),
-      hasCommented(tweetId, xUserId, xUsername)
-    ]);
-
-    const completed = Boolean(liked && reposted && commented);
     const now = new Date().toISOString();
 
-    const updateData = {
+    const [likedResult, repostedResult, commentedResult] = await Promise.all([
+      safeCheck("liked", () => hasLiked(tweetId, xUserId)),
+      safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
+      safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
+    ]);
+
+    const liked = likedResult.ok;
+    const reposted = repostedResult.ok;
+    const commented = commentedResult.ok;
+
+    const actionErrors = {
+      liked: likedResult.error,
+      reposted: repostedResult.error,
+      commented: commentedResult.error
+    };
+
+    const completed = Boolean(liked && reposted && commented);
+
+    const progressPayload = {
       task_id: taskId,
       wallet_address: wallet,
       x_user_id: xUserId,
@@ -222,7 +258,7 @@ export default async function handler(req, res) {
 
     const { data: savedProgress, error: progressError } = await supabase
       .from("task_progress")
-      .upsert(updateData, {
+      .upsert(progressPayload, {
         onConflict: "task_id,wallet_address"
       })
       .select()
@@ -240,6 +276,7 @@ export default async function handler(req, res) {
         liked,
         reposted,
         commented,
+        actionErrors,
         message: "Mission not completed yet. Please like, repost, and comment, then try again.",
         progress: savedProgress
       });
@@ -252,6 +289,7 @@ export default async function handler(req, res) {
       liked,
       reposted,
       commented,
+      actionErrors,
       message: "Mission verified. You can claim now.",
       progress: savedProgress
     });
