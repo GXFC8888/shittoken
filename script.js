@@ -594,16 +594,6 @@ async function verifyAndClaim(taskId) {
 
     showMessage("Checking mission...");
 
-    if (!isXConnected()) {
-      localStorage.setItem("pending_verify_task_id", String(taskId));
-      localStorage.setItem("pending_x_wallet", activeWallet);
-
-      showMessage("X authorization is required once. Redirecting to X...", "ok");
-
-      window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
-      return;
-    }
-
     const verifyResponse = await fetch("/api/verify", {
       method: "POST",
       headers: {
@@ -618,18 +608,21 @@ async function verifyAndClaim(taskId) {
     const verifyData = await verifyResponse.json();
 
     if (!verifyData.success) {
-      const errorText = String(verifyData.message || verifyData.error || "").toLowerCase();
+      const errorText = String(
+        verifyData.message || verifyData.error || ""
+      ).toLowerCase();
 
       if (
         errorText.includes("connect x") ||
-        errorText.includes("please connect x")
+        errorText.includes("please connect x") ||
+        errorText.includes("x first")
       ) {
         localStorage.setItem("pending_verify_task_id", String(taskId));
         localStorage.setItem("pending_x_wallet", activeWallet);
 
         showMessage("X authorization is required once. Redirecting to X...", "ok");
 
-        window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
+        window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
         return;
       }
 
