@@ -167,13 +167,7 @@ function clearXConnected(address) {
 }
 
 function isXConnected() {
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (!activeWallet) return false;
-
-  if (currentXConnected) return true;
-
-  return localStorage.getItem(getXStorageKey(activeWallet)) === "true";
+  return Boolean(currentXConnected);
 }
 
 function getTaskProgress(taskId) {
@@ -624,6 +618,21 @@ async function verifyAndClaim(taskId) {
     const verifyData = await verifyResponse.json();
 
     if (!verifyData.success) {
+      const errorText = String(verifyData.message || verifyData.error || "").toLowerCase();
+
+      if (
+        errorText.includes("connect x") ||
+        errorText.includes("please connect x")
+      ) {
+        localStorage.setItem("pending_verify_task_id", String(taskId));
+        localStorage.setItem("pending_x_wallet", activeWallet);
+
+        showMessage("X authorization is required once. Redirecting to X...", "ok");
+
+        window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
+        return;
+      }
+
       showMessage(
         verifyData.message || verifyData.error || "Mission not verified yet. Please comment and try again.",
         "err"
