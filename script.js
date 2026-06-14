@@ -180,15 +180,6 @@ function getTaskProgress(taskId) {
   return currentProgress.find((item) => Number(item.task_id) === Number(taskId));
 }
 
-function getFirstAvailableTask() {
-  if (!currentTasks.length) return null;
-
-  return currentTasks.find((task) => {
-    const progress = getTaskProgress(task.id);
-    return !(progress && progress.claimed);
-  }) || currentTasks[0];
-}
-
 function updateWalletUI() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
   const connectedX = isXConnected();
@@ -375,10 +366,6 @@ function connectX() {
 
   localStorage.setItem("pending_x_wallet", activeWallet);
 
-  // After the user comes back to TokenPocket and taps refresh missions,
-  // the page will automatically open the X mission post.
-  localStorage.setItem("open_task_after_x_auth", "true");
-
   window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
 }
 
@@ -416,21 +403,19 @@ async function loadTasks() {
     renderMissions();
 
     if (activeWallet && currentXConnected) {
-      showMessage("X account connected. Opening the mission post...", "ok");
+      showMessage("X account connected. You can verify and claim.", "ok");
 
-      const shouldOpenTask = localStorage.getItem("open_task_after_x_auth") === "true";
+      const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
 
-      if (shouldOpenTask) {
-        localStorage.removeItem("open_task_after_x_auth");
+      if (pendingVerifyTaskId) {
+        localStorage.removeItem("pending_verify_task_id");
 
-        const firstTask = getFirstAvailableTask();
-
-        if (firstTask && firstTask.tweet_id) {
-          openXTask(firstTask.tweet_id);
-        }
+        setTimeout(() => {
+          verifyAndClaim(pendingVerifyTaskId);
+        }, 500);
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Please connect X.", "err");
+      showMessage("Wallet connected. Open the mission post, comment, then tap verify & claim.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -527,7 +512,7 @@ function renderMissions() {
 
           <p>
             Like, repost, and comment on the official X post.
-            Then come back here and verify your mission.
+            Then come back here and tap verify & claim. X authorization may be required once.
           </p>
 
           <a class="mission-link" href="${taskUrl}" target="_blank" rel="noopener noreferrer">
@@ -570,34 +555,13 @@ function openXTask(tweetId) {
   localStorage.setItem("pending_x_task_id", String(tweetId));
 
   const webUrl = `https://x.com/i/web/status/${tweetId}`;
-  const ua = navigator.userAgent || "";
 
-  showMessage("Opening X. Like, repost, comment, then come back and tap verify.", "ok");
+  showMessage(
+    "Opening X. Make sure you comment with the same X account you will authorize.",
+    "ok"
+  );
 
-  // Android: try to open X app first, fallback to x.com web.
-  if (/Android/i.test(ua)) {
-    const fallbackUrl = encodeURIComponent(webUrl);
-
-    window.location.href =
-      `intent://x.com/i/web/status/${tweetId}` +
-      `#Intent;scheme=https;package=com.twitter.android;` +
-      `S.browser_fallback_url=${fallbackUrl};end`;
-
-    return;
-  }
-
-  // iPhone / iPad: try Twitter/X app scheme first, fallback to x.com web.
-  if (/iPhone|iPad|iPod/i.test(ua)) {
-    window.location.href = `twitter://status?id=${tweetId}`;
-
-    setTimeout(() => {
-      window.location.href = webUrl;
-    }, 1200);
-
-    return;
-  }
-
-  window.open(webUrl, "_blank", "noopener,noreferrer");
+  window.location.href = webUrl;
 }
 
 async function verifyAndClaim(taskId) {
@@ -613,18 +577,16 @@ async function verifyAndClaim(taskId) {
   try {
     isVerifying = true;
 
-    showMessage("Checking X mission...");
+    showMessage("Checking mission...");
 
     if (!isXConnected()) {
-      await loadTasks();
+      localStorage.setItem("pending_verify_task_id", String(taskId));
+      localStorage.setItem("pending_x_wallet", activeWallet);
 
-      if (!isXConnected()) {
-        showMessage(
-          "Please connect X first. If you just authorized X, tap refresh missions and try again.",
-          "err"
-        );
-        return;
-      }
+      showMessage("X authorization is required once. Redirecting to X...", "ok");
+
+      window.location.assign(`/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`);
+      return;
     }
 
     const verifyResponse = await fetch("/api/verify", {
@@ -645,6 +607,7 @@ async function verifyAndClaim(taskId) {
         verifyData.message || verifyData.error || "Mission not verified yet. Please comment and try again.",
         "err"
       );
+
       await loadTasks();
       return;
     }
@@ -700,7 +663,7 @@ function handleUrlStatus() {
   const params = new URLSearchParams(window.location.search);
 
   if (params.get("x_connected") === "1") {
-    showMessage("X connected. Open the mission post, comment, then verify.", "ok");
+    showMessage("X connected. Tap refresh missions to continue.", "ok");
 
     const activeWallet =
       userAddress ||
@@ -720,9 +683,9 @@ function handleUrlStatus() {
   if (xError) {
     const errorMap = {
       already_bound: "This X account is already bound to another wallet.",
-      missing_oauth_params: "Missing X authorization data. Please connect X again.",
-      oauth_state_not_found: "X authorization expired or opened in another browser. Please connect X again.",
-      oauth_expired: "X authorization expired. Please connect X again."
+      missing_oauth_params: "Missing X authorization data. Please try verify & claim again.",
+      oauth_state_not_found: "X authorization expired or opened in another browser. Please try verify & claim again.",
+      oauth_expired: "X authorization expired. Please try verify & claim again."
     };
 
     showMessage(errorMap[xError] || `X connection failed: ${xError}`, "err");
