@@ -555,13 +555,71 @@ function openXTask(tweetId) {
   localStorage.setItem("pending_x_task_id", String(tweetId));
 
   const webUrl = `https://x.com/i/web/status/${tweetId}`;
+  const ua = navigator.userAgent || "";
 
   showMessage(
-    "Opening X. Make sure you comment with the same X account you will authorize.",
+    "Opening X. If it does not open, tap the yellow X link above or copy the link manually.",
     "ok"
   );
 
-  window.location.href = webUrl;
+  try {
+    navigator.clipboard.writeText(webUrl).catch(() => {});
+  } catch (error) {}
+
+  if (/Android/i.test(ua)) {
+    const fallbackUrl = encodeURIComponent(webUrl);
+
+    const intentUrl =
+      `intent://x.com/i/web/status/${tweetId}` +
+      `#Intent;scheme=https;package=com.twitter.android;` +
+      `S.browser_fallback_url=${fallbackUrl};end`;
+
+    const opened = window.open(intentUrl, "_blank");
+
+    if (!opened) {
+      const a = document.createElement("a");
+      a.href = intentUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    setTimeout(() => {
+      const a = document.createElement("a");
+      a.href = webUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }, 1500);
+
+    return;
+  }
+
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    window.location.href = `twitter://status?id=${tweetId}`;
+
+    setTimeout(() => {
+      const a = document.createElement("a");
+      a.href = webUrl;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }, 1200);
+
+    return;
+  }
+
+  const opened = window.open(webUrl, "_blank", "noopener,noreferrer");
+
+  if (!opened) {
+    window.location.href = webUrl;
+  }
 }
 
 async function verifyAndClaim(taskId) {
