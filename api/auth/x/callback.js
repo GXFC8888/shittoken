@@ -31,7 +31,12 @@ export default async function handler(req, res) {
 
     const client = getOAuthClient();
 
-    const { client: loggedClient } = await client.loginWithOAuth2({
+    const {
+      client: loggedClient,
+      accessToken,
+      refreshToken,
+      expiresIn
+    } = await client.loginWithOAuth2({
       code,
       codeVerifier: oauthState.code_verifier,
       redirectUri: process.env.X_REDIRECT_URI
@@ -58,11 +63,18 @@ export default async function handler(req, res) {
       return res.redirect(`${process.env.SITE_URL}/?x_error=already_bound`);
     }
 
+    const tokenExpiresAt = expiresIn
+      ? new Date(Date.now() + Number(expiresIn) * 1000).toISOString()
+      : null;
+
     const { error: upsertError } = await supabase.from("users").upsert(
       {
         wallet_address: walletAddress,
         x_user_id: xUserId,
         x_username: xUsername,
+        x_access_token: accessToken || null,
+        x_refresh_token: refreshToken || null,
+        x_token_expires_at: tokenExpiresAt,
         updated_at: new Date().toISOString()
       },
       {
