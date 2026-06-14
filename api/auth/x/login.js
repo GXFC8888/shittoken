@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     const { url, codeVerifier, state } = client.generateOAuth2AuthLink(
       process.env.X_REDIRECT_URI,
       {
-        scope: ["tweet.read", "users.read", "offline.access"]
+        scope: ["tweet.read", "users.read", "like.read", "offline.access"]
       }
     );
 
