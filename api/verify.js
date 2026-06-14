@@ -81,6 +81,40 @@ async function findUserInPaginatedUsers(path, tweetId, xUserId) {
   return false;
 }
 
+async function findTweetInUserLikedTweets(tweetId, xUserId) {
+  let paginationToken = null;
+  let page = 0;
+  const maxPages = 10;
+
+  while (page < maxPages) {
+    page += 1;
+
+    const params = {
+      max_results: 100,
+      "tweet.fields": "id,created_at"
+    };
+
+    if (paginationToken) {
+      params.pagination_token = paginationToken;
+    }
+
+    const data = await xGet(`/users/${xUserId}/liked_tweets`, params);
+    const tweets = data.data || [];
+
+    if (tweets.some((tweet) => String(tweet.id) === String(tweetId))) {
+      return true;
+    }
+
+    paginationToken = data.meta && data.meta.next_token;
+
+    if (!paginationToken) {
+      break;
+    }
+  }
+
+  return false;
+}
+
 async function safeCheck(name, checkFn) {
   try {
     const result = await checkFn();
@@ -100,11 +134,23 @@ async function safeCheck(name, checkFn) {
 }
 
 async function hasLiked(tweetId, xUserId) {
-  return findUserInPaginatedUsers(
+  const likedFromTweet = await findUserInPaginatedUsers(
     "/tweets/:tweetId/liking_users",
     tweetId,
     xUserId
   );
+
+  if (likedFromTweet) {
+    return true;
+  }
+
+  const likedFromUser = await findTweetInUserLikedTweets(tweetId, xUserId);
+
+  if (likedFromUser) {
+    return true;
+  }
+
+  return false;
 }
 
 async function hasReposted(tweetId, xUserId) {
