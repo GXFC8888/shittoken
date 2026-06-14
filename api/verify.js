@@ -12,7 +12,7 @@ function getBearerToken() {
   return token;
 }
 
-async function xGet(path, params = {}) {
+async function xGet(path, params = {}, token = null) {
   const url = new URL(`${X_API_BASE}${path}`);
 
   Object.entries(params).forEach(([key, value]) => {
@@ -24,7 +24,7 @@ async function xGet(path, params = {}) {
   const response = await fetch(url.toString(), {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${getBearerToken()}`
+      Authorization: `Bearer ${token || getBearerToken()}`
     }
   });
 
@@ -81,7 +81,11 @@ async function findUserInPaginatedUsers(path, tweetId, xUserId) {
   return false;
 }
 
-async function findTweetInUserLikedTweets(tweetId, xUserId) {
+async function findTweetInUserLikedTweets(tweetId, xUserId, accessToken) {
+  if (!accessToken) {
+    return false;
+  }
+
   let paginationToken = null;
   let page = 0;
   const maxPages = 10;
@@ -98,7 +102,7 @@ async function findTweetInUserLikedTweets(tweetId, xUserId) {
       params.pagination_token = paginationToken;
     }
 
-    const data = await xGet(`/users/${xUserId}/liked_tweets`, params);
+    const data = await xGet(`/users/${xUserId}/liked_tweets`, params, accessToken);
     const tweets = data.data || [];
 
     if (tweets.some((tweet) => String(tweet.id) === String(tweetId))) {
@@ -133,7 +137,17 @@ async function safeCheck(name, checkFn) {
   }
 }
 
-async function hasLiked(tweetId, xUserId) {
+async function hasLiked(tweetId, xUserId, accessToken) {
+  const likedFromUserToken = await findTweetInUserLikedTweets(
+    tweetId,
+    xUserId,
+    accessToken
+  );
+
+  if (likedFromUserToken) {
+    return true;
+  }
+
   const likedFromTweet = await findUserInPaginatedUsers(
     "/tweets/:tweetId/liking_users",
     tweetId,
@@ -141,12 +155,6 @@ async function hasLiked(tweetId, xUserId) {
   );
 
   if (likedFromTweet) {
-    return true;
-  }
-
-  const likedFromUser = await findTweetInUserLikedTweets(tweetId, xUserId);
-
-  if (likedFromUser) {
     return true;
   }
 
@@ -233,7 +241,7 @@ export default async function handler(req, res) {
 
     const { data: user, error: userError } = await supabase
       .from("users")
-      .select("wallet_address, x_user_id, x_username")
+      .select("wallet_address, x_user_id, x_username, x_access_token")
       .eq("wallet_address", wallet)
       .maybeSingle();
 
@@ -269,10 +277,11 @@ export default async function handler(req, res) {
     const tweetId = String(task.tweet_id);
     const xUserId = String(user.x_user_id);
     const xUsername = String(user.x_username).replace("@", "");
+    const accessToken = user.x_access_token || null;
     const now = new Date().toISOString();
 
     const [likedResult, repostedResult, commentedResult] = await Promise.all([
-      safeCheck("liked", () => hasLiked(tweetId, xUserId)),
+      safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
       safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
       safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
     ]);
