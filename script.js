@@ -521,7 +521,7 @@ function renderMissions() {
 
           <div class="mission-actions">
             <button class="btn full light open-task-btn" type="button" data-tweet-id="${task.tweet_id}">
-              open X task
+              open X app
             </button>
 
             <button class="btn full gold verify-task-btn" type="button" data-task-id="${task.id}" ${verifyDisabled}>
@@ -555,9 +555,10 @@ function openXTask(tweetId) {
   localStorage.setItem("pending_x_task_id", String(tweetId));
 
   const webUrl = `https://x.com/i/web/status/${tweetId}`;
+  const appUrl = `twitter://status?id=${tweetId}`;
 
   showMessage(
-    "Opening X. Like, repost, comment, then come back and tap verify & claim.",
+    "Opening X App. Make sure the X App account is the same account you will authorize.",
     "ok"
   );
 
@@ -565,7 +566,23 @@ function openXTask(tweetId) {
     navigator.clipboard.writeText(webUrl).catch(() => {});
   } catch (error) {}
 
-  window.location.href = webUrl;
+  let appOpened = false;
+
+  const onVisibilityChange = () => {
+    if (document.hidden) {
+      appOpened = true;
+    }
+  };
+
+  document.addEventListener("visibilitychange", onVisibilityChange, { once: true });
+
+  window.location.href = appUrl;
+
+  setTimeout(() => {
+    if (!appOpened) {
+      window.location.href = webUrl;
+    }
+  }, 1800);
 }
 
 async function verifyAndClaim(taskId) {
