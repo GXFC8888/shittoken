@@ -576,6 +576,19 @@ function openOfficialX() {
   }, 1800);
 }
 
+function shouldLockClaimButton(data) {
+  const text = String(
+    data && (data.message || data.error || data.detail || "")
+  ).toLowerCase();
+
+  return (
+    text.includes("already claimed") ||
+    text.includes("latest official post already claimed") ||
+    text.includes("no unclaimed official posts found") ||
+    text.includes("already claimed on chain")
+  );
+}
+
 function needsXAuthorization(data) {
   const text = String(
     data && (data.message || data.error || data.detail || "")
@@ -615,7 +628,9 @@ async function getClaimSignature(activeWallet, tweetId) {
   const data = await response.json().catch(() => ({}));
 
   if (!data.success) {
-    throw new Error(data.error || data.detail || "Failed to get claim signature");
+    const error = new Error(data.error || data.detail || "Failed to get claim signature");
+    error.responseData = data;
+    throw error;
   }
 
   return data;
@@ -689,7 +704,9 @@ async function recordClaim(activeWallet, taskId, txHash) {
   const data = await response.json().catch(() => ({}));
 
   if (!data.success) {
-    throw new Error(data.error || data.detail || "Failed to record claim");
+    const error = new Error(data.error || data.detail || "Failed to record claim");
+    error.responseData = data;
+    throw error;
   }
 
   return data;
@@ -735,6 +752,18 @@ async function verifyAndClaim() {
         return;
       }
 
+      if (shouldLockClaimButton(verifyData)) {
+        localClaimLocked = true;
+
+        showMessage(
+          verifyData.message || verifyData.error || "Latest official post already claimed.",
+          "ok"
+        );
+
+        renderMissions();
+        return;
+      }
+
       showMessage(
         verifyData.message || verifyData.error || "Latest official post is not completed yet. Please try again.",
         "err"
@@ -776,7 +805,17 @@ async function verifyAndClaim() {
     await loadTasks(false);
   } catch (error) {
     console.error(error);
-    showMessage("Claim failed: " + getReadableError(error), "err");
+
+    const responseData = error && error.responseData;
+    const readableError = getReadableError(error);
+
+    if (shouldLockClaimButton(responseData) || String(readableError).toLowerCase().includes("already claimed")) {
+      localClaimLocked = true;
+      showMessage("Latest official post already claimed.", "ok");
+      renderMissions();
+    } else {
+      showMessage("Claim failed: " + readableError, "err");
+    }
   } finally {
     isVerifying = false;
     renderMissions();
