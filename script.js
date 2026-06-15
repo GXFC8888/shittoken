@@ -13,6 +13,14 @@ const OFFICIAL_X_USERNAME = "GXFCLJ";
 const OFFICIAL_X_WEB_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
 const OFFICIAL_X_APP_URL = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
 
+const TWITTER_TASK_CLAIM_ABI = [
+  "function claim(bytes32 tweetHash, uint256 deadline, bytes signature) payable",
+  "function claimFee() view returns (uint256)",
+  "function claimAmount() view returns (uint256)",
+  "function signer() view returns (address)",
+  "function isClaimed(address user, bytes32 tweetHash) view returns (bool)"
+];
+
 let provider = null;
 let signer = null;
 let userAddress = null;
@@ -98,6 +106,18 @@ function getReadableError(error) {
 
   if (lowerMessage.includes("already claimed")) {
     return "Already claimed.";
+  }
+
+  if (lowerMessage.includes("insufficient fee")) {
+    return "Insufficient BNB fee.";
+  }
+
+  if (lowerMessage.includes("invalid signer")) {
+    return "Invalid claim signature.";
+  }
+
+  if (lowerMessage.includes("signature expired")) {
+    return "Claim signature expired. Please verify again.";
   }
 
   if (error.data && error.data.message) return error.data.message;
@@ -550,6 +570,101 @@ function redirectToXAuthorization(activeWallet) {
   }, 300);
 }
 
+async function getClaimSignature(activeWallet, tweetId) {
+  const response = await fetch("/api/claim-signature", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      wallet: activeWallet,
+      tweetId
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!data.success) {
+    throw new Error(data.error || data.detail || "Failed to get claim signature");
+  }
+
+  return data;
+}
+
+async function claimOnChain(signatureData, activeWallet) {
+  const walletProvider = getWalletProvider();
+
+  if (!walletProvider) {
+    throw new Error("No wallet provider found");
+  }
+
+  await switchToBSC();
+
+  const web3Provider = new ethers.providers.Web3Provider(walletProvider, "any");
+  const web3Signer = web3Provider.getSigner();
+  const connectedAddress = await web3Signer.getAddress();
+
+  if (connectedAddress.toLowerCase() !== activeWallet.toLowerCase()) {
+    throw new Error("Connected wallet does not match verified wallet");
+  }
+
+  const contract = new ethers.Contract(
+    signatureData.contract,
+    TWITTER_TASK_CLAIM_ABI,
+    web3Signer
+  );
+
+  const alreadyClaimed = await contract.isClaimed(
+    activeWallet,
+    signatureData.tweetHash
+  );
+
+  if (alreadyClaimed) {
+    throw new Error("Already claimed on chain");
+  }
+
+  const claimFee = await contract.claimFee();
+
+  showMessage("Please confirm the on-chain claim transaction in your wallet.", "ok");
+
+  const tx = await contract.claim(
+    signatureData.tweetHash,
+    signatureData.deadline,
+    signatureData.signature,
+    {
+      value: claimFee
+    }
+  );
+
+  showMessage("Transaction submitted. Waiting for confirmation...", "ok");
+
+  await tx.wait();
+
+  return tx.hash;
+}
+
+async function recordClaim(activeWallet, taskId, txHash) {
+  const response = await fetch("/api/claim", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      wallet: activeWallet,
+      taskId: Number(taskId),
+      txHash
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!data.success) {
+    throw new Error(data.error || data.detail || "Failed to record claim");
+  }
+
+  return data;
+}
+
 async function verifyAndClaim() {
   if (isVerifying) return;
 
@@ -592,45 +707,35 @@ async function verifyAndClaim() {
       return;
     }
 
-    if (!verifyData.taskId) {
-      showMessage("Verified, but missing task ID. Please refresh and try again.", "err");
+    if (!verifyData.taskId || !verifyData.tweetId) {
+      showMessage("Verified, but missing claim data. Please refresh and try again.", "err");
       await loadTasks(false);
       return;
     }
 
-    showMessage("Official post verified. Recording claim...", "ok");
+    showMessage("Official post verified. Getting claim signature...", "ok");
 
-    const claimResponse = await fetch("/api/claim", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        wallet: activeWallet,
-        taskId: Number(verifyData.taskId),
-        txHash: "offchain"
-      })
-    });
+    const signatureData = await getClaimSignature(
+      activeWallet,
+      verifyData.tweetId
+    );
 
-    const claimData = await claimResponse.json().catch(() => ({}));
+    const txHash = await claimOnChain(signatureData, activeWallet);
 
-    if (!claimData.success) {
-      if (claimData.error && claimData.error.toLowerCase().includes("already claimed")) {
-        showMessage("Already claimed.", "ok");
-      } else {
-        showMessage(claimData.error || "Claim failed.", "err");
-      }
+    showMessage("On-chain claim confirmed. Recording claim...", "ok");
 
-      await loadTasks(false);
-      return;
-    }
+    await recordClaim(
+      activeWallet,
+      signatureData.taskId || verifyData.taskId,
+      txHash
+    );
 
-    showMessage("Claim recorded for one official post.", "ok");
+    showMessage("Claim successful. Tokens sent to your wallet.", "ok");
 
     await loadTasks(false);
   } catch (error) {
     console.error(error);
-    showMessage("Verify failed: " + getReadableError(error), "err");
+    showMessage("Claim failed: " + getReadableError(error), "err");
   } finally {
     isVerifying = false;
   }
