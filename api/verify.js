@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabase.js";
 
 const X_API_BASE = "https://api.x.com/2";
 const OFFICIAL_USERNAME = process.env.X_OFFICIAL_USERNAME || "GXFCLJ";
-const MAX_OFFICIAL_POSTS = 30;
+const MAX_OFFICIAL_POSTS = 1;
 const MAX_OFFICIAL_POST_PAGES = 1;
 
 function getBearerToken() {
@@ -244,7 +244,7 @@ async function safeCheck(name, checkFn) {
       error: null
     };
   } catch (error) {
-    console.error(`${name} check failed:`, error);
+    console.warn(`${name} check failed:`, error.message || String(error));
 
     return {
       ok: false,
@@ -455,16 +455,24 @@ export default async function handler(req, res) {
     const officialTweets = await getOfficialTweets(officialUser.id);
     const claimedTweetIds = await getClaimedTweetIds(wallet);
 
-    const availableTweets = officialTweets.filter((tweet) => {
-      return !claimedTweetIds.has(String(tweet.id));
-    });
-
-    if (!availableTweets.length) {
+    if (!officialTweets.length) {
       return res.status(200).json({
         success: false,
         completed: false,
         claimable: false,
-        message: "No unclaimed official posts found."
+        message: "No official post found."
+      });
+    }
+
+    const latestTweet = officialTweets[0];
+    const latestTweetId = String(latestTweet.id);
+
+    if (claimedTweetIds.has(latestTweetId)) {
+      return res.status(200).json({
+        success: false,
+        completed: false,
+        claimable: false,
+        message: "Latest official post already claimed."
       });
     }
 
@@ -472,86 +480,48 @@ export default async function handler(req, res) {
     const xUsername = String(user.x_username).replace("@", "");
     const accessToken = user.x_access_token;
 
-    const checked = [];
-    let bestPartial = null;
+    const result = await checkTweetActions({
+      tweet: latestTweet,
+      xUserId,
+      xUsername,
+      accessToken
+    });
 
-    for (const tweet of availableTweets) {
-      const result = await checkTweetActions({
-        tweet,
-        xUserId,
-        xUsername,
-        accessToken
-      });
+    const task = await ensureTaskForTweet(latestTweet);
+    const progress = await saveResultProgress({
+      result,
+      task,
+      wallet,
+      xUserId,
+      xUsername
+    });
 
-      checked.push({
-        tweetId: result.tweetId,
+    if (!result.completed) {
+      return res.status(200).json({
+        success: false,
+        completed: false,
+        claimable: false,
+        message: "Latest official post is not completed yet. Please like, repost, and comment on the latest official post, then try again.",
+        latestTweetId,
         liked: result.liked,
         reposted: result.reposted,
         commented: result.commented,
-        completed: result.completed,
+        progress,
         actionErrors: result.actionErrors
-      });
-
-      if (result.completed) {
-        const task = await ensureTaskForTweet(tweet);
-        const progress = await saveResultProgress({
-          result,
-          task,
-          wallet,
-          xUserId,
-          xUsername
-        });
-
-        return res.status(200).json({
-          success: true,
-          completed: true,
-          claimable: true,
-          tweetId: result.tweetId,
-          taskId: task.id,
-          liked: result.liked,
-          reposted: result.reposted,
-          commented: result.commented,
-          message: "Mission verified. You can claim now.",
-          progress,
-          checked
-        });
-      }
-
-      if (!bestPartial || result.score > bestPartial.score) {
-        bestPartial = result;
-      }
-    }
-
-    let savedPartialProgress = null;
-
-    if (bestPartial && bestPartial.score > 0) {
-      const task = await ensureTaskForTweet(bestPartial.tweet);
-      savedPartialProgress = await saveResultProgress({
-        result: bestPartial,
-        task,
-        wallet,
-        xUserId,
-        xUsername
       });
     }
 
     return res.status(200).json({
-      success: false,
-      completed: false,
-      claimable: false,
-      message: "No completed unclaimed official post found. Please like, repost, and comment on the same official post, then try again.",
-      bestPartial: bestPartial
-        ? {
-            tweetId: bestPartial.tweetId,
-            liked: bestPartial.liked,
-            reposted: bestPartial.reposted,
-            commented: bestPartial.commented,
-            score: bestPartial.score,
-            actionErrors: bestPartial.actionErrors
-          }
-        : null,
-      progress: savedPartialProgress,
-      checked
+      success: true,
+      completed: true,
+      claimable: true,
+      tweetId: result.tweetId,
+      taskId: task.id,
+      liked: result.liked,
+      reposted: result.reposted,
+      commented: result.commented,
+      message: "Latest official post verified. You can claim now.",
+      progress
     });
   } catch (error) {
     console.error("Verify error:", error);
