@@ -33,6 +33,7 @@ let currentXUsername = null;
 let isConnectingWallet = false;
 let isLoadingTasks = false;
 let isVerifying = false;
+let localClaimLocked = false;
 
 const connectBtn = document.getElementById("connectBtn");
 
@@ -236,6 +237,7 @@ function resetWalletUI() {
   currentProgress = [];
   currentXConnected = false;
   currentXUsername = null;
+  localClaimLocked = false;
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
@@ -348,6 +350,7 @@ function listenWalletChange() {
   walletProvider.on("accountsChanged", async (accounts) => {
     if (accounts && accounts.length > 0) {
       try {
+        localClaimLocked = false;
         await setupWalletAfterConnected();
         showMessage("Wallet account changed.", "ok");
       } catch (error) {
@@ -417,11 +420,11 @@ async function loadTasks(runPendingVerify = true) {
     renderMissions();
 
     if (activeWallet && currentXConnected) {
-      showMessage("X account connected. Open official X, finish one post, then verify.", "ok");
+      showMessage("X account connected. Open official X, finish the latest post, then verify.", "ok");
 
       const pendingVerify = localStorage.getItem("pending_official_verify") === "true";
 
-      if (runPendingVerify && pendingVerify) {
+      if (runPendingVerify && pendingVerify && !localClaimLocked) {
         localStorage.removeItem("pending_official_verify");
 
         setTimeout(() => {
@@ -429,7 +432,7 @@ async function loadTasks(runPendingVerify = true) {
         }, 600);
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Open official X, finish one post, then tap verify & claim.", "ok");
+      showMessage("Wallet connected. Open official X, finish the latest post, then tap verify & claim.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -468,21 +471,24 @@ function renderMissions() {
   }
 
   const claimedCount = getClaimedCount();
+  const displayClaimedCount = localClaimLocked ? Math.max(claimedCount, 1) : claimedCount;
+  const verifyDisabled = localClaimLocked || isVerifying;
+  const verifyButtonText = localClaimLocked ? "claimed" : isVerifying ? "checking..." : "verify & claim";
 
   missionList.innerHTML = `
     <div class="mission-card" data-official-x="true">
       <div class="mission-head">
         <div>
           <h3>Official X Mission</h3>
-          <p class="reward">Reward: 1 drop per official post</p>
+          <p class="reward">Reward: 1 drop for the latest official post</p>
         </div>
-        <span class="mission-status ready">${claimedCount} claimed</span>
+        <span class="mission-status ready">${displayClaimedCount} claimed</span>
       </div>
 
       <p>
-        Open @${OFFICIAL_X_USERNAME}, choose any official post, then like, repost,
-        and comment on that post. Come back here and tap verify & claim.
-        Each official post can be claimed once.
+        Open @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
+        Come back here and tap verify & claim.
+        Only the latest official post can be claimed once.
       </p>
 
       <a class="mission-link" href="${OFFICIAL_X_WEB_URL}" target="_blank" rel="noopener noreferrer">
@@ -494,8 +500,8 @@ function renderMissions() {
           open official X
         </button>
 
-        <button class="btn full gold verify-task-btn" type="button">
-          verify & claim
+        <button class="btn full gold verify-task-btn" type="button" ${verifyDisabled ? "disabled" : ""}>
+          ${verifyButtonText}
         </button>
       </div>
     </div>
@@ -510,6 +516,11 @@ function renderMissions() {
 
   if (verifyButton) {
     verifyButton.addEventListener("click", () => {
+      if (localClaimLocked) {
+        showMessage("This post has already been claimed.", "ok");
+        return;
+      }
+
       verifyAndClaim();
     });
   }
@@ -538,7 +549,7 @@ function openOfficialX() {
   }
 
   showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on any official post, then manually return here to claim.`,
+    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on the latest official post, then manually return here to claim.`,
     "ok"
   );
 
@@ -685,7 +696,13 @@ async function recordClaim(activeWallet, taskId, txHash) {
 }
 
 async function verifyAndClaim() {
-  if (isVerifying) return;
+  if (isVerifying || localClaimLocked) {
+    if (localClaimLocked) {
+      showMessage("This post has already been claimed.", "ok");
+    }
+
+    return;
+  }
 
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
@@ -696,8 +713,9 @@ async function verifyAndClaim() {
 
   try {
     isVerifying = true;
+    renderMissions();
 
-    showMessage("Scanning official X posts...");
+    showMessage("Scanning latest official X post...");
 
     const verifyResponse = await fetch("/api/verify", {
       method: "POST",
@@ -718,7 +736,7 @@ async function verifyAndClaim() {
       }
 
       showMessage(
-        verifyData.message || verifyData.error || "No completed unclaimed official post found. Please try again.",
+        verifyData.message || verifyData.error || "Latest official post is not completed yet. Please try again.",
         "err"
       );
 
@@ -732,7 +750,7 @@ async function verifyAndClaim() {
       return;
     }
 
-    showMessage("Official post verified. Getting claim signature...", "ok");
+    showMessage("Latest official post verified. Getting claim signature...", "ok");
 
     const signatureData = await getClaimSignature(
       activeWallet,
@@ -749,7 +767,11 @@ async function verifyAndClaim() {
       txHash
     );
 
+    localClaimLocked = true;
+
     showMessage("Claim successful. Tokens sent to your wallet.", "ok");
+
+    renderMissions();
 
     await loadTasks(false);
   } catch (error) {
@@ -757,6 +779,7 @@ async function verifyAndClaim() {
     showMessage("Claim failed: " + getReadableError(error), "err");
   } finally {
     isVerifying = false;
+    renderMissions();
   }
 }
 
@@ -764,7 +787,7 @@ function handleReturnFromX() {
   const pendingOfficialX = localStorage.getItem("pending_official_x");
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
-  if (pendingOfficialX && activeWallet) {
+  if (pendingOfficialX && activeWallet && !localClaimLocked) {
     showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
   }
 }
@@ -773,7 +796,7 @@ function handleUrlStatus() {
   const params = new URLSearchParams(window.location.search);
 
   if (params.get("x_connected") === "1") {
-    showMessage("X connected. Tap refresh missions to continue.", "ok");
+    showMessage("X connected. Open official X, finish the latest post, then claim.", "ok");
 
     const activeWallet =
       userAddress ||
