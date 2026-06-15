@@ -516,10 +516,29 @@ function renderMissions() {
 }
 
 function openOfficialX() {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (!activeWallet) {
+    showMessage("Please connect wallet first.", "err");
+    return;
+  }
+
   localStorage.setItem("pending_official_x", "true");
 
+  if (!isXConnected()) {
+    localStorage.setItem("pending_x_wallet", activeWallet);
+
+    showMessage("X authorization is required first. Redirecting to X...", "ok");
+
+    setTimeout(() => {
+      window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
+    }, 300);
+
+    return;
+  }
+
   showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on any official post, then come back and verify.`,
+    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on any official post, then manually return here to claim.`,
     "ok"
   );
 
