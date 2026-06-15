@@ -9,6 +9,10 @@ const BSC_RPC_URLS = [
   "https://rpc.ankr.com/bsc"
 ];
 
+const OFFICIAL_X_USERNAME = "GXFCLJ";
+const OFFICIAL_X_WEB_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
+const OFFICIAL_X_APP_URL = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
+
 let provider = null;
 let signer = null;
 let userAddress = null;
@@ -168,10 +172,6 @@ function clearXConnected(address) {
 
 function isXConnected() {
   return Boolean(currentXConnected);
-}
-
-function getTaskProgress(taskId) {
-  return currentProgress.find((item) => Number(item.task_id) === Number(taskId));
 }
 
 function updateWalletUI() {
@@ -397,19 +397,19 @@ async function loadTasks(runPendingVerify = true) {
     renderMissions();
 
     if (activeWallet && currentXConnected) {
-      showMessage("X account connected. You can verify and claim.", "ok");
+      showMessage("X account connected. Open official X, finish one post, then verify.", "ok");
 
-      const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
+      const pendingVerify = localStorage.getItem("pending_official_verify") === "true";
 
-      if (runPendingVerify && pendingVerifyTaskId) {
-        localStorage.removeItem("pending_verify_task_id");
+      if (runPendingVerify && pendingVerify) {
+        localStorage.removeItem("pending_official_verify");
 
         setTimeout(() => {
-          verifyAndClaim(pendingVerifyTaskId);
+          verifyAndClaim();
         }, 600);
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Open the mission post, comment, then tap verify & claim.", "ok");
+      showMessage("Wallet connected. Open official X, finish one post, then tap verify & claim.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -428,36 +428,8 @@ async function loadTasks(runPendingVerify = true) {
   }
 }
 
-function getTaskUrl(tweetId) {
-  return `https://x.com/i/web/status/${tweetId}`;
-}
-
-function getTaskStatus(progress) {
-  if (!progress) {
-    return {
-      text: "Not verified",
-      className: "not-verified"
-    };
-  }
-
-  if (progress.claimed) {
-    return {
-      text: "Claimed",
-      className: "claimed"
-    };
-  }
-
-  if (progress.claimable || progress.verified) {
-    return {
-      text: "Ready",
-      className: "ready"
-    };
-  }
-
-  return {
-    text: "Not verified",
-    className: "not-verified"
-  };
+function getClaimedCount() {
+  return currentProgress.filter((item) => item.claimed).length;
 }
 
 function renderMissions() {
@@ -468,96 +440,71 @@ function renderMissions() {
   if (!activeWallet) {
     missionList.innerHTML = `
       <div class="mission-card empty">
-        <h3>Connect your wallet to load airdrop missions.</h3>
+        <h3>Connect your wallet to load official X mission.</h3>
         <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
       </div>
     `;
     return;
   }
 
-  if (!currentTasks.length) {
-    missionList.innerHTML = `
-      <div class="mission-card empty">
-        <h3>No missions loaded</h3>
-        <p>Tap refresh missions. If this stays empty, check /api/tasks.</p>
+  const claimedCount = getClaimedCount();
+
+  missionList.innerHTML = `
+    <div class="mission-card" data-official-x="true">
+      <div class="mission-head">
+        <div>
+          <h3>Official X Mission</h3>
+          <p class="reward">Reward: 1 drop per official post</p>
+        </div>
+        <span class="mission-status ready">${claimedCount} claimed</span>
       </div>
-    `;
-    return;
+
+      <p>
+        Open @${OFFICIAL_X_USERNAME}, choose any official post, then like, repost,
+        and comment on that post. Come back here and tap verify & claim.
+        Each official post can be claimed once.
+      </p>
+
+      <a class="mission-link" href="${OFFICIAL_X_WEB_URL}" target="_blank" rel="noopener noreferrer">
+        ${OFFICIAL_X_WEB_URL}
+      </a>
+
+      <div class="mission-actions">
+        <button class="btn full light open-task-btn" type="button">
+          open official X
+        </button>
+
+        <button class="btn full gold verify-task-btn" type="button">
+          verify & claim
+        </button>
+      </div>
+    </div>
+  `;
+
+  const openButton = missionList.querySelector(".open-task-btn");
+  const verifyButton = missionList.querySelector(".verify-task-btn");
+
+  if (openButton) {
+    openButton.addEventListener("click", openOfficialX);
   }
 
-  missionList.innerHTML = currentTasks
-    .map((task) => {
-      const progress = getTaskProgress(task.id);
-      const status = getTaskStatus(progress);
-      const taskUrl = getTaskUrl(task.tweet_id);
-
-      const verifyDisabled = progress && progress.claimed ? "disabled" : "";
-      const verifyText = progress && progress.claimed ? "claimed" : "verify & claim";
-
-      return `
-        <div class="mission-card" data-task-id="${task.id}">
-          <div class="mission-head">
-            <div>
-              <h3>${task.title || `Mission ${task.id}`}</h3>
-              <p class="reward">Reward: ${task.reward_amount || "1"} drop</p>
-            </div>
-            <span class="mission-status ${status.className}">${status.text}</span>
-          </div>
-
-          <p>
-            Like, repost, and comment on the official X post.
-            Then come back here and tap verify & claim. X authorization may be required once.
-          </p>
-
-          <a class="mission-link" href="${taskUrl}" target="_blank" rel="noopener noreferrer">
-            ${taskUrl}
-          </a>
-
-          <div class="mission-actions">
-            <button class="btn full light open-task-btn" type="button" data-tweet-id="${task.tweet_id}">
-              open X app
-            </button>
-
-            <button class="btn full gold verify-task-btn" type="button" data-task-id="${task.id}" ${verifyDisabled}>
-              ${verifyText}
-            </button>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-
-  missionList.querySelectorAll(".open-task-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      openXTask(button.dataset.tweetId);
+  if (verifyButton) {
+    verifyButton.addEventListener("click", () => {
+      verifyAndClaim();
     });
-  });
-
-  missionList.querySelectorAll(".verify-task-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      verifyAndClaim(button.dataset.taskId);
-    });
-  });
+  }
 }
 
-function openXTask(tweetId) {
-  if (!tweetId) {
-    showMessage("Missing tweet ID.", "err");
-    return;
-  }
-
-  localStorage.setItem("pending_x_task_id", String(tweetId));
-
-  const webUrl = `https://x.com/i/web/status/${tweetId}`;
-  const appUrl = `twitter://status?id=${tweetId}`;
+function openOfficialX() {
+  localStorage.setItem("pending_official_x", "true");
 
   showMessage(
-    "Opening X App. Make sure the X App account is the same account you will authorize.",
+    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on any official post, then come back and verify.`,
     "ok"
   );
 
   try {
-    navigator.clipboard.writeText(webUrl).catch(() => {});
+    navigator.clipboard.writeText(OFFICIAL_X_WEB_URL).catch(() => {});
   } catch (error) {}
 
   let appOpened = false;
@@ -570,11 +517,11 @@ function openXTask(tweetId) {
 
   document.addEventListener("visibilitychange", onVisibilityChange, { once: true });
 
-  window.location.href = appUrl;
+  window.location.href = OFFICIAL_X_APP_URL;
 
   setTimeout(() => {
     if (!appOpened) {
-      window.location.href = webUrl;
+      window.location.href = OFFICIAL_X_WEB_URL;
     }
   }, 1800);
 }
@@ -592,8 +539,8 @@ function needsXAuthorization(data) {
   );
 }
 
-function redirectToXAuthorization(activeWallet, taskId) {
-  localStorage.setItem("pending_verify_task_id", String(taskId));
+function redirectToXAuthorization(activeWallet) {
+  localStorage.setItem("pending_official_verify", "true");
   localStorage.setItem("pending_x_wallet", activeWallet);
 
   showMessage("X authorization is required once. Redirecting to X...", "ok");
@@ -603,7 +550,7 @@ function redirectToXAuthorization(activeWallet, taskId) {
   }, 300);
 }
 
-async function verifyAndClaim(taskId) {
+async function verifyAndClaim() {
   if (isVerifying) return;
 
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
@@ -616,7 +563,7 @@ async function verifyAndClaim(taskId) {
   try {
     isVerifying = true;
 
-    showMessage("Checking mission...");
+    showMessage("Scanning official X posts...");
 
     const verifyResponse = await fetch("/api/verify", {
       method: "POST",
@@ -624,8 +571,7 @@ async function verifyAndClaim(taskId) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        wallet: activeWallet,
-        taskId: Number(taskId)
+        wallet: activeWallet
       })
     });
 
@@ -633,12 +579,12 @@ async function verifyAndClaim(taskId) {
 
     if (!verifyData.success) {
       if (needsXAuthorization(verifyData) || verifyResponse.status === 400) {
-        redirectToXAuthorization(activeWallet, taskId);
+        redirectToXAuthorization(activeWallet);
         return;
       }
 
       showMessage(
-        verifyData.message || verifyData.error || "Mission not verified yet. Please comment and try again.",
+        verifyData.message || verifyData.error || "No completed unclaimed official post found. Please try again.",
         "err"
       );
 
@@ -646,7 +592,13 @@ async function verifyAndClaim(taskId) {
       return;
     }
 
-    showMessage("Mission verified. Recording claim...", "ok");
+    if (!verifyData.taskId) {
+      showMessage("Verified, but missing task ID. Please refresh and try again.", "err");
+      await loadTasks(false);
+      return;
+    }
+
+    showMessage("Official post verified. Recording claim...", "ok");
 
     const claimResponse = await fetch("/api/claim", {
       method: "POST",
@@ -655,7 +607,7 @@ async function verifyAndClaim(taskId) {
       },
       body: JSON.stringify({
         wallet: activeWallet,
-        taskId: Number(taskId),
+        taskId: Number(verifyData.taskId),
         txHash: "offchain"
       })
     });
@@ -673,7 +625,7 @@ async function verifyAndClaim(taskId) {
       return;
     }
 
-    showMessage("Claim recorded. You are claimed for this mission.", "ok");
+    showMessage("Claim recorded for one official post.", "ok");
 
     await loadTasks(false);
   } catch (error) {
@@ -685,10 +637,10 @@ async function verifyAndClaim(taskId) {
 }
 
 function handleReturnFromX() {
-  const pendingTask = localStorage.getItem("pending_x_task_id");
+  const pendingOfficialX = localStorage.getItem("pending_official_x");
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
-  if (pendingTask && activeWallet) {
+  if (pendingOfficialX && activeWallet) {
     showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
   }
 }
