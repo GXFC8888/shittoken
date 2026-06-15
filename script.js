@@ -548,6 +548,12 @@ function openOfficialX() {
     return;
   }
 
+  openOfficialXDirect();
+}
+
+function openOfficialXDirect() {
+  localStorage.setItem("pending_official_x", "true");
+
   showMessage(
     `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on the latest official post, then manually return here to claim.`,
     "ok"
@@ -774,7 +780,7 @@ async function verifyAndClaim() {
       );
 
       setTimeout(() => {
-        openOfficialX();
+        openOfficialXDirect();
       }, 800);
 
       return;
