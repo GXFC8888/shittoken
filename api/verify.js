@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabase.js";
 
 const X_API_BASE = "https://api.x.com/2";
 const OFFICIAL_USERNAME = process.env.X_OFFICIAL_USERNAME || "GXFCLJ";
-const MAX_OFFICIAL_POSTS = 30;
+const MAX_OFFICIAL_POSTS = 50;
 
 function getBearerToken() {
   const token = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
@@ -64,13 +64,37 @@ async function getOfficialUser() {
 }
 
 async function getOfficialTweets(officialUserId) {
-  const data = await xGet(`/users/${officialUserId}/tweets`, {
-    max_results: MAX_OFFICIAL_POSTS,
-    exclude: "retweets,replies",
-    "tweet.fields": "id,text,created_at,author_id"
-  });
+  const tweets = [];
+  let paginationToken = null;
+  let page = 0;
+  const maxPages = 3;
 
-  return data.data || [];
+  while (tweets.length < MAX_OFFICIAL_POSTS && page < maxPages) {
+    page += 1;
+
+    const params = {
+      max_results: 100,
+      exclude: "retweets,replies",
+      "tweet.fields": "id,text,created_at,author_id"
+    };
+
+    if (paginationToken) {
+      params.pagination_token = paginationToken;
+    }
+
+    const data = await xGet(`/users/${officialUserId}/tweets`, params);
+    const pageTweets = data.data || [];
+
+    tweets.push(...pageTweets);
+
+    paginationToken = data.meta && data.meta.next_token;
+
+    if (!paginationToken) {
+      break;
+    }
+  }
+
+  return tweets.slice(0, MAX_OFFICIAL_POSTS);
 }
 
 async function ensureTaskForTweet(tweet) {
@@ -341,9 +365,8 @@ async function saveProgress(payload) {
   return insertedProgress;
 }
 
-async function checkTweetForUser({ tweet, task, wallet, xUserId, xUsername, accessToken }) {
+async function checkTweetActions({ tweet, xUserId, xUsername, accessToken }) {
   const tweetId = String(tweet.id);
-  const now = new Date().toISOString();
 
   const [likedResult, repostedResult, commentedResult] = await Promise.all([
     safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
@@ -355,37 +378,42 @@ async function checkTweetForUser({ tweet, task, wallet, xUserId, xUsername, acce
   const reposted = repostedResult.ok;
   const commented = commentedResult.ok;
   const completed = Boolean(liked && reposted && commented);
-
-  const progressPayload = {
-    task_id: task.id,
-    tweet_id: tweetId,
-    wallet_address: wallet,
-    x_user_id: xUserId,
-    x_username: xUsername,
-    liked,
-    reposted,
-    commented,
-    verified: completed,
-    claimable: completed,
-    verified_at: completed ? now : null
-  };
-
-  const savedProgress = await saveProgress(progressPayload);
+  const score = Number(liked) + Number(reposted) + Number(commented);
 
   return {
     tweet,
-    task,
-    progress: savedProgress,
-    completed,
+    tweetId,
     liked,
     reposted,
     commented,
+    completed,
+    score,
     actionErrors: {
       liked: likedResult.error,
       reposted: repostedResult.error,
       commented: commentedResult.error
     }
   };
+}
+
+async function saveResultProgress({ result, task, wallet, xUserId, xUsername }) {
+  const now = new Date().toISOString();
+
+  const progressPayload = {
+    task_id: task.id,
+    tweet_id: result.tweetId,
+    wallet_address: wallet,
+    x_user_id: xUserId,
+    x_username: xUsername,
+    liked: result.liked,
+    reposted: result.reposted,
+    commented: result.commented,
+    verified: result.completed,
+    claimable: result.completed,
+    verified_at: result.completed ? now : null
+  };
+
+  return saveProgress(progressPayload);
 }
 
 export default async function handler(req, res) {
@@ -445,22 +473,18 @@ export default async function handler(req, res) {
     const accessToken = user.x_access_token;
 
     const checked = [];
+    let bestPartial = null;
 
     for (const tweet of availableTweets) {
-      const task = await ensureTaskForTweet(tweet);
-
-      const result = await checkTweetForUser({
+      const result = await checkTweetActions({
         tweet,
-        task,
-        wallet,
         xUserId,
         xUsername,
         accessToken
       });
 
       checked.push({
-        tweetId: String(tweet.id),
-        taskId: task.id,
+        tweetId: result.tweetId,
         liked: result.liked,
         reposted: result.reposted,
         commented: result.commented,
@@ -469,27 +493,64 @@ export default async function handler(req, res) {
       });
 
       if (result.completed) {
+        const task = await ensureTaskForTweet(tweet);
+        const progress = await saveResultProgress({
+          result,
+          task,
+          wallet,
+          xUserId,
+          xUsername
+        });
+
         return res.status(200).json({
           success: true,
           completed: true,
           claimable: true,
-          tweetId: String(tweet.id),
+          tweetId: result.tweetId,
           taskId: task.id,
           liked: result.liked,
           reposted: result.reposted,
           commented: result.commented,
           message: "Mission verified. You can claim now.",
-          progress: result.progress,
+          progress,
           checked
         });
       }
+
+      if (!bestPartial || result.score > bestPartial.score) {
+        bestPartial = result;
+      }
+    }
+
+    let savedPartialProgress = null;
+
+    if (bestPartial && bestPartial.score > 0) {
+      const task = await ensureTaskForTweet(bestPartial.tweet);
+      savedPartialProgress = await saveResultProgress({
+        result: bestPartial,
+        task,
+        wallet,
+        xUserId,
+        xUsername
+      });
     }
 
     return res.status(200).json({
       success: false,
       completed: false,
       claimable: false,
-      message: "No completed unclaimed official post found. Please like, repost, and comment on an official post, then try again.",
+      message: "No completed unclaimed official post found. Please like, repost, and comment on the same official post, then try again.",
+      bestPartial: bestPartial
+        ? {
+            tweetId: bestPartial.tweetId,
+            liked: bestPartial.liked,
+            reposted: bestPartial.reposted,
+            commented: bestPartial.commented,
+            score: bestPartial.score,
+            actionErrors: bestPartial.actionErrors
+          }
+        : null,
+      progress: savedPartialProgress,
       checked
     });
   } catch (error) {
