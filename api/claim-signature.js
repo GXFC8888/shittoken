@@ -25,7 +25,8 @@ const CLAIM_TYPEHASH = ethers.utils.keccak256(
 const CLAIM_CONTRACT_ABI = [
   "function claimAmount() view returns (uint256)",
   "function signer() view returns (address)",
-  "function claimedTweet(address user, bytes32 tweetHash) view returns (bool)"
+  "function claimedTweet(address user, bytes32 tweetHash) view returns (bool)",
+  "function isClaimed(address user, bytes32 tweetHash) view returns (bool)"
 ];
 
 function normalizeWallet(wallet) {
@@ -105,6 +106,18 @@ async function getClaimableProgress(wallet, tweetId) {
   return data;
 }
 
+async function getAlreadyClaimedOnChain(claimContract, wallet, tweetHash) {
+  try {
+    return await claimContract.claimedTweet(wallet, tweetHash);
+  } catch (error) {
+    try {
+      return await claimContract.isClaimed(wallet, tweetHash);
+    } catch (fallbackError) {
+      throw error;
+    }
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -167,7 +180,8 @@ export default async function handler(req, res) {
       provider
     );
 
-    const alreadyClaimedOnChain = await claimContract.claimedTweet(
+    const alreadyClaimedOnChain = await getAlreadyClaimedOnChain(
+      claimContract,
       wallet,
       tweetHash
     );
@@ -179,14 +193,17 @@ export default async function handler(req, res) {
       });
     }
 
-    const onChainClaimAmount = await claimContract.claimAmount();
+    const claimAmountResult = await claimContract.functions.claimAmount();
+    const onChainClaimAmount = claimAmountResult[0];
 
     const backendSigner = new ethers.Wallet(
       normalizePrivateKey(CLAIM_SIGNER_PRIVATE_KEY)
     );
 
     const backendSignerAddress = await backendSigner.getAddress();
-    const contractSigner = await claimContract.signer();
+
+    const contractSignerResult = await claimContract.functions.signer();
+    const contractSigner = contractSignerResult[0];
 
     if (
       backendSignerAddress.toLowerCase() !==
