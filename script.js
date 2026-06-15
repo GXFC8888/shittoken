@@ -192,20 +192,7 @@ function clearXConnected(address) {
 }
 
 function isXConnected() {
-  const activeWallet =
-    userAddress ||
-    localStorage.getItem("wallet_address") ||
-    localStorage.getItem("pending_x_wallet");
-
-  if (currentXConnected) {
-    return true;
-  }
-
-  if (activeWallet && localStorage.getItem(getXStorageKey(activeWallet)) === "true") {
-    return true;
-  }
-
-  return false;
+  return Boolean(currentXConnected);
 }
 
 function updateWalletUI() {
@@ -254,6 +241,10 @@ function resetWalletUI() {
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
+  localStorage.removeItem("pending_official_verify");
+  localStorage.removeItem("pending_official_x");
+  localStorage.removeItem("pending_x_wallet");
+  localStorage.removeItem("x_username");
 
   if (oldWallet) {
     clearXConnected(oldWallet);
@@ -425,8 +416,18 @@ async function loadTasks(runPendingVerify = true) {
     currentXConnected = Boolean(data.xConnected);
     currentXUsername = data.xUsername || null;
 
-    if (currentXConnected && activeWallet) {
-      setXConnected(activeWallet);
+    if (activeWallet) {
+      if (currentXConnected) {
+        setXConnected(activeWallet);
+
+        if (currentXUsername) {
+          localStorage.setItem("x_username", currentXUsername);
+        }
+      } else {
+        clearXConnected(activeWallet);
+        localStorage.removeItem("x_username");
+        localStorage.removeItem("pending_official_verify");
+      }
     }
 
     updateWalletUI();
@@ -805,17 +806,21 @@ async function verifyAndClaim() {
 
     if (!verifyData.success) {
       if (needsXAuthorization(verifyData)) {
-        if (!isXConnected()) {
-          redirectToXAuthorization(activeWallet);
-          return;
-        }
+        clearXConnected(activeWallet);
+        currentXConnected = false;
 
         showMessage(
-          "X is connected locally, but the server did not find authorization. Refreshing status...",
-          "err"
+          "X authorization is required. Redirecting to X...",
+          "ok"
         );
 
-        await loadTasks(false);
+        updateWalletUI();
+        renderMissions();
+
+        setTimeout(() => {
+          redirectToXAuthorization(activeWallet);
+        }, 800);
+
         return;
       }
 
@@ -908,16 +913,28 @@ function handleUrlStatus() {
   const params = new URLSearchParams(window.location.search);
 
   if (params.get("x_connected") === "1") {
+    const walletFromUrl = params.get("wallet");
+    const xUsernameFromUrl = params.get("x_username");
+
     showMessage("X connected. Open official X, finish the latest post, then claim.", "ok");
 
     const activeWallet =
+      walletFromUrl ||
       userAddress ||
       localStorage.getItem("wallet_address") ||
       localStorage.getItem("pending_x_wallet");
 
     if (activeWallet) {
+      localStorage.setItem("wallet_connected", "true");
+      localStorage.setItem("wallet_address", activeWallet);
+      localStorage.setItem("pending_x_wallet", activeWallet);
       setXConnected(activeWallet);
       currentXConnected = true;
+    }
+
+    if (xUsernameFromUrl) {
+      currentXUsername = xUsernameFromUrl;
+      localStorage.setItem("x_username", xUsernameFromUrl);
     }
 
     const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
@@ -931,7 +948,8 @@ function handleUrlStatus() {
       already_bound: "This X account is already bound to another wallet.",
       missing_oauth_params: "Missing X authorization data. Please try verify & claim again.",
       oauth_state_not_found: "X authorization expired or opened in another browser. Please try verify & claim again.",
-      oauth_expired: "X authorization expired. Please try verify & claim again."
+      oauth_expired: "X authorization expired. Please try verify & claim again.",
+      missing_wallet: "Missing wallet address. Please connect wallet and try again."
     };
 
     showMessage(errorMap[xError] || `X connection failed: ${xError}`, "err");
