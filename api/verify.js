@@ -472,6 +472,9 @@ export default async function handler(req, res) {
         success: false,
         completed: false,
         claimable: false,
+        alreadyClaimed: true,
+        lockClaim: true,
+        tweetId: latestTweetId,
         message: "Latest official post already claimed."
       });
     }
