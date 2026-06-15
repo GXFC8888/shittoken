@@ -102,7 +102,6 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
   const officialUsername = String(OFFICIAL_X_USERNAME).replace("@", "");
   const officialWebUrl = `https://x.com/${officialUsername}`;
   const twitterAppUrl = `twitter://user?screen_name=${officialUsername}`;
-  const xAppUrl = `x://user?screen_name=${officialUsername}`;
   const claimUrl = buildClaimUrl(walletAddress, xUsername);
 
   const safeWallet = escapeHtml(walletAddress);
@@ -209,7 +208,6 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
       var claimUrl = ${JSON.stringify(claimUrl)};
       var officialWebUrl = ${JSON.stringify(officialWebUrl)};
       var twitterAppUrl = ${JSON.stringify(twitterAppUrl)};
-      var xAppUrl = ${JSON.stringify(xAppUrl)};
 
       try {
         if (wallet) {
@@ -241,20 +239,14 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
 
       if (isIOS) {
         setTimeout(function () {
-          window.location.href = xAppUrl;
+          window.location.href = twitterAppUrl;
         }, 900);
-
-        setTimeout(function () {
-          if (!appOpened) {
-            window.location.href = twitterAppUrl;
-          }
-        }, 1700);
 
         setTimeout(function () {
           if (!appOpened) {
             window.location.href = officialWebUrl;
           }
-        }, 4200);
+        }, 3600);
 
         return;
       }
