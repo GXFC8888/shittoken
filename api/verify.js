@@ -1,6 +1,8 @@
 import { supabase } from "../lib/supabase.js";
 
 const X_API_BASE = "https://api.x.com/2";
+const OFFICIAL_USERNAME = process.env.X_OFFICIAL_USERNAME || "GXFCLJ";
+const MAX_OFFICIAL_POSTS = 30;
 
 function getBearerToken() {
   const token = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
@@ -45,6 +47,96 @@ async function xGet(path, params = {}, token = null) {
   }
 
   return data;
+}
+
+async function getOfficialUser() {
+  const username = String(OFFICIAL_USERNAME).replace("@", "");
+
+  const data = await xGet(`/users/by/username/${username}`, {
+    "user.fields": "id,username"
+  });
+
+  if (!data.data || !data.data.id) {
+    throw new Error("Official X account not found");
+  }
+
+  return data.data;
+}
+
+async function getOfficialTweets(officialUserId) {
+  const data = await xGet(`/users/${officialUserId}/tweets`, {
+    max_results: MAX_OFFICIAL_POSTS,
+    exclude: "retweets,replies",
+    "tweet.fields": "id,text,created_at,author_id"
+  });
+
+  return data.data || [];
+}
+
+async function ensureTaskForTweet(tweet) {
+  const tweetId = String(tweet.id);
+
+  const { data: existingTask, error: existingError } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("tweet_id", tweetId)
+    .maybeSingle();
+
+  if (existingError) {
+    throw existingError;
+  }
+
+  if (existingTask) {
+    return existingTask;
+  }
+
+  const title = `Official Post ${tweetId.slice(-6)}`;
+
+  const { data: insertedTask, error: insertError } = await supabase
+    .from("tasks")
+    .insert({
+      title,
+      tweet_id: tweetId,
+      reward_amount: "1",
+      active: true
+    })
+    .select()
+    .maybeSingle();
+
+  if (insertError) {
+    const { data: fallbackTask, error: fallbackError } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("tweet_id", tweetId)
+      .maybeSingle();
+
+    if (fallbackError) {
+      throw fallbackError;
+    }
+
+    if (fallbackTask) {
+      return fallbackTask;
+    }
+
+    throw insertError;
+  }
+
+  return insertedTask;
+}
+
+async function getClaimedTweetIds(wallet) {
+  const { data, error } = await supabase
+    .from("task_progress")
+    .select("tweet_id")
+    .eq("wallet_address", wallet)
+    .eq("claimed", true)
+    .not("tweet_id", "is", null);
+
+  if (error) {
+    throw error;
+  }
+
+  return new Set((data || []).map((row) => String(row.tweet_id)));
 }
 
 async function findUserInPaginatedUsers(path, tweetId, xUserId) {
@@ -154,11 +246,7 @@ async function hasLiked(tweetId, xUserId, accessToken) {
     xUserId
   );
 
-  if (likedFromTweet) {
-    return true;
-  }
-
-  return false;
+  return Boolean(likedFromTweet);
 }
 
 async function hasReposted(tweetId, xUserId) {
@@ -213,6 +301,93 @@ async function hasCommented(tweetId, xUserId, xUsername) {
   return false;
 }
 
+async function saveProgress(payload) {
+  const { data: existingProgress, error: findError } = await supabase
+    .from("task_progress")
+    .select("*")
+    .eq("wallet_address", payload.wallet_address)
+    .eq("tweet_id", payload.tweet_id)
+    .maybeSingle();
+
+  if (findError) {
+    throw findError;
+  }
+
+  if (existingProgress) {
+    const { data: updatedProgress, error: updateError } = await supabase
+      .from("task_progress")
+      .update(payload)
+      .eq("id", existingProgress.id)
+      .select()
+      .maybeSingle();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    return updatedProgress;
+  }
+
+  const { data: insertedProgress, error: insertError } = await supabase
+    .from("task_progress")
+    .insert(payload)
+    .select()
+    .maybeSingle();
+
+  if (insertError) {
+    throw insertError;
+  }
+
+  return insertedProgress;
+}
+
+async function checkTweetForUser({ tweet, task, wallet, xUserId, xUsername, accessToken }) {
+  const tweetId = String(tweet.id);
+  const now = new Date().toISOString();
+
+  const [likedResult, repostedResult, commentedResult] = await Promise.all([
+    safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
+    safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
+    safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
+  ]);
+
+  const liked = likedResult.ok;
+  const reposted = repostedResult.ok;
+  const commented = commentedResult.ok;
+  const completed = Boolean(liked && reposted && commented);
+
+  const progressPayload = {
+    task_id: task.id,
+    tweet_id: tweetId,
+    wallet_address: wallet,
+    x_user_id: xUserId,
+    x_username: xUsername,
+    liked,
+    reposted,
+    commented,
+    verified: completed,
+    claimable: completed,
+    verified_at: completed ? now : null
+  };
+
+  const savedProgress = await saveProgress(progressPayload);
+
+  return {
+    tweet,
+    task,
+    progress: savedProgress,
+    completed,
+    liked,
+    reposted,
+    commented,
+    actionErrors: {
+      liked: likedResult.error,
+      reposted: repostedResult.error,
+      commented: commentedResult.error
+    }
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -223,19 +398,11 @@ export default async function handler(req, res) {
 
   try {
     const wallet = String(req.body.wallet || "").toLowerCase();
-    const taskId = Number(req.body.taskId);
 
     if (!wallet || !wallet.startsWith("0x")) {
       return res.status(400).json({
         success: false,
         error: "Missing wallet address"
-      });
-    }
-
-    if (!taskId) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing task ID"
       });
     }
 
@@ -249,104 +416,81 @@ export default async function handler(req, res) {
       throw userError;
     }
 
-    if (!user || !user.x_user_id || !user.x_username) {
+    if (!user || !user.x_user_id || !user.x_username || !user.x_access_token) {
       return res.status(400).json({
         success: false,
         error: "Please connect X first"
       });
     }
 
-    const { data: task, error: taskError } = await supabase
-      .from("tasks")
-      .select("*")
-      .eq("id", taskId)
-      .eq("active", true)
-      .maybeSingle();
+    const officialUser = await getOfficialUser();
+    const officialTweets = await getOfficialTweets(officialUser.id);
+    const claimedTweetIds = await getClaimedTweetIds(wallet);
 
-    if (taskError) {
-      throw taskError;
-    }
+    const availableTweets = officialTweets.filter((tweet) => {
+      return !claimedTweetIds.has(String(tweet.id));
+    });
 
-    if (!task || !task.tweet_id) {
-      return res.status(404).json({
-        success: false,
-        error: "Task not found"
-      });
-    }
-
-    const tweetId = String(task.tweet_id);
-    const xUserId = String(user.x_user_id);
-    const xUsername = String(user.x_username).replace("@", "");
-    const accessToken = user.x_access_token || null;
-    const now = new Date().toISOString();
-
-    const [likedResult, repostedResult, commentedResult] = await Promise.all([
-      safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
-      safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
-      safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
-    ]);
-
-    const liked = likedResult.ok;
-    const reposted = repostedResult.ok;
-    const commented = commentedResult.ok;
-
-    const actionErrors = {
-      liked: likedResult.error,
-      reposted: repostedResult.error,
-      commented: commentedResult.error
-    };
-
-    const completed = Boolean(liked && reposted && commented);
-
-    const progressPayload = {
-      task_id: taskId,
-      wallet_address: wallet,
-      x_user_id: xUserId,
-      x_username: xUsername,
-      liked,
-      reposted,
-      commented,
-      verified: completed,
-      claimable: completed,
-      verified_at: completed ? now : null
-    };
-
-    const { data: savedProgress, error: progressError } = await supabase
-      .from("task_progress")
-      .upsert(progressPayload, {
-        onConflict: "task_id,wallet_address"
-      })
-      .select()
-      .maybeSingle();
-
-    if (progressError) {
-      throw progressError;
-    }
-
-    if (!completed) {
+    if (!availableTweets.length) {
       return res.status(200).json({
         success: false,
         completed: false,
         claimable: false,
-        liked,
-        reposted,
-        commented,
-        actionErrors,
-        message: "Mission not completed yet. Please like, repost, and comment, then try again.",
-        progress: savedProgress
+        message: "No unclaimed official posts found."
       });
     }
 
+    const xUserId = String(user.x_user_id);
+    const xUsername = String(user.x_username).replace("@", "");
+    const accessToken = user.x_access_token;
+
+    const checked = [];
+
+    for (const tweet of availableTweets) {
+      const task = await ensureTaskForTweet(tweet);
+
+      const result = await checkTweetForUser({
+        tweet,
+        task,
+        wallet,
+        xUserId,
+        xUsername,
+        accessToken
+      });
+
+      checked.push({
+        tweetId: String(tweet.id),
+        taskId: task.id,
+        liked: result.liked,
+        reposted: result.reposted,
+        commented: result.commented,
+        completed: result.completed,
+        actionErrors: result.actionErrors
+      });
+
+      if (result.completed) {
+        return res.status(200).json({
+          success: true,
+          completed: true,
+          claimable: true,
+          tweetId: String(tweet.id),
+          taskId: task.id,
+          liked: result.liked,
+          reposted: result.reposted,
+          commented: result.commented,
+          message: "Mission verified. You can claim now.",
+          progress: result.progress,
+          checked
+        });
+      }
+    }
+
     return res.status(200).json({
-      success: true,
-      completed: true,
-      claimable: true,
-      liked,
-      reposted,
-      commented,
-      actionErrors,
-      message: "Mission verified. You can claim now.",
-      progress: savedProgress
+      success: false,
+      completed: false,
+      claimable: false,
+      message: "No completed unclaimed official post found. Please like, repost, and comment on an official post, then try again.",
+      checked
     });
   } catch (error) {
     console.error("Verify error:", error);
