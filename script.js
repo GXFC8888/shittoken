@@ -192,7 +192,20 @@ function clearXConnected(address) {
 }
 
 function isXConnected() {
-  return Boolean(currentXConnected);
+  const activeWallet =
+    userAddress ||
+    localStorage.getItem("wallet_address") ||
+    localStorage.getItem("pending_x_wallet");
+
+  if (currentXConnected) {
+    return true;
+  }
+
+  if (activeWallet && localStorage.getItem(getXStorageKey(activeWallet)) === "true") {
+    return true;
+  }
+
+  return false;
 }
 
 function updateWalletUI() {
@@ -852,7 +865,10 @@ async function verifyAndClaim() {
     const responseData = error && error.responseData;
     const readableError = getReadableError(error);
 
-    if (shouldLockClaimButton(responseData) || String(readableError).toLowerCase().includes("already claimed")) {
+    if (
+      shouldLockClaimButton(responseData) ||
+      String(readableError).toLowerCase().includes("already claimed")
+    ) {
       localClaimLocked = true;
       showMessage("Latest official post already claimed.", "ok");
       renderMissions();
@@ -887,6 +903,7 @@ function handleUrlStatus() {
 
     if (activeWallet) {
       setXConnected(activeWallet);
+      currentXConnected = true;
     }
 
     const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
