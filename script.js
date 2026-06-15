@@ -769,11 +769,14 @@ async function verifyAndClaim() {
       }
 
       showMessage(
-        verifyData.message || verifyData.error || "Latest official post is not completed yet. Please try again.",
-        "err"
+        "Latest official post is not completed yet. Opening official X...",
+        "ok"
       );
 
-      await loadTasks(false);
+      setTimeout(() => {
+        openOfficialX();
+      }, 800);
+
       return;
     }
 
