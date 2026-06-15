@@ -580,7 +580,6 @@ function openOfficialXDirect() {
   const userAgent = navigator.userAgent || "";
   const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
 
-  const xAppUrl = `x://user?screen_name=${OFFICIAL_X_USERNAME}`;
   const twitterAppUrl = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
   const webUrl = OFFICIAL_X_WEB_URL;
 
@@ -600,13 +599,7 @@ function openOfficialXDirect() {
   window.addEventListener("pagehide", onPageHide, { once: true });
 
   if (isIOS) {
-    window.location.href = xAppUrl;
-
-    setTimeout(() => {
-      if (!appOpened) {
-        window.location.href = twitterAppUrl;
-      }
-    }, 800);
+    window.location.href = twitterAppUrl;
 
     setTimeout(() => {
       if (!appOpened) {
