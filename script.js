@@ -577,6 +577,10 @@ function openOfficialX() {
 }
 
 function shouldLockClaimButton(data) {
+  if (data && (data.lockClaim || data.alreadyClaimed)) {
+    return true;
+  }
+
   const text = String(
     data && (data.message || data.error || data.detail || "")
   ).toLowerCase();
