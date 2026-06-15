@@ -7,6 +7,7 @@ const BSC_RPC_URL =
   "https://bsc-dataseed.binance.org";
 
 const CLAIM_CONTRACT = process.env.TWITTER_TASK_CLAIM_CONTRACT;
+
 const CLAIM_SIGNER_PRIVATE_KEY =
   process.env.CLAIM_SIGNER_PRIVATE_KEY ||
   process.env.SIGNER_PRIVATE_KEY;
@@ -24,11 +25,21 @@ const CLAIM_TYPEHASH = ethers.utils.keccak256(
 const CLAIM_CONTRACT_ABI = [
   "function claimAmount() view returns (uint256)",
   "function signer() view returns (address)",
-  "function isClaimed(address user, bytes32 tweetHash) view returns (bool)"
+  "function claimedTweet(address user, bytes32 tweetHash) view returns (bool)"
 ];
 
 function normalizeWallet(wallet) {
   return String(wallet || "").trim().toLowerCase();
+}
+
+function normalizePrivateKey(privateKey) {
+  const key = String(privateKey || "").trim();
+
+  if (!key) {
+    return "";
+  }
+
+  return key.startsWith("0x") ? key : `0x${key}`;
 }
 
 function getTweetHash(tweetId) {
@@ -78,7 +89,7 @@ async function getClaimableProgress(wallet, tweetId) {
     .eq("claimable", true)
     .eq("claimed", false)
     .not("tweet_id", "is", null)
-    .order("updated_at", { ascending: false })
+    .order("id", { ascending: false })
     .limit(1);
 
   if (tweetId) {
@@ -156,7 +167,7 @@ export default async function handler(req, res) {
       provider
     );
 
-    const alreadyClaimedOnChain = await claimContract.isClaimed(
+    const alreadyClaimedOnChain = await claimContract.claimedTweet(
       wallet,
       tweetHash
     );
@@ -170,9 +181,11 @@ export default async function handler(req, res) {
 
     const onChainClaimAmount = await claimContract.claimAmount();
 
-    const backendSigner = new ethers.Wallet(CLAIM_SIGNER_PRIVATE_KEY);
-    const backendSignerAddress = await backendSigner.getAddress();
+    const backendSigner = new ethers.Wallet(
+      normalizePrivateKey(CLAIM_SIGNER_PRIVATE_KEY)
+    );
 
+    const backendSignerAddress = await backendSigner.getAddress();
     const contractSigner = await claimContract.signer();
 
     if (
