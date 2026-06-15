@@ -2,7 +2,8 @@ import { supabase } from "../lib/supabase.js";
 
 const X_API_BASE = "https://api.x.com/2";
 const OFFICIAL_USERNAME = process.env.X_OFFICIAL_USERNAME || "GXFCLJ";
-const MAX_OFFICIAL_POSTS = 50;
+const MAX_OFFICIAL_POSTS = 30;
+const MAX_OFFICIAL_POST_PAGES = 1;
 
 function getBearerToken() {
   const token = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
@@ -67,9 +68,8 @@ async function getOfficialTweets(officialUserId) {
   const tweets = [];
   let paginationToken = null;
   let page = 0;
-  const maxPages = 3;
 
-  while (tweets.length < MAX_OFFICIAL_POSTS && page < maxPages) {
+  while (tweets.length < MAX_OFFICIAL_POSTS && page < MAX_OFFICIAL_POST_PAGES) {
     page += 1;
 
     const params = {
