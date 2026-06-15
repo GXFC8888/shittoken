@@ -650,8 +650,12 @@ function needsXAuthorization(data) {
   return (
     text.includes("connect x") ||
     text.includes("please connect x") ||
+    text.includes("x authorization required") ||
+    text.includes("x authorization is required") ||
+    text.includes("authorization is required") ||
     text.includes("x first") ||
-    text.includes("x account")
+    text.includes("x account not connected") ||
+    text.includes("no x account")
   );
 }
 
@@ -800,8 +804,18 @@ async function verifyAndClaim() {
     const verifyData = await verifyResponse.json().catch(() => ({}));
 
     if (!verifyData.success) {
-      if (needsXAuthorization(verifyData) || verifyResponse.status === 400) {
-        redirectToXAuthorization(activeWallet);
+      if (needsXAuthorization(verifyData)) {
+        if (!isXConnected()) {
+          redirectToXAuthorization(activeWallet);
+          return;
+        }
+
+        showMessage(
+          "X is connected locally, but the server did not find authorization. Refreshing status...",
+          "err"
+        );
+
+        await loadTasks(false);
         return;
       }
 
