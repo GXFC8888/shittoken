@@ -563,6 +563,13 @@ function openOfficialXDirect() {
     navigator.clipboard.writeText(OFFICIAL_X_WEB_URL).catch(() => {});
   } catch (error) {}
 
+  const userAgent = navigator.userAgent || "";
+  const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+
+  const xAppUrl = `x://user?screen_name=${OFFICIAL_X_USERNAME}`;
+  const twitterAppUrl = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
+  const webUrl = OFFICIAL_X_WEB_URL;
+
   let appOpened = false;
 
   const onVisibilityChange = () => {
@@ -571,13 +578,36 @@ function openOfficialXDirect() {
     }
   };
 
-  document.addEventListener("visibilitychange", onVisibilityChange, { once: true });
+  const onPageHide = () => {
+    appOpened = true;
+  };
 
-  window.location.href = OFFICIAL_X_APP_URL;
+  document.addEventListener("visibilitychange", onVisibilityChange, { once: true });
+  window.addEventListener("pagehide", onPageHide, { once: true });
+
+  if (isIOS) {
+    window.location.href = xAppUrl;
+
+    setTimeout(() => {
+      if (!appOpened) {
+        window.location.href = twitterAppUrl;
+      }
+    }, 800);
+
+    setTimeout(() => {
+      if (!appOpened) {
+        window.location.href = webUrl;
+      }
+    }, 3200);
+
+    return;
+  }
+
+  window.location.href = twitterAppUrl;
 
   setTimeout(() => {
     if (!appOpened) {
-      window.location.href = OFFICIAL_X_WEB_URL;
+      window.location.href = webUrl;
     }
   }, 1800);
 }
