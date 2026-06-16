@@ -249,11 +249,7 @@ async function findTweetInUserLikedTweets(tweetId, xUserId, accessToken) {
   return false;
 }
 
-async function findOfficialInUserFollowing(xUserId, officialUserId, accessToken) {
-  if (!accessToken) {
-    return false;
-  }
-
+async function findOfficialInUserFollowing(xUserId, officialUserId) {
   let paginationToken = null;
   let page = 0;
   const maxPages = 20;
@@ -270,7 +266,7 @@ async function findOfficialInUserFollowing(xUserId, officialUserId, accessToken)
       params.pagination_token = paginationToken;
     }
 
-    const data = await xGet(`/users/${xUserId}/following`, params, accessToken);
+    const data = await xGet(`/users/${xUserId}/following`, params);
     const users = data.data || [];
 
     if (users.some((user) => String(user.id) === String(officialUserId))) {
@@ -305,8 +301,8 @@ async function safeCheck(name, checkFn) {
   }
 }
 
-async function hasFollowedOfficial(xUserId, officialUserId, accessToken) {
-  return findOfficialInUserFollowing(xUserId, officialUserId, accessToken);
+async function hasFollowedOfficial(xUserId, officialUserId) {
+  return findOfficialInUserFollowing(xUserId, officialUserId);
 }
 
 async function hasLiked(tweetId, xUserId, accessToken) {
@@ -432,7 +428,7 @@ async function checkTweetActions({
 
   const [followedResult, likedResult, repostedResult, commentedResult] =
     await Promise.all([
-      safeCheck("followed", () => hasFollowedOfficial(xUserId, officialUserId, accessToken)),
+      safeCheck("followed", () => hasFollowedOfficial(xUserId, officialUserId)),
       safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
       safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
       safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
@@ -456,9 +452,7 @@ async function checkTweetActions({
     commented: commentedResult.error
   };
 
-  const requiresReconnect =
-    isAuthorizationErrorMessage(followedResult.error) ||
-    isAuthorizationErrorMessage(likedResult.error);
+  const requiresReconnect = isAuthorizationErrorMessage(likedResult.error);
 
   return {
     tweet,
@@ -575,7 +569,7 @@ export default async function handler(req, res) {
         success: false,
         completed: false,
         claimable: false,
-        error: "X authorization is required. Please reconnect X to grant follows.read permission.",
+        error: "X authorization is required. Please reconnect X.",
         latestTweetId,
         followed: result.followed,
         liked: result.liked,
