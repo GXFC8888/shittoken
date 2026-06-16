@@ -17,6 +17,25 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function forceBrowserAuthUrl(authUrl) {
+  try {
+    const url = new URL(authUrl);
+
+    if (
+      url.hostname === "twitter.com" ||
+      url.hostname === "www.twitter.com" ||
+      url.hostname === "x.com" ||
+      url.hostname === "www.x.com"
+    ) {
+      url.hostname = "mobile.twitter.com";
+    }
+
+    return url.toString();
+  } catch (error) {
+    return authUrl;
+  }
+}
+
 export default async function handler(req, res) {
   try {
     const wallet = String(req.query.wallet || "").toLowerCase();
@@ -33,6 +52,8 @@ export default async function handler(req, res) {
         scope: X_OAUTH_SCOPES
       }
     );
+
+    const browserAuthUrl = forceBrowserAuthUrl(url);
 
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
@@ -52,7 +73,7 @@ export default async function handler(req, res) {
       throw error;
     }
 
-    const safeUrl = escapeHtml(url);
+    const safeUrl = escapeHtml(browserAuthUrl);
     const safeWallet = escapeHtml(wallet);
 
     res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -114,6 +135,7 @@ export default async function handler(req, res) {
       text-decoration: none;
       box-shadow: 0 8px 0 #000;
       box-sizing: border-box;
+      cursor: pointer;
     }
 
     .small {
@@ -122,20 +144,54 @@ export default async function handler(req, res) {
       color: #ddd;
       word-break: break-all;
     }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #ffef9a;
+    }
   </style>
 </head>
 <body>
   <div class="box">
     <h1>Connect X</h1>
     <p>Tap the button below to authorize DOGESHIT.</p>
-    <p>After authorization, you will return to the claim page.</p>
+    <p>Please complete authorization in this browser.</p>
 
-    <a class="btn" href="${safeUrl}" rel="noopener noreferrer">
+    <button class="btn" id="authorizeBtn" type="button">
       Authorize X
-    </a>
+    </button>
+
+    <p class="hint">
+      If X App opens and shows page error, return here and tap again, or long press/copy the link into browser.
+    </p>
 
     <p class="small">Wallet: ${safeWallet}</p>
+    <p class="small" id="authLink">${safeUrl}</p>
   </div>
+
+  <script>
+    (function () {
+      var authUrl = ${JSON.stringify(browserAuthUrl)};
+
+      var btn = document.getElementById("authorizeBtn");
+
+      if (btn) {
+        btn.addEventListener("click", function () {
+          window.location.href = authUrl;
+        });
+      }
+
+      try {
+        var linkText = document.getElementById("authLink");
+        if (linkText) {
+          linkText.addEventListener("click", function () {
+            navigator.clipboard.writeText(authUrl).catch(function () {});
+          });
+        }
+      } catch (error) {}
+    })();
+  </script>
 </body>
 </html>`);
   } catch (err) {
