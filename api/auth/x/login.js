@@ -5,7 +5,7 @@ const X_OAUTH_SCOPES = [
   "tweet.read",
   "users.read",
   "like.read",
-  "follows.read",
+  "offline.access",
 ];
 
 export default async function handler(req, res) {
