@@ -6,7 +6,6 @@ const X_OAUTH_SCOPES = [
   "users.read",
   "like.read",
   "follows.read",
-  "offline.access"
 ];
 
 export default async function handler(req, res) {
