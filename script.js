@@ -129,33 +129,111 @@ function getReadableError(error) {
   return String(error);
 }
 
-function getWalletProvider() {
-  if (window.okxwallet && window.okxwallet.ethereum) {
-    return window.okxwallet.ethereum;
+function normalizeProvider(candidate) {
+  if (!candidate) return null;
+
+  if (candidate.ethereum && candidate.ethereum.request) {
+    return candidate.ethereum;
   }
 
-  if (window.ethereum) {
-    return window.ethereum;
+  if (candidate.provider && candidate.provider.request) {
+    return candidate.provider;
+  }
+
+  if (candidate.request) {
+    return candidate;
   }
 
   return null;
 }
 
-async function switchToBSC() {
-  const walletProvider = getWalletProvider();
+function getWalletProvider() {
+  const ethereum = window.ethereum;
 
-  if (!walletProvider) {
+  if (ethereum && Array.isArray(ethereum.providers) && ethereum.providers.length > 0) {
+    const preferredProvider =
+      ethereum.providers.find((item) => item && item.isTokenPocket) ||
+      ethereum.providers.find((item) => item && item.isMetaMask) ||
+      ethereum.providers.find((item) => item && item.isTrust) ||
+      ethereum.providers.find((item) => item && item.isOkxWallet) ||
+      ethereum.providers[0];
+
+    const normalizedPreferredProvider = normalizeProvider(preferredProvider);
+
+    if (normalizedPreferredProvider) {
+      return normalizedPreferredProvider;
+    }
+  }
+
+  const candidates = [
+    window.tokenpocket && window.tokenpocket.ethereum,
+    window.TokenPocket && window.TokenPocket.ethereum,
+    window.tp && window.tp.ethereum,
+    window.okxwallet && window.okxwallet.ethereum,
+    window.trustwallet && window.trustwallet.ethereum,
+    window.bitkeep && window.bitkeep.ethereum,
+    window.BinanceChain,
+    window.ethereum
+  ];
+
+  for (const candidate of candidates) {
+    const normalizedProvider = normalizeProvider(candidate);
+
+    if (normalizedProvider) {
+      return normalizedProvider;
+    }
+  }
+
+  return null;
+}
+
+function waitForWalletProvider(timeout = 3000) {
+  return new Promise((resolve) => {
+    const existingProvider = getWalletProvider();
+
+    if (existingProvider) {
+      resolve(existingProvider);
+      return;
+    }
+
+    const startedAt = Date.now();
+
+    const timer = setInterval(() => {
+      const walletProvider = getWalletProvider();
+
+      if (walletProvider || Date.now() - startedAt >= timeout) {
+        clearInterval(timer);
+        resolve(walletProvider || null);
+      }
+    }, 100);
+  });
+}
+
+async function switchToBSC(walletProvider = null) {
+  const activeProvider = walletProvider || (await waitForWalletProvider());
+
+  if (!activeProvider) {
     throw new Error("No wallet provider found");
   }
 
   try {
-    await walletProvider.request({
+    const currentChainId = await activeProvider.request({
+      method: "eth_chainId"
+    });
+
+    if (String(currentChainId).toLowerCase() === BSC_CHAIN_ID_HEX) {
+      return;
+    }
+  } catch (error) {}
+
+  try {
+    await activeProvider.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: BSC_CHAIN_ID_HEX }]
     });
   } catch (error) {
     if (error && error.code === 4902) {
-      await walletProvider.request({
+      await activeProvider.request({
         method: "wallet_addEthereumChain",
         params: [
           {
@@ -217,6 +295,7 @@ function updateWalletUI() {
   }
 
   if (connectXBtn) {
+    connectXBtn.classList.toggle("hidden", !activeWallet);
     connectXBtn.innerText = connectedX ? "reconnect X" : "connect X";
     connectXBtn.disabled = !activeWallet;
   }
@@ -256,14 +335,21 @@ function resetWalletUI() {
   showMessage("");
 }
 
-async function setupWalletAfterConnected() {
-  const walletProvider = getWalletProvider();
+async function setupWalletAfterConnected(walletProvider = null) {
+  const activeProvider = walletProvider || (await waitForWalletProvider());
 
-  if (!walletProvider) {
+  if (!activeProvider) {
     throw new Error("No wallet provider found");
   }
 
-  provider = new ethers.providers.Web3Provider(walletProvider, "any");
+  provider = new ethers.providers.Web3Provider(activeProvider, "any");
+
+  const accounts = await provider.listAccounts();
+
+  if (!accounts || accounts.length === 0) {
+    await provider.send("eth_requestAccounts", []);
+  }
+
   signer = provider.getSigner();
   userAddress = await signer.getAddress();
 
@@ -278,11 +364,11 @@ async function setupWalletAfterConnected() {
 async function connectWallet() {
   if (isConnectingWallet) return;
 
-  const walletProvider = getWalletProvider();
+  const walletProvider = await waitForWalletProvider();
 
   if (!walletProvider) {
     showMessage(
-      "Please open this page in TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.",
+      "No wallet detected. Please open this page inside TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.",
       "err"
     );
     return;
@@ -298,13 +384,13 @@ async function connectWallet() {
 
     showMessage("Connecting wallet...");
 
-    await switchToBSC();
-
     provider = new ethers.providers.Web3Provider(walletProvider, "any");
 
     await provider.send("eth_requestAccounts", []);
 
-    await setupWalletAfterConnected();
+    await switchToBSC(walletProvider);
+
+    await setupWalletAfterConnected(walletProvider);
 
     showMessage("Wallet connected.", "ok");
   } catch (error) {
@@ -324,7 +410,7 @@ async function connectWallet() {
 }
 
 async function autoConnectWallet() {
-  const walletProvider = getWalletProvider();
+  const walletProvider = await waitForWalletProvider(1500);
 
   if (!walletProvider) return;
   if (localStorage.getItem("wallet_connected") !== "true") return;
@@ -339,15 +425,15 @@ async function autoConnectWallet() {
       return;
     }
 
-    await switchToBSC();
-    await setupWalletAfterConnected();
+    await switchToBSC(walletProvider);
+    await setupWalletAfterConnected(walletProvider);
   } catch (error) {
     console.error(error);
   }
 }
 
-function listenWalletChange() {
-  const walletProvider = getWalletProvider();
+async function listenWalletChange() {
+  const walletProvider = await waitForWalletProvider(1500);
 
   if (!walletProvider || !walletProvider.on) return;
 
@@ -355,7 +441,7 @@ function listenWalletChange() {
     if (accounts && accounts.length > 0) {
       try {
         localClaimLocked = false;
-        await setupWalletAfterConnected();
+        await setupWalletAfterConnected(walletProvider);
         showMessage("Wallet account changed.", "ok");
       } catch (error) {
         console.error(error);
@@ -369,7 +455,7 @@ function listenWalletChange() {
 
   walletProvider.on("chainChanged", async () => {
     try {
-      await setupWalletAfterConnected();
+      await setupWalletAfterConnected(walletProvider);
     } catch (error) {
       console.error(error);
       window.location.reload();
@@ -446,7 +532,7 @@ async function loadTasks(runPendingVerify = true) {
         }, 600);
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Open official X, finish the latest post, then tap verify & claim.", "ok");
+      showMessage("Wallet connected. Tap connect X before verifying missions.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -500,8 +586,9 @@ function renderMissions() {
       </div>
 
       <p>
-        Open @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
-        Come back here and tap verify & claim.
+        ${isXConnected()
+          ? `Open @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post. Come back here and tap verify & claim.`
+          : `Connect X first, then open @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.`}
         Only the latest official post can be claimed once.
       </p>
 
@@ -510,11 +597,11 @@ function renderMissions() {
       </a>
 
       <div class="mission-actions">
-        <button class="btn full light open-task-btn" type="button">
-          open official X
-        </button>
+        ${isXConnected()
+          ? `<button class="btn full light open-task-btn" type="button">open official X</button>`
+          : `<button class="btn full light connect-x-task-btn" type="button">connect X</button>`}
 
-        <button class="btn full gold verify-task-btn" type="button" ${verifyDisabled ? "disabled" : ""}>
+        <button class="btn full gold verify-task-btn" type="button" ${(!isXConnected() || verifyDisabled) ? "disabled" : ""}>
           ${verifyButtonText}
         </button>
       </div>
@@ -522,10 +609,15 @@ function renderMissions() {
   `;
 
   const openButton = missionList.querySelector(".open-task-btn");
+  const connectXTaskButton = missionList.querySelector(".connect-x-task-btn");
   const verifyButton = missionList.querySelector(".verify-task-btn");
 
   if (openButton) {
     openButton.addEventListener("click", openOfficialX);
+  }
+
+  if (connectXTaskButton) {
+    connectXTaskButton.addEventListener("click", connectX);
   }
 
   if (verifyButton) {
@@ -688,13 +780,13 @@ async function getClaimSignature(activeWallet, tweetId) {
 }
 
 async function claimOnChain(signatureData, activeWallet) {
-  const walletProvider = getWalletProvider();
+  const walletProvider = await waitForWalletProvider();
 
   if (!walletProvider) {
     throw new Error("No wallet provider found");
   }
 
-  await switchToBSC();
+  await switchToBSC(walletProvider);
 
   const web3Provider = new ethers.providers.Web3Provider(walletProvider, "any");
   const web3Signer = web3Provider.getSigner();
@@ -1002,5 +1094,5 @@ window.addEventListener("load", async () => {
     await loadTasks(true);
   }
 
-  listenWalletChange();
+  await listenWalletChange();
 });
