@@ -43,7 +43,9 @@ function buildXAuthUrl({ state, codeChallenge }) {
   params.set("state", state);
   params.set("code_challenge", codeChallenge);
   params.set("code_challenge_method", "S256");
-  params.set("scope", "tweet.read users.read like.read offline.access");
+
+  // 最小权限测试版：先不要 like.read
+  params.set("scope", "tweet.read users.read offline.access");
 
   return `https://twitter.com/i/oauth2/authorize?${params
     .toString()
