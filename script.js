@@ -500,7 +500,7 @@ function renderMissions() {
       </div>
 
       <p>
-        Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
+        Open @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
         Come back here and tap verify & claim.
         Only the latest official post can be claimed once.
       </p>
@@ -569,7 +569,7 @@ function openOfficialXDirect() {
   localStorage.setItem("pending_official_x", "true");
 
   showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest official post, then manually return here to claim.`,
+    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on the latest official post, then manually return here to claim.`,
     "ok"
   );
 
@@ -898,7 +898,7 @@ function handleReturnFromX() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (pendingOfficialX && activeWallet && !localClaimLocked) {
-    showMessage("Back from X? Tap verify & claim after following, liking, reposting, and commenting.", "ok");
+    showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
   }
 }
 
