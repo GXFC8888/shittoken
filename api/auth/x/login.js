@@ -1,6 +1,14 @@
 import { getOAuthClient } from "../../../lib/x.js";
 import { supabase } from "../../../lib/supabase.js";
 
+const X_OAUTH_SCOPES = [
+  "tweet.read",
+  "users.read",
+  "like.read",
+  "follows.read",
+  "offline.access"
+];
+
 export default async function handler(req, res) {
   try {
     const wallet = String(req.query.wallet || "").toLowerCase();
@@ -14,7 +22,7 @@ export default async function handler(req, res) {
     const { url, codeVerifier, state } = client.generateOAuth2AuthLink(
       process.env.X_REDIRECT_URI,
       {
-        scope: ["tweet.read", "users.read", "like.read", "offline.access"]
+        scope: X_OAUTH_SCOPES
       }
     );
 
