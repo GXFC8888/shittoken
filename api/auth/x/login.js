@@ -8,6 +8,24 @@ const X_OAUTH_SCOPES = [
   "offline.access"
 ];
 
+function forceTwitterAuthUrl(authUrl) {
+  try {
+    const url = new URL(authUrl);
+
+    if (
+      url.hostname === "x.com" ||
+      url.hostname === "www.x.com" ||
+      url.hostname === "mobile.x.com"
+    ) {
+      url.hostname = "twitter.com";
+    }
+
+    return url.toString();
+  } catch (error) {
+    return authUrl;
+  }
+}
+
 export default async function handler(req, res) {
   try {
     const wallet = String(req.query.wallet || "").toLowerCase();
@@ -24,6 +42,8 @@ export default async function handler(req, res) {
         scope: X_OAUTH_SCOPES
       }
     );
+
+    const authUrl = forceTwitterAuthUrl(url);
 
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
@@ -43,7 +63,7 @@ export default async function handler(req, res) {
       throw error;
     }
 
-    return res.redirect(url);
+    return res.redirect(authUrl);
   } catch (err) {
     console.error("X login error:", err);
     return res.status(500).json({ error: "X login failed" });
