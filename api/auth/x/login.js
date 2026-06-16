@@ -43,13 +43,7 @@ function buildXAuthUrl({ state, codeChallenge }) {
   params.set("state", state);
   params.set("code_challenge", codeChallenge);
   params.set("code_challenge_method", "S256");
-
-  // Minimum scope test version.
-  // Do not use like.read or offline.access here first.
   params.set("scope", "tweet.read users.read");
-
-  // Force X to show the authorization page again.
-  params.set("prompt", "consent");
 
   return `https://x.com/i/oauth2/authorize?${params
     .toString()
