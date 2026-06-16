@@ -44,10 +44,14 @@ function buildXAuthUrl({ state, codeChallenge }) {
   params.set("code_challenge", codeChallenge);
   params.set("code_challenge_method", "S256");
 
-  // 最小权限测试版：先不要 like.read
-  params.set("scope", "tweet.read users.read offline.access");
+  // Minimum scope test version.
+  // Do not use like.read or offline.access here first.
+  params.set("scope", "tweet.read users.read");
 
-  return `https://twitter.com/i/oauth2/authorize?${params
+  // Force X to show the authorization page again.
+  params.set("prompt", "consent");
+
+  return `https://x.com/i/oauth2/authorize?${params
     .toString()
     .replace(/\+/g, "%20")}`;
 }
