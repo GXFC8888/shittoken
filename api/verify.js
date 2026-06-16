@@ -491,7 +491,6 @@ export default async function handler(req, res) {
     });
 
     const task = await ensureTaskForTweet(latestTweet);
-
     const progress = await saveResultProgress({
       result,
       task,
