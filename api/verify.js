@@ -50,6 +50,20 @@ async function xGet(path, params = {}, token = null) {
   return data;
 }
 
+function isAuthorizationErrorMessage(message) {
+  const text = String(message || "").toLowerCase();
+
+  return (
+    text.includes("scope") ||
+    text.includes("permission") ||
+    text.includes("unauthorized") ||
+    text.includes("forbidden") ||
+    text.includes("not permitted") ||
+    text.includes("access token") ||
+    text.includes("oauth")
+  );
+}
+
 async function getOfficialUser() {
   const username = String(OFFICIAL_USERNAME).replace("@", "");
 
@@ -235,6 +249,44 @@ async function findTweetInUserLikedTweets(tweetId, xUserId, accessToken) {
   return false;
 }
 
+async function findOfficialInUserFollowing(xUserId, officialUserId, accessToken) {
+  if (!accessToken) {
+    return false;
+  }
+
+  let paginationToken = null;
+  let page = 0;
+  const maxPages = 20;
+
+  while (page < maxPages) {
+    page += 1;
+
+    const params = {
+      max_results: 1000,
+      "user.fields": "id,username"
+    };
+
+    if (paginationToken) {
+      params.pagination_token = paginationToken;
+    }
+
+    const data = await xGet(`/users/${xUserId}/following`, params, accessToken);
+    const users = data.data || [];
+
+    if (users.some((user) => String(user.id) === String(officialUserId))) {
+      return true;
+    }
+
+    paginationToken = data.meta && data.meta.next_token;
+
+    if (!paginationToken) {
+      break;
+    }
+  }
+
+  return false;
+}
+
 async function safeCheck(name, checkFn) {
   try {
     const result = await checkFn();
@@ -251,6 +303,10 @@ async function safeCheck(name, checkFn) {
       error: error.message || String(error)
     };
   }
+}
+
+async function hasFollowedOfficial(xUserId, officialUserId, accessToken) {
+  return findOfficialInUserFollowing(xUserId, officialUserId, accessToken);
 }
 
 async function hasLiked(tweetId, xUserId, accessToken) {
@@ -365,34 +421,56 @@ async function saveProgress(payload) {
   return insertedProgress;
 }
 
-async function checkTweetActions({ tweet, xUserId, xUsername, accessToken }) {
+async function checkTweetActions({
+  tweet,
+  officialUserId,
+  xUserId,
+  xUsername,
+  accessToken
+}) {
   const tweetId = String(tweet.id);
 
-  const [likedResult, repostedResult, commentedResult] = await Promise.all([
-    safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
-    safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
-    safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
-  ]);
+  const [followedResult, likedResult, repostedResult, commentedResult] =
+    await Promise.all([
+      safeCheck("followed", () => hasFollowedOfficial(xUserId, officialUserId, accessToken)),
+      safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
+      safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
+      safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
+    ]);
 
+  const followed = followedResult.ok;
   const liked = likedResult.ok;
   const reposted = repostedResult.ok;
   const commented = commentedResult.ok;
-  const completed = Boolean(liked && reposted && commented);
-  const score = Number(liked) + Number(reposted) + Number(commented);
+  const completed = Boolean(followed && liked && reposted && commented);
+  const score =
+    Number(followed) +
+    Number(liked) +
+    Number(reposted) +
+    Number(commented);
+
+  const actionErrors = {
+    followed: followedResult.error,
+    liked: likedResult.error,
+    reposted: repostedResult.error,
+    commented: commentedResult.error
+  };
+
+  const requiresReconnect =
+    isAuthorizationErrorMessage(followedResult.error) ||
+    isAuthorizationErrorMessage(likedResult.error);
 
   return {
     tweet,
     tweetId,
+    followed,
     liked,
     reposted,
     commented,
     completed,
     score,
-    actionErrors: {
-      liked: likedResult.error,
-      reposted: repostedResult.error,
-      commented: commentedResult.error
-    }
+    requiresReconnect,
+    actionErrors
   };
 }
 
@@ -405,6 +483,7 @@ async function saveResultProgress({ result, task, wallet, xUserId, xUsername }) 
     wallet_address: wallet,
     x_user_id: xUserId,
     x_username: xUsername,
+    followed: result.followed,
     liked: result.liked,
     reposted: result.reposted,
     commented: result.commented,
@@ -485,12 +564,29 @@ export default async function handler(req, res) {
 
     const result = await checkTweetActions({
       tweet: latestTweet,
+      officialUserId: String(officialUser.id),
       xUserId,
       xUsername,
       accessToken
     });
 
+    if (result.requiresReconnect) {
+      return res.status(400).json({
+        success: false,
+        completed: false,
+        claimable: false,
+        error: "X authorization is required. Please reconnect X to grant follows.read permission.",
+        latestTweetId,
+        followed: result.followed,
+        liked: result.liked,
+        reposted: result.reposted,
+        commented: result.commented,
+        actionErrors: result.actionErrors
+      });
+    }
+
     const task = await ensureTaskForTweet(latestTweet);
+
     const progress = await saveResultProgress({
       result,
       task,
@@ -504,8 +600,9 @@ export default async function handler(req, res) {
         success: false,
         completed: false,
         claimable: false,
-        message: "Latest official post is not completed yet. Please like, repost, and comment on the latest official post, then try again.",
+        message: "Latest official post is not completed yet. Please follow, like, repost, and comment on the latest official post, then try again.",
         latestTweetId,
+        followed: result.followed,
         liked: result.liked,
         reposted: result.reposted,
         commented: result.commented,
@@ -520,6 +617,7 @@ export default async function handler(req, res) {
       claimable: true,
       tweetId: result.tweetId,
       taskId: task.id,
+      followed: result.followed,
       liked: result.liked,
       reposted: result.reposted,
       commented: result.commented,
