@@ -222,7 +222,8 @@ function updateWalletUI() {
   }
 
   if (refreshMissionsBtn) {
-    refreshMissionsBtn.disabled = !activeWallet;
+    refreshMissionsBtn.innerText = "Connect Wallet";
+    refreshMissionsBtn.disabled = Boolean(activeWallet);
   }
 }
 
@@ -296,6 +297,11 @@ async function connectWallet() {
       connectBtn.innerText = "connecting...";
     }
 
+    if (refreshMissionsBtn) {
+      refreshMissionsBtn.disabled = true;
+      refreshMissionsBtn.innerText = "connecting...";
+    }
+
     showMessage("Connecting wallet...");
 
     await switchToBSC();
@@ -314,12 +320,18 @@ async function connectWallet() {
     if (connectBtn) {
       connectBtn.innerText = "connect wallet";
     }
+
+    if (refreshMissionsBtn) {
+      refreshMissionsBtn.innerText = "Connect Wallet";
+    }
   } finally {
     isConnectingWallet = false;
 
     if (connectBtn) {
       connectBtn.disabled = false;
     }
+
+    updateWalletUI();
   }
 }
 
@@ -446,7 +458,7 @@ async function loadTasks(runPendingVerify = true) {
         }, 600);
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Open official X, finish the latest post, then tap verify & claim.", "ok");
+      showMessage("Wallet connected. Open official X, finish the latest post, then tap Claim Reward.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -459,8 +471,8 @@ async function loadTasks(runPendingVerify = true) {
     const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
     if (refreshMissionsBtn) {
-      refreshMissionsBtn.disabled = !activeWallet;
-      refreshMissionsBtn.innerText = "refresh missions";
+      refreshMissionsBtn.innerText = "Connect Wallet";
+      refreshMissionsBtn.disabled = Boolean(activeWallet);
     }
   }
 }
@@ -486,8 +498,10 @@ function renderMissions() {
 
   const claimedCount = getClaimedCount();
   const displayClaimedCount = localClaimLocked ? Math.max(claimedCount, 1) : claimedCount;
+  const connectedX = isXConnected();
+  const openXDisabled = connectedX;
   const verifyDisabled = localClaimLocked || isVerifying;
-  const verifyButtonText = localClaimLocked ? "claimed" : isVerifying ? "checking..." : "verify & claim";
+  const verifyButtonText = localClaimLocked ? "claimed" : isVerifying ? "checking..." : "Claim Reward";
 
   missionList.innerHTML = `
     <div class="mission-card" data-official-x="true">
@@ -500,8 +514,8 @@ function renderMissions() {
       </div>
 
       <p>
-        Open @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
-        Come back here and tap verify & claim.
+        Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
+        Come back here and tap Claim Reward.
         Only the latest official post can be claimed once.
       </p>
 
@@ -510,8 +524,8 @@ function renderMissions() {
       </a>
 
       <div class="mission-actions">
-        <button class="btn full light open-task-btn" type="button">
-          open official X
+        <button class="btn full light open-task-btn" type="button" ${openXDisabled ? "disabled" : ""}>
+          Open X
         </button>
 
         <button class="btn full gold verify-task-btn" type="button" ${verifyDisabled ? "disabled" : ""}>
@@ -569,7 +583,7 @@ function openOfficialXDirect() {
   localStorage.setItem("pending_official_x", "true");
 
   showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Like, repost, and comment on the latest official post, then manually return here to claim.`,
+    `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest official post, then manually return here to claim.`,
     "ok"
   );
 
@@ -898,7 +912,7 @@ function handleReturnFromX() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (pendingOfficialX && activeWallet && !localClaimLocked) {
-    showMessage("Back from X? Tap verify & claim after liking, reposting, and commenting.", "ok");
+    showMessage("Back from X? Tap Claim Reward after following, liking, reposting, and commenting.", "ok");
   }
 }
 
@@ -939,9 +953,9 @@ function handleUrlStatus() {
   if (xError) {
     const errorMap = {
       already_bound: "This X account is already bound to another wallet.",
-      missing_oauth_params: "Missing X authorization data. Please try verify & claim again.",
-      oauth_state_not_found: "X authorization expired or opened in another browser. Please try verify & claim again.",
-      oauth_expired: "X authorization expired. Please try verify & claim again.",
+      missing_oauth_params: "Missing X authorization data. Please try Claim Reward again.",
+      oauth_state_not_found: "X authorization expired or opened in another browser. Please try Claim Reward again.",
+      oauth_expired: "X authorization expired. Please try Claim Reward again.",
       missing_wallet: "Missing wallet address. Please connect wallet and try again."
     };
 
@@ -962,7 +976,15 @@ if (connectXBtn) {
 
 if (refreshMissionsBtn) {
   refreshMissionsBtn.addEventListener("click", () => {
-    loadTasks(true);
+    const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+    if (activeWallet) {
+      showMessage("Wallet already connected.", "ok");
+      updateWalletUI();
+      return;
+    }
+
+    connectWallet();
   });
 }
 
