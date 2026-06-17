@@ -2,102 +2,62 @@ import { supabase } from "../lib/supabase.js";
 
 const X_API_BASE = "https://api.x.com/2";
 const OFFICIAL_USERNAME = process.env.X_OFFICIAL_USERNAME || "GXFCLJ";
-const MAX_OFFICIAL_POSTS = 1;
-const MAX_OFFICIAL_POST_PAGES = 1;
 
 function getBearerToken() {
   const token = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
-
-  if (!token) {
-    throw new Error("Missing X_BEARER_TOKEN");
-  }
-
+  if (!token) throw new Error("Missing X_BEARER_TOKEN");
   return token;
 }
 
 async function xGet(path, params = {}, token = null) {
   const url = new URL(`${X_API_BASE}${path}`);
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      url.searchParams.set(key, String(value));
-    }
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== "") url.searchParams.set(k, String(v));
   });
 
-  const response = await fetch(url.toString(), {
+  const res = await fetch(url.toString(), {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token || getBearerToken()}`
-    }
+    headers: { Authorization: `Bearer ${token || getBearerToken()}` }
   });
 
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    throw new Error(
-      data?.detail ||
-      data?.title ||
-      data?.error ||
-      `X API error: ${response.status}`
-    );
-  }
-
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || data?.title || data?.error || "X API error");
   return data;
 }
 
-/* ----------------------------
-   OFFICIAL USER + POSTS
------------------------------ */
-
 async function getOfficialUser() {
   const username = String(OFFICIAL_USERNAME).replace("@", "");
-
   const data = await xGet(`/users/by/username/${username}`, {
     "user.fields": "id,username"
   });
-
-  if (!data?.data?.id) {
-    throw new Error("Official X account not found");
-  }
-
+  if (!data?.data?.id) throw new Error("Official user not found");
   return data.data;
 }
 
-async function getOfficialTweets(officialUserId) {
-  const tweets = [];
-
-  const data = await xGet(`/users/${officialUserId}/tweets`, {
+async function getOfficialTweets(userId) {
+  const data = await xGet(`/users/${userId}/tweets`, {
     max_results: 10,
     exclude: "retweets,replies",
-    "tweet.fields": "id,text,created_at"
+    "tweet.fields": "id"
   });
-
-  if (data?.data) {
-    tweets.push(...data.data);
-  }
-
-  return tweets.slice(0, MAX_OFFICIAL_POSTS);
+  return (data.data || []).slice(0, 1);
 }
 
-/* ----------------------------
-   TASK / DB
------------------------------ */
-
-async function ensureTaskForTweet(tweet) {
+async function ensureTask(tweet) {
   const tweetId = String(tweet.id);
 
-  const { data: existingTask } = await supabase
+  const { data: exist } = await supabase
     .from("tasks")
     .select("*")
     .eq("tweet_id", tweetId)
     .maybeSingle();
 
-  if (existingTask) return existingTask;
+  if (exist) return exist;
 
-  const { data: inserted } = await supabase
+  const { data } = await supabase
     .from("tasks")
     .insert({
-      title: `Official Post ${tweetId.slice(-6)}`,
+      title: `Official ${tweetId.slice(-6)}`,
       tweet_id: tweetId,
       reward_amount: "1",
       active: true
@@ -105,50 +65,41 @@ async function ensureTaskForTweet(tweet) {
     .select()
     .maybeSingle();
 
-  return inserted;
+  return data;
 }
 
-async function getClaimedTweetIds(wallet) {
+async function getClaimed(wallet) {
   const { data } = await supabase
     .from("task_progress")
     .select("tweet_id")
     .eq("wallet_address", wallet)
     .eq("claimed", true);
 
-  return new Set((data || []).map(r => String(r.tweet_id)));
+  return new Set((data || []).map(i => String(i.tweet_id)));
 }
 
-/* ----------------------------
-   ACTION CHECKS
------------------------------ */
-
-/**
- * ❗ FOLLOW（已修复：不再使用分页旧逻辑）
- * 直接判断是否关注官方账号
- */
-async function hasFollowedOfficial(xUserId, officialUserId, accessToken) {
+async function hasFollowed(xUserId, officialId, token) {
   try {
     const data = await xGet(
-      `/users/${xUserId}/following/${officialUserId}`,
-      {},
-      accessToken
+      `/users/${xUserId}/following`,
+      { max_results: 100 },
+      token
     );
 
-    return Boolean(data && data.data);
-  } catch (e) {
+    return (data.data || []).some(u => String(u.id) === String(officialId));
+  } catch {
     return false;
   }
 }
 
-async function hasLiked(tweetId, xUserId, accessToken) {
+async function hasLiked(tweetId, xUserId, token) {
   try {
     const data = await xGet(
       `/users/${xUserId}/liked_tweets`,
-      { max_results: 50 },
-      accessToken
+      { max_results: 100 },
+      token
     );
-
-    return (data?.data || []).some(t => String(t.id) === String(tweetId));
+    return (data.data || []).some(t => String(t.id) === String(tweetId));
   } catch {
     return false;
   }
@@ -157,7 +108,7 @@ async function hasLiked(tweetId, xUserId, accessToken) {
 async function hasReposted(tweetId, xUserId) {
   try {
     const data = await xGet(`/tweets/${tweetId}/retweeted_by`);
-    return (data?.data || []).some(u => String(u.id) === String(xUserId));
+    return (data.data || []).some(u => String(u.id) === String(xUserId));
   } catch {
     return false;
   }
@@ -169,81 +120,52 @@ async function hasCommented(tweetId, xUserId, xUsername) {
       query: `conversation_id:${tweetId} from:${xUsername}`
     });
 
-    return (data?.data || []).length > 0;
+    return (data.data || []).length > 0;
   } catch {
     return false;
   }
 }
 
-/* ----------------------------
-   CORE VERIFY LOGIC
------------------------------ */
+async function check(tweet, officialId, xUserId, xUsername, token) {
+  const id = String(tweet.id);
 
-async function checkTweetActions({
-  tweet,
-  officialUserId,
-  xUserId,
-  xUsername,
-  accessToken
-}) {
-  const tweetId = String(tweet.id);
-
-  const followed = await hasFollowedOfficial(
-    xUserId,
-    officialUserId,
-    accessToken
-  );
-
-  const liked = await hasLiked(tweetId, xUserId, accessToken);
-  const reposted = await hasReposted(tweetId, xUserId);
-  const commented = await hasCommented(tweetId, xUserId, xUsername);
-
-  const completed = Boolean(
-    followed && liked && reposted && commented
-  );
+  const [f, l, r, c] = await Promise.all([
+    hasFollowed(xUserId, officialId, token),
+    hasLiked(id, xUserId, token),
+    hasReposted(id, xUserId),
+    hasCommented(id, xUserId, xUsername)
+  ]);
 
   return {
     tweet,
-    tweetId,
-    followed,
-    liked,
-    reposted,
-    commented,
-    completed
+    tweetId: id,
+    followed: f,
+    liked: l,
+    reposted: r,
+    commented: c,
+    completed: f && l && r && c
   };
 }
 
-/* ----------------------------
-   SAVE PROGRESS
------------------------------ */
-
-async function saveProgress(payload) {
-  const { data: existing } = await supabase
+async function save(payload) {
+  const { data: exist } = await supabase
     .from("task_progress")
     .select("*")
     .eq("wallet_address", payload.wallet_address)
     .eq("tweet_id", payload.tweet_id)
     .maybeSingle();
 
-  if (existing) {
+  if (exist) {
     return supabase
       .from("task_progress")
       .update(payload)
-      .eq("id", existing.id);
+      .eq("id", exist.id);
   }
 
   return supabase.from("task_progress").insert(payload);
 }
 
-/* ----------------------------
-   API HANDLER
------------------------------ */
-
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ success: false });
-  }
-
   try {
     const wallet = String(req.body.wallet || "").toLowerCase();
 
@@ -253,47 +175,36 @@ export default async function handler(req, res) {
       .eq("wallet_address", wallet)
       .maybeSingle();
 
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        error: "No X account connected"
-      });
+    if (!user?.x_user_id) {
+      return res.status(400).json({ success: false });
     }
 
-    const officialUser = await getOfficialUser();
-    const tweets = await getOfficialTweets(officialUser.id);
+    const official = await getOfficialUser();
+    const tweets = await getOfficialTweets(official.id);
 
     if (!tweets.length) {
-      return res.json({
-        success: false,
-        message: "No tweet found"
-      });
+      return res.json({ success: false });
     }
 
-    const latestTweet = tweets[0];
-    const tweetId = String(latestTweet.id);
+    const tweet = tweets[0];
+    const tweetId = String(tweet.id);
 
-    const claimed = await getClaimedTweetIds(wallet);
-
+    const claimed = await getClaimed(wallet);
     if (claimed.has(tweetId)) {
-      return res.json({
-        success: false,
-        lockClaim: true,
-        message: "Already claimed"
-      });
+      return res.json({ success: false, lockClaim: true });
     }
 
-    const result = await checkTweetActions({
-      tweet: latestTweet,
-      officialUserId: officialUser.id,
-      xUserId: user.x_user_id,
-      xUsername: user.x_username.replace("@", ""),
-      accessToken: user.x_access_token
-    });
+    const result = await check(
+      tweet,
+      official.id,
+      user.x_user_id,
+      user.x_username,
+      user.x_access_token
+    );
 
-    const task = await ensureTaskForTweet(latestTweet);
+    const task = await ensureTask(tweet);
 
-    await saveProgress({
+    await save({
       task_id: task.id,
       tweet_id: tweetId,
       wallet_address: wallet,
@@ -309,21 +220,13 @@ export default async function handler(req, res) {
 
     return res.json({
       success: result.completed,
-      completed: result.completed,
-      followed: result.followed,
-      liked: result.liked,
-      reposted: result.reposted,
-      commented: result.commented,
-      tweetId,
+      ...result,
       taskId: task?.id
     });
-
-  } catch (err) {
-    console.error(err);
-
+  } catch (e) {
     return res.status(500).json({
       success: false,
-      error: err.message
+      error: e.message
     });
   }
 }
