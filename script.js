@@ -35,6 +35,9 @@ let isLoadingTasks = false;
 let isVerifying = false;
 let localClaimLocked = false;
 
+let currentOfficialTweetId =
+  localStorage.getItem("current_official_tweet_id") || null;
+
 const connectBtn = document.getElementById("connectBtn");
 
 const connectXBtn =
@@ -76,6 +79,29 @@ function showMessage(text, type) {
 
 function shortAddress(address) {
   return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected";
+}
+
+function setCurrentOfficialTweetId(tweetId) {
+  if (!tweetId) return;
+
+  currentOfficialTweetId = String(tweetId);
+  localStorage.setItem("current_official_tweet_id", currentOfficialTweetId);
+}
+
+function getOfficialXTargetUrl() {
+  if (currentOfficialTweetId) {
+    return `https://x.com/${OFFICIAL_X_USERNAME}/status/${currentOfficialTweetId}`;
+  }
+
+  return OFFICIAL_X_WEB_URL;
+}
+
+function getOfficialXTargetAppUrl() {
+  if (currentOfficialTweetId) {
+    return `twitter://status?id=${currentOfficialTweetId}`;
+  }
+
+  return OFFICIAL_X_APP_URL;
 }
 
 function getReadableError(error) {
@@ -239,6 +265,7 @@ function resetWalletUI() {
   currentXConnected = false;
   currentXUsername = null;
   localClaimLocked = false;
+  currentOfficialTweetId = null;
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
@@ -246,6 +273,7 @@ function resetWalletUI() {
   localStorage.removeItem("pending_official_x");
   localStorage.removeItem("pending_x_wallet");
   localStorage.removeItem("x_username");
+  localStorage.removeItem("current_official_tweet_id");
 
   if (oldWallet) {
     clearXConnected(oldWallet);
@@ -367,7 +395,11 @@ function listenWalletChange() {
     if (accounts && accounts.length > 0) {
       try {
         localClaimLocked = false;
+        currentOfficialTweetId = null;
+        localStorage.removeItem("current_official_tweet_id");
+
         await setupWalletAfterConnected();
+
         showMessage("Wallet account changed.", "ok");
       } catch (error) {
         console.error(error);
@@ -446,7 +478,7 @@ async function loadTasks(runPendingVerify = true) {
     renderMissions();
 
     if (activeWallet && currentXConnected) {
-      showMessage("X account connected. Open official X, finish the latest post, then verify.", "ok");
+      showMessage("X account connected. Finish the latest post, then claim.", "ok");
 
       const pendingVerify = localStorage.getItem("pending_official_verify") === "true";
 
@@ -458,7 +490,7 @@ async function loadTasks(runPendingVerify = true) {
         }, 600);
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Open official X, finish the latest post, then tap Claim Reward.", "ok");
+      showMessage("Wallet connected. Tap Open X to authorize first, then tap Claim Reward.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -519,8 +551,8 @@ function renderMissions() {
         Only the latest official post can be claimed once.
       </p>
 
-      <a class="mission-link" href="${OFFICIAL_X_WEB_URL}" target="_blank" rel="noopener noreferrer">
-        ${OFFICIAL_X_WEB_URL}
+      <a class="mission-link" href="${getOfficialXTargetUrl()}" target="_blank" rel="noopener noreferrer">
+        ${getOfficialXTargetUrl()}
       </a>
 
       <div class="mission-actions">
@@ -587,15 +619,15 @@ function openOfficialXDirect() {
     "ok"
   );
 
+  const targetWebUrl = getOfficialXTargetUrl();
+  const targetAppUrl = getOfficialXTargetAppUrl();
+
   try {
-    navigator.clipboard.writeText(OFFICIAL_X_WEB_URL).catch(() => {});
+    navigator.clipboard.writeText(targetWebUrl).catch(() => {});
   } catch (error) {}
 
   const userAgent = navigator.userAgent || "";
   const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-
-  const twitterAppUrl = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
-  const webUrl = OFFICIAL_X_WEB_URL;
 
   let appOpened = false;
 
@@ -613,22 +645,22 @@ function openOfficialXDirect() {
   window.addEventListener("pagehide", onPageHide, { once: true });
 
   if (isIOS) {
-    window.location.href = twitterAppUrl;
+    window.location.href = targetAppUrl;
 
     setTimeout(() => {
       if (!appOpened) {
-        window.location.href = webUrl;
+        window.location.href = targetWebUrl;
       }
     }, 3200);
 
     return;
   }
 
-  window.location.href = twitterAppUrl;
+  window.location.href = targetAppUrl;
 
   setTimeout(() => {
     if (!appOpened) {
-      window.location.href = webUrl;
+      window.location.href = targetWebUrl;
     }
   }, 1800);
 }
@@ -811,6 +843,10 @@ async function verifyAndClaim() {
 
     const verifyData = await verifyResponse.json().catch(() => ({}));
 
+    if (verifyData.tweetId || verifyData.latestTweetId) {
+      setCurrentOfficialTweetId(verifyData.tweetId || verifyData.latestTweetId);
+    }
+
     if (!verifyData.success) {
       if (needsXAuthorization(verifyData)) {
         clearXConnected(activeWallet);
@@ -843,8 +879,12 @@ async function verifyAndClaim() {
         return;
       }
 
+      if (verifyData.tweetId || verifyData.latestTweetId) {
+        setCurrentOfficialTweetId(verifyData.tweetId || verifyData.latestTweetId);
+      }
+
       showMessage(
-        "Latest official post is not completed yet. Opening official X...",
+        "Latest official post is not completed yet. Opening the exact X post...",
         "ok"
       );
 
@@ -860,6 +900,8 @@ async function verifyAndClaim() {
       await loadTasks(false);
       return;
     }
+
+    setCurrentOfficialTweetId(verifyData.tweetId);
 
     showMessage("Latest official post verified. Getting claim signature...", "ok");
 
@@ -923,7 +965,7 @@ function handleUrlStatus() {
     const walletFromUrl = params.get("wallet");
     const xUsernameFromUrl = params.get("x_username");
 
-    showMessage("X connected. Open official X, finish the latest post, then claim.", "ok");
+    showMessage("X connected. Finish the latest post, then claim.", "ok");
 
     const activeWallet =
       walletFromUrl ||
