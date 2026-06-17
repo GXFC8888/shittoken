@@ -34,21 +34,20 @@ async function xGet(path, params = {}, token = null) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const message =
-      data.detail ||
-      data.title ||
-      data.error ||
-      data.errors?.[0]?.message ||
-      `X API request failed: ${response.status}`;
-
-    const error = new Error(message);
-    error.status = response.status;
-    error.data = data;
-    throw error;
+    throw new Error(
+      data?.detail ||
+      data?.title ||
+      data?.error ||
+      `X API error: ${response.status}`
+    );
   }
 
   return data;
 }
+
+/* ----------------------------
+   OFFICIAL USER + POSTS
+----------------------------- */
 
 async function getOfficialUser() {
   const username = String(OFFICIAL_USERNAME).replace("@", "");
@@ -57,7 +56,7 @@ async function getOfficialUser() {
     "user.fields": "id,username"
   });
 
-  if (!data.data || !data.data.id) {
+  if (!data?.data?.id) {
     throw new Error("Official X account not found");
   }
 
@@ -66,60 +65,39 @@ async function getOfficialUser() {
 
 async function getOfficialTweets(officialUserId) {
   const tweets = [];
-  let paginationToken = null;
-  let page = 0;
 
-  while (tweets.length < MAX_OFFICIAL_POSTS && page < MAX_OFFICIAL_POST_PAGES) {
-    page += 1;
+  const data = await xGet(`/users/${officialUserId}/tweets`, {
+    max_results: 10,
+    exclude: "retweets,replies",
+    "tweet.fields": "id,text,created_at"
+  });
 
-    const params = {
-      max_results: 100,
-      exclude: "retweets,replies",
-      "tweet.fields": "id,text,created_at,author_id"
-    };
-
-    if (paginationToken) {
-      params.pagination_token = paginationToken;
-    }
-
-    const data = await xGet(`/users/${officialUserId}/tweets`, params);
-    const pageTweets = data.data || [];
-
-    tweets.push(...pageTweets);
-
-    paginationToken = data.meta && data.meta.next_token;
-
-    if (!paginationToken) {
-      break;
-    }
+  if (data?.data) {
+    tweets.push(...data.data);
   }
 
   return tweets.slice(0, MAX_OFFICIAL_POSTS);
 }
 
+/* ----------------------------
+   TASK / DB
+----------------------------- */
+
 async function ensureTaskForTweet(tweet) {
   const tweetId = String(tweet.id);
 
-  const { data: existingTask, error: existingError } = await supabase
+  const { data: existingTask } = await supabase
     .from("tasks")
     .select("*")
     .eq("tweet_id", tweetId)
     .maybeSingle();
 
-  if (existingError) {
-    throw existingError;
-  }
+  if (existingTask) return existingTask;
 
-  if (existingTask) {
-    return existingTask;
-  }
-
-  const title = `Official Post ${tweetId.slice(-6)}`;
-
-  const { data: insertedTask, error: insertError } = await supabase
+  const { data: inserted } = await supabase
     .from("tasks")
     .insert({
-      title,
+      title: `Official Post ${tweetId.slice(-6)}`,
       tweet_id: tweetId,
       reward_amount: "1",
       active: true
@@ -127,412 +105,225 @@ async function ensureTaskForTweet(tweet) {
     .select()
     .maybeSingle();
 
-  if (insertError) {
-    const { data: fallbackTask, error: fallbackError } = await supabase
-      .from("tasks")
-      .select("*")
-      .eq("tweet_id", tweetId)
-      .maybeSingle();
-
-    if (fallbackError) {
-      throw fallbackError;
-    }
-
-    if (fallbackTask) {
-      return fallbackTask;
-    }
-
-    throw insertError;
-  }
-
-  return insertedTask;
+  return inserted;
 }
 
 async function getClaimedTweetIds(wallet) {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("task_progress")
     .select("tweet_id")
     .eq("wallet_address", wallet)
-    .eq("claimed", true)
-    .not("tweet_id", "is", null);
+    .eq("claimed", true);
 
-  if (error) {
-    throw error;
-  }
-
-  return new Set((data || []).map((row) => String(row.tweet_id)));
+  return new Set((data || []).map(r => String(r.tweet_id)));
 }
 
-async function findUserInPaginatedUsers(path, tweetId, xUserId) {
-  let paginationToken = null;
-  let page = 0;
-  const maxPages = 10;
+/* ----------------------------
+   ACTION CHECKS
+----------------------------- */
 
-  while (page < maxPages) {
-    page += 1;
-
-    const params = {
-      max_results: 100,
-      "user.fields": "id,username"
-    };
-
-    if (paginationToken) {
-      params.pagination_token = paginationToken;
-    }
-
-    const data = await xGet(path.replace(":tweetId", tweetId), params);
-    const users = data.data || [];
-
-    if (users.some((user) => String(user.id) === String(xUserId))) {
-      return true;
-    }
-
-    paginationToken = data.meta && data.meta.next_token;
-
-    if (!paginationToken) {
-      break;
-    }
-  }
-
-  return false;
-}
-
-async function findTweetInUserLikedTweets(tweetId, xUserId, accessToken) {
-  if (!accessToken) {
-    return false;
-  }
-
-  let paginationToken = null;
-  let page = 0;
-  const maxPages = 10;
-
-  while (page < maxPages) {
-    page += 1;
-
-    const params = {
-      max_results: 100,
-      "tweet.fields": "id,created_at"
-    };
-
-    if (paginationToken) {
-      params.pagination_token = paginationToken;
-    }
-
-    const data = await xGet(`/users/${xUserId}/liked_tweets`, params, accessToken);
-    const tweets = data.data || [];
-
-    if (tweets.some((tweet) => String(tweet.id) === String(tweetId))) {
-      return true;
-    }
-
-    paginationToken = data.meta && data.meta.next_token;
-
-    if (!paginationToken) {
-      break;
-    }
-  }
-
-  return false;
-}
-
-async function safeCheck(name, checkFn) {
+/**
+ * ❗ FOLLOW（已修复：不再使用分页旧逻辑）
+ * 直接判断是否关注官方账号
+ */
+async function hasFollowedOfficial(xUserId, officialUserId, accessToken) {
   try {
-    const result = await checkFn();
+    const data = await xGet(
+      `/users/${xUserId}/following/${officialUserId}`,
+      {},
+      accessToken
+    );
 
-    return {
-      ok: Boolean(result),
-      error: null
-    };
-  } catch (error) {
-    console.warn(`${name} check failed:`, error.message || String(error));
-
-    return {
-      ok: false,
-      error: error.message || String(error)
-    };
+    return Boolean(data && data.data);
+  } catch (e) {
+    return false;
   }
 }
 
 async function hasLiked(tweetId, xUserId, accessToken) {
-  const likedFromUserToken = await findTweetInUserLikedTweets(
-    tweetId,
-    xUserId,
-    accessToken
-  );
+  try {
+    const data = await xGet(
+      `/users/${xUserId}/liked_tweets`,
+      { max_results: 50 },
+      accessToken
+    );
 
-  if (likedFromUserToken) {
-    return true;
+    return (data?.data || []).some(t => String(t.id) === String(tweetId));
+  } catch {
+    return false;
   }
-
-  const likedFromTweet = await findUserInPaginatedUsers(
-    "/tweets/:tweetId/liking_users",
-    tweetId,
-    xUserId
-  );
-
-  return Boolean(likedFromTweet);
 }
 
 async function hasReposted(tweetId, xUserId) {
-  return findUserInPaginatedUsers(
-    "/tweets/:tweetId/retweeted_by",
-    tweetId,
-    xUserId
-  );
+  try {
+    const data = await xGet(`/tweets/${tweetId}/retweeted_by`);
+    return (data?.data || []).some(u => String(u.id) === String(xUserId));
+  } catch {
+    return false;
+  }
 }
 
 async function hasCommented(tweetId, xUserId, xUsername) {
-  let paginationToken = null;
-  let page = 0;
-  const maxPages = 10;
-
-  const query = `conversation_id:${tweetId} from:${xUsername} -is:retweet`;
-
-  while (page < maxPages) {
-    page += 1;
-
-    const params = {
-      query,
-      max_results: 100,
-      "tweet.fields": "author_id,conversation_id,created_at"
-    };
-
-    if (paginationToken) {
-      params.pagination_token = paginationToken;
-    }
-
-    const data = await xGet("/tweets/search/recent", params);
-    const tweets = data.data || [];
-
-    const found = tweets.some((tweet) => {
-      return (
-        String(tweet.author_id) === String(xUserId) &&
-        String(tweet.conversation_id) === String(tweetId)
-      );
+  try {
+    const data = await xGet("/tweets/search/recent", {
+      query: `conversation_id:${tweetId} from:${xUsername}`
     });
 
-    if (found) {
-      return true;
-    }
-
-    paginationToken = data.meta && data.meta.next_token;
-
-    if (!paginationToken) {
-      break;
-    }
+    return (data?.data || []).length > 0;
+  } catch {
+    return false;
   }
-
-  return false;
 }
 
+/* ----------------------------
+   CORE VERIFY LOGIC
+----------------------------- */
+
+async function checkTweetActions({
+  tweet,
+  officialUserId,
+  xUserId,
+  xUsername,
+  accessToken
+}) {
+  const tweetId = String(tweet.id);
+
+  const followed = await hasFollowedOfficial(
+    xUserId,
+    officialUserId,
+    accessToken
+  );
+
+  const liked = await hasLiked(tweetId, xUserId, accessToken);
+  const reposted = await hasReposted(tweetId, xUserId);
+  const commented = await hasCommented(tweetId, xUserId, xUsername);
+
+  const completed = Boolean(
+    followed && liked && reposted && commented
+  );
+
+  return {
+    tweet,
+    tweetId,
+    followed,
+    liked,
+    reposted,
+    commented,
+    completed
+  };
+}
+
+/* ----------------------------
+   SAVE PROGRESS
+----------------------------- */
+
 async function saveProgress(payload) {
-  const { data: existingProgress, error: findError } = await supabase
+  const { data: existing } = await supabase
     .from("task_progress")
     .select("*")
     .eq("wallet_address", payload.wallet_address)
     .eq("tweet_id", payload.tweet_id)
     .maybeSingle();
 
-  if (findError) {
-    throw findError;
-  }
-
-  if (existingProgress) {
-    const { data: updatedProgress, error: updateError } = await supabase
+  if (existing) {
+    return supabase
       .from("task_progress")
       .update(payload)
-      .eq("id", existingProgress.id)
-      .select()
-      .maybeSingle();
-
-    if (updateError) {
-      throw updateError;
-    }
-
-    return updatedProgress;
+      .eq("id", existing.id);
   }
 
-  const { data: insertedProgress, error: insertError } = await supabase
-    .from("task_progress")
-    .insert(payload)
-    .select()
-    .maybeSingle();
-
-  if (insertError) {
-    throw insertError;
-  }
-
-  return insertedProgress;
+  return supabase.from("task_progress").insert(payload);
 }
 
-async function checkTweetActions({ tweet, xUserId, xUsername, accessToken }) {
-  const tweetId = String(tweet.id);
-
-  const [likedResult, repostedResult, commentedResult] = await Promise.all([
-    safeCheck("liked", () => hasLiked(tweetId, xUserId, accessToken)),
-    safeCheck("reposted", () => hasReposted(tweetId, xUserId)),
-    safeCheck("commented", () => hasCommented(tweetId, xUserId, xUsername))
-  ]);
-
-  const liked = likedResult.ok;
-  const reposted = repostedResult.ok;
-  const commented = commentedResult.ok;
-  const completed = Boolean(liked && reposted && commented);
-  const score = Number(liked) + Number(reposted) + Number(commented);
-
-  return {
-    tweet,
-    tweetId,
-    liked,
-    reposted,
-    commented,
-    completed,
-    score,
-    actionErrors: {
-      liked: likedResult.error,
-      reposted: repostedResult.error,
-      commented: commentedResult.error
-    }
-  };
-}
-
-async function saveResultProgress({ result, task, wallet, xUserId, xUsername }) {
-  const now = new Date().toISOString();
-
-  const progressPayload = {
-    task_id: task.id,
-    tweet_id: result.tweetId,
-    wallet_address: wallet,
-    x_user_id: xUserId,
-    x_username: xUsername,
-    liked: result.liked,
-    reposted: result.reposted,
-    commented: result.commented,
-    verified: result.completed,
-    claimable: result.completed,
-    verified_at: result.completed ? now : null
-  };
-
-  return saveProgress(progressPayload);
-}
+/* ----------------------------
+   API HANDLER
+----------------------------- */
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      error: "Method not allowed"
-    });
+    return res.status(405).json({ success: false });
   }
 
   try {
     const wallet = String(req.body.wallet || "").toLowerCase();
 
-    if (!wallet || !wallet.startsWith("0x")) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing wallet address"
-      });
-    }
-
-    const { data: user, error: userError } = await supabase
+    const { data: user } = await supabase
       .from("users")
-      .select("wallet_address, x_user_id, x_username, x_access_token")
+      .select("*")
       .eq("wallet_address", wallet)
       .maybeSingle();
 
-    if (userError) {
-      throw userError;
-    }
-
-    if (!user || !user.x_user_id || !user.x_username || !user.x_access_token) {
+    if (!user) {
       return res.status(400).json({
         success: false,
-        error: "Please connect X first"
+        error: "No X account connected"
       });
     }
 
     const officialUser = await getOfficialUser();
-    const officialTweets = await getOfficialTweets(officialUser.id);
-    const claimedTweetIds = await getClaimedTweetIds(wallet);
+    const tweets = await getOfficialTweets(officialUser.id);
 
-    if (!officialTweets.length) {
-      return res.status(200).json({
+    if (!tweets.length) {
+      return res.json({
         success: false,
-        completed: false,
-        claimable: false,
-        message: "No official post found."
+        message: "No tweet found"
       });
     }
 
-    const latestTweet = officialTweets[0];
-    const latestTweetId = String(latestTweet.id);
+    const latestTweet = tweets[0];
+    const tweetId = String(latestTweet.id);
 
-    if (claimedTweetIds.has(latestTweetId)) {
-      return res.status(200).json({
+    const claimed = await getClaimedTweetIds(wallet);
+
+    if (claimed.has(tweetId)) {
+      return res.json({
         success: false,
-        completed: false,
-        claimable: false,
-        alreadyClaimed: true,
         lockClaim: true,
-        tweetId: latestTweetId,
-        message: "Latest official post already claimed."
+        message: "Already claimed"
       });
     }
-
-    const xUserId = String(user.x_user_id);
-    const xUsername = String(user.x_username).replace("@", "");
-    const accessToken = user.x_access_token;
 
     const result = await checkTweetActions({
       tweet: latestTweet,
-      xUserId,
-      xUsername,
-      accessToken
+      officialUserId: officialUser.id,
+      xUserId: user.x_user_id,
+      xUsername: user.x_username.replace("@", ""),
+      accessToken: user.x_access_token
     });
 
     const task = await ensureTaskForTweet(latestTweet);
-    const progress = await saveResultProgress({
-      result,
-      task,
-      wallet,
-      xUserId,
-      xUsername
-    });
 
-    if (!result.completed) {
-      return res.status(200).json({
-        success: false,
-        completed: false,
-        claimable: false,
-        message: "Latest official post is not completed yet. Please like, repost, and comment on the latest official post, then try again.",
-        latestTweetId,
-        liked: result.liked,
-        reposted: result.reposted,
-        commented: result.commented,
-        progress,
-        actionErrors: result.actionErrors
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      completed: true,
-      claimable: true,
-      tweetId: result.tweetId,
-      taskId: task.id,
+    await saveProgress({
+      task_id: task.id,
+      tweet_id: tweetId,
+      wallet_address: wallet,
+      x_user_id: user.x_user_id,
+      x_username: user.x_username,
+      followed: result.followed,
       liked: result.liked,
       reposted: result.reposted,
       commented: result.commented,
-      message: "Latest official post verified. You can claim now.",
-      progress
+      verified: result.completed,
+      claimable: result.completed
     });
-  } catch (error) {
-    console.error("Verify error:", error);
+
+    return res.json({
+      success: result.completed,
+      completed: result.completed,
+      followed: result.followed,
+      liked: result.liked,
+      reposted: result.reposted,
+      commented: result.commented,
+      tweetId,
+      taskId: task?.id
+    });
+
+  } catch (err) {
+    console.error(err);
 
     return res.status(500).json({
       success: false,
-      error: "Verification failed",
-      detail: error.message || String(error)
+      error: err.message
     });
   }
 }
