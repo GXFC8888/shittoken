@@ -191,11 +191,10 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
   <div class="box">
     <h1>X Connected</h1>
     <p class="ok">@${safeXUsername} connected successfully.</p>
-    <p>Now manually open @${safeOfficialUsername}, like, repost, and comment.</p>
-    <p>After finishing the X task, return to TokenPocket and refresh the claim page.</p>
+    <p>Opening @${safeOfficialUsername} now.</p>
+    <p>Like, repost, and comment on the latest official post, then manually return to the wallet page to claim.</p>
 
-    <a class="btn" id="openXAppBtn" href="${safeTwitterAppUrl}">Open X App</a>
-    <a class="btn light" id="openXWebBtn" href="${safeOfficialWebUrl}">Open X Web</a>
+    <a class="btn" id="openXBtn" href="${safeTwitterAppUrl}">Open official X</a>
     <a class="btn light" id="backBtn" href="${safeClaimUrl}">Back to claim page</a>
 
     <p class="small">Wallet: ${safeWallet}</p>
@@ -206,6 +205,9 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
     (function () {
       var wallet = ${JSON.stringify(walletAddress)};
       var xUsername = ${JSON.stringify(xUsername)};
+      var claimUrl = ${JSON.stringify(claimUrl)};
+      var officialWebUrl = ${JSON.stringify(officialWebUrl)};
+      var twitterAppUrl = ${JSON.stringify(twitterAppUrl)};
 
       try {
         if (wallet) {
@@ -220,6 +222,44 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
           localStorage.setItem("x_username", xUsername);
         }
       } catch (error) {}
+
+      var userAgent = navigator.userAgent || "";
+      var isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+      var appOpened = false;
+
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          appOpened = true;
+        }
+      }, { once: true });
+
+      window.addEventListener("pagehide", function () {
+        appOpened = true;
+      }, { once: true });
+
+      if (isIOS) {
+        setTimeout(function () {
+          window.location.href = twitterAppUrl;
+        }, 900);
+
+        setTimeout(function () {
+          if (!appOpened) {
+            window.location.href = officialWebUrl;
+          }
+        }, 3600);
+
+        return;
+      }
+
+      setTimeout(function () {
+        window.location.href = twitterAppUrl;
+      }, 900);
+
+      setTimeout(function () {
+        if (!appOpened) {
+          window.location.href = officialWebUrl;
+        }
+      }, 2600);
     })();
   </script>
 </body>
