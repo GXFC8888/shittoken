@@ -192,7 +192,7 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
     <h1>X Connected</h1>
     <p class="ok">@${safeXUsername} connected successfully.</p>
     <p>Opening @${safeOfficialUsername} now.</p>
-    <p>Like, repost, and comment on the latest official post, then manually return to the wallet page to claim.</p>
+    <p>Follow, like, repost, and comment on the latest official post, then manually return to the wallet page to claim.</p>
 
     <a class="btn" id="openXBtn" href="${safeTwitterAppUrl}">Open official X</a>
     <a class="btn light" id="backBtn" href="${safeClaimUrl}">Back to claim page</a>
@@ -240,26 +240,26 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
       if (isIOS) {
         setTimeout(function () {
           window.location.href = twitterAppUrl;
-        }, 900);
+        }, 150);
 
         setTimeout(function () {
           if (!appOpened) {
             window.location.href = officialWebUrl;
           }
-        }, 3600);
+        }, 1800);
 
         return;
       }
 
       setTimeout(function () {
         window.location.href = twitterAppUrl;
-      }, 900);
+      }, 150);
 
       setTimeout(function () {
         if (!appOpened) {
           window.location.href = officialWebUrl;
         }
-      }, 2600);
+      }, 1600);
     })();
   </script>
 </body>
