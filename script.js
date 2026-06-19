@@ -485,9 +485,15 @@ async function loadTasks(runPendingActions = true) {
     }
 
     const activeWallet = userAddress || localStorage.getItem("wallet_address") || "";
-    const walletQuery = activeWallet ? `?wallet=${encodeURIComponent(activeWallet)}` : "";
+    const params = new URLSearchParams();
 
-    const response = await fetch(`/api/tasks${walletQuery}`, {
+    if (activeWallet) {
+      params.set("wallet", activeWallet);
+    }
+
+    params.set("_t", String(Date.now()));
+
+    const response = await fetch(`/api/tasks?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       cache: "no-store"
@@ -535,7 +541,7 @@ async function loadTasks(runPendingActions = true) {
         const pendingTweetId = localStorage.getItem("pending_open_tweet_id");
         const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
 
-        if (pendingTweetId) {
+        if (pendingTweetId && !currentXConnected) {
           localStorage.removeItem("pending_open_tweet_id");
           setTimeout(() => {
             openTaskXDirect(pendingTweetId);
@@ -671,7 +677,14 @@ function renderMissions() {
   const verified = Boolean(progress && progress.verified);
   const statusText = getTaskStatus(progress);
   const verifyDisabled = isVerifying || claimed;
-  const openDisabled = claimed;
+  const openDisabled = claimed || currentXConnected;
+
+  const openButtonText = claimed
+    ? "Completed"
+    : currentXConnected
+      ? "X Authorized"
+      : "Open X";
+
   const verifyButtonText = claimed
     ? "Claimed"
     : isVerifying
@@ -707,7 +720,7 @@ function renderMissions() {
 
       <div class="mission-actions">
         <button class="btn full light open-task-btn" type="button" data-tweet-id="${tweetId}" ${openDisabled ? "disabled" : ""}>
-          ${claimed ? "Completed" : "Open X"}
+          ${openButtonText}
         </button>
 
         <button class="btn full gold verify-task-btn" type="button" data-task-id="${latestTask.id}" ${verifyDisabled ? "disabled" : ""}>
@@ -724,6 +737,11 @@ function renderMissions() {
     openButton.addEventListener("click", () => {
       if (claimed) {
         showMessage("Latest mission already claimed.", "ok");
+        return;
+      }
+
+      if (currentXConnected) {
+        showMessage("X already authorized. Complete the mission on X, then tap Verify & Claim.", "ok");
         return;
       }
 
@@ -1101,15 +1119,11 @@ async function verifyAndClaim(task) {
       showMessage(
         verifyData.message ||
           verifyData.error ||
-          "Latest mission is not completed yet. Opening the exact X post...",
+          "Latest mission is not completed yet. Please complete it on X, then tap Verify & Claim again.",
         "ok"
       );
 
       await loadTasks(false);
-
-      setTimeout(() => {
-        openTaskXDirect(tweetId);
-      }, 800);
 
       return;
     }
