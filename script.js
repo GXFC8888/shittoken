@@ -34,6 +34,9 @@ let isConnectingWallet = false;
 let isLoadingTasks = false;
 let isVerifying = false;
 
+let noNewMissionLocked = false;
+let noNewMissionTaskId = null;
+
 let currentOfficialTweetId =
   localStorage.getItem("current_official_tweet_id") || null;
 
@@ -302,6 +305,8 @@ function resetWalletUI() {
   currentXConnected = false;
   currentXUsername = null;
   currentOfficialTweetId = null;
+  noNewMissionLocked = false;
+  noNewMissionTaskId = null;
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
@@ -433,6 +438,9 @@ function listenWalletChange() {
     if (accounts && accounts.length > 0) {
       try {
         currentOfficialTweetId = null;
+        noNewMissionLocked = false;
+        noNewMissionTaskId = null;
+
         localStorage.removeItem("current_official_tweet_id");
         localStorage.removeItem("pending_verify_task_id");
         localStorage.removeItem("pending_open_tweet_id");
@@ -514,6 +522,14 @@ async function loadTasks(runPendingActions = true) {
 
     if (latestTask && latestTask.tweet_id) {
       setCurrentOfficialTweetId(latestTask.tweet_id);
+
+      if (
+        noNewMissionTaskId &&
+        Number(noNewMissionTaskId) !== Number(latestTask.id)
+      ) {
+        noNewMissionLocked = false;
+        noNewMissionTaskId = null;
+      }
     }
 
     if (activeWallet) {
@@ -663,7 +679,13 @@ function renderMissions() {
   const claimable = Boolean(progress && progress.claimable);
   const verified = Boolean(progress && progress.verified);
   const statusText = getTaskStatus(progress);
-  const verifyDisabled = isVerifying;
+
+  const noNewMissionForThisTask =
+    noNewMissionLocked &&
+    noNewMissionTaskId &&
+    Number(noNewMissionTaskId) === Number(latestTask.id);
+
+  const verifyDisabled = isVerifying || noNewMissionForThisTask;
   const openDisabled = claimed || currentXConnected;
 
   const openButtonText = claimed
@@ -674,11 +696,13 @@ function renderMissions() {
 
   const verifyButtonText = isVerifying
     ? "checking..."
-    : claimed
-      ? "Check New Mission"
-      : claimable || verified
-        ? "Claim Reward"
-        : "Verify & Claim";
+    : noNewMissionForThisTask
+      ? "No New Mission"
+      : claimed
+        ? "Check New Mission"
+        : claimable || verified
+          ? "Claim Reward"
+          : "Verify & Claim";
 
   missionList.innerHTML = `
     <div class="mission-summary">
@@ -1011,6 +1035,8 @@ async function verifyAndClaim(task) {
     return;
   }
 
+  const progress = getProgressForTask(task);
+
   try {
     isVerifying = true;
     renderMissions();
@@ -1063,6 +1089,21 @@ async function verifyAndClaim(task) {
       }
 
       const targetTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
+      const targetTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
+
+      if (
+        progress &&
+        progress.claimed &&
+        Number(targetTaskId) === Number(taskId)
+      ) {
+        noNewMissionLocked = true;
+        noNewMissionTaskId = Number(taskId);
+
+        showMessage("No new mission yet. Please try again later.", "ok");
+
+        renderMissions();
+        return;
+      }
 
       setCurrentOfficialTweetId(targetTweetId);
 
@@ -1084,6 +1125,20 @@ async function verifyAndClaim(task) {
 
     const verifiedTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
     const verifiedTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
+
+    if (
+      progress &&
+      progress.claimed &&
+      Number(verifiedTaskId) === Number(taskId)
+    ) {
+      noNewMissionLocked = true;
+      noNewMissionTaskId = Number(taskId);
+
+      showMessage("No new mission yet. Please try again later.", "ok");
+
+      renderMissions();
+      return;
+    }
 
     showMessage("Mission verified. Getting claim signature...", "ok");
 
