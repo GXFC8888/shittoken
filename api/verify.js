@@ -64,6 +64,162 @@ async function getOfficialUser() {
   return data.data;
 }
 
+async function getLatestOfficialTweet(officialId) {
+  const data = await xGet(`/users/${officialId}/tweets`, {
+    max_results: 5,
+    exclude: "retweets,replies",
+    "tweet.fields": "id,created_at"
+  });
+
+  const tweets = data.data || [];
+
+  if (!tweets.length) {
+    return null;
+  }
+
+  return tweets[0];
+}
+
+async function getTaskByTweetId(tweetId) {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select("*")
+    .eq("tweet_id", String(tweetId))
+    .order("id", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data || null;
+}
+
+async function closeOtherTasks(activeTaskId) {
+  let query = supabase
+    .from("tasks")
+    .update({
+      active: false
+    });
+
+  if (activeTaskId) {
+    query = query.neq("id", activeTaskId);
+  } else {
+    query = query.eq("active", true);
+  }
+
+  const { error } = await query;
+
+  if (error) {
+    throw error;
+  }
+}
+
+async function activateTask(task) {
+  await closeOtherTasks(task.id);
+
+  if (task.active) {
+    return task;
+  }
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      active: true
+    })
+    .eq("id", task.id)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data || task;
+}
+
+async function createTaskFromTweet(tweetId) {
+  await closeOtherTasks(null);
+
+  const title = `Official ${String(tweetId).slice(-6)}`;
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .insert({
+      title,
+      tweet_id: String(tweetId),
+      reward_amount: "1",
+      active: true,
+      created_at: new Date().toISOString()
+    })
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+async function ensureLatestTaskFromX() {
+  const official = await getOfficialUser();
+  const latestTweet = await getLatestOfficialTweet(official.id);
+
+  if (!latestTweet?.id) {
+    const { data: currentTask, error: currentTaskError } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("active", true)
+      .order("id", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (currentTaskError) {
+      throw currentTaskError;
+    }
+
+    return {
+      official,
+      task: currentTask || null
+    };
+  }
+
+  const tweetId = String(latestTweet.id);
+  const existingTask = await getTaskByTweetId(tweetId);
+
+  if (existingTask) {
+    const activeTask = await activateTask(existingTask);
+
+    return {
+      official,
+      task: activeTask
+    };
+  }
+
+  const newTask = await createTaskFromTweet(tweetId);
+
+  return {
+    official,
+    task: newTask
+  };
+}
+
+async function getUserByWallet(wallet) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("wallet_address", wallet)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data || null;
+}
+
 async function getXUserByUsername(username) {
   const cleanUsername = String(username || "").replace("@", "").trim();
 
@@ -80,51 +236,6 @@ async function getXUserByUsername(username) {
   }
 
   return data.data;
-}
-
-async function getLatestActiveTask() {
-  const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("active", true)
-    .order("id", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
-  return data || null;
-}
-
-async function getTaskById(taskId) {
-  const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("id", taskId)
-    .eq("active", true)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
-  return data || null;
-}
-
-async function getUserByWallet(wallet) {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("wallet_address", wallet)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
-  return data || null;
 }
 
 async function fixAndGetRealXUser(user) {
@@ -384,19 +495,12 @@ export default async function handler(req, res) {
     const { wallet, taskId } = req.body || {};
 
     const walletAddress = String(wallet || "").toLowerCase();
-    const currentTaskId = Number(taskId);
+    const requestedTaskId = taskId ? Number(taskId) : null;
 
     if (!walletAddress || !walletAddress.startsWith("0x")) {
       return res.status(400).json({
         success: false,
         error: "Invalid wallet"
-      });
-    }
-
-    if (!currentTaskId) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing taskId"
       });
     }
 
@@ -418,54 +522,32 @@ export default async function handler(req, res) {
       });
     }
 
-    const task = await getTaskById(currentTaskId);
+    const latest = await ensureLatestTaskFromX();
 
-    if (!task) {
-      return res.status(404).json({
-        success: false,
-        error: "Task not found"
-      });
-    }
-
-    const latestTask = await getLatestActiveTask();
-
-    if (!latestTask) {
+    if (!latest.task) {
       return res.status(404).json({
         success: false,
         error: "No active task"
       });
     }
 
-    if (Number(task.id) !== Number(latestTask.id)) {
-      return res.status(400).json({
-        success: false,
-        error: "Only the latest official post can be claimed",
-        message: "Old posts are not claimable.",
-        taskId: task.id,
-        latestTaskId: latestTask.id,
-        tweetId: String(task.tweet_id),
-        latestTweetId: String(latestTask.tweet_id)
-      });
-    }
-
+    const task = latest.task;
     const tweetId = String(task.tweet_id);
-
     const fixedXUser = await fixAndGetRealXUser(user);
 
     console.log("Verify request:", {
       wallet: walletAddress,
-      taskId: task.id,
+      requestedTaskId,
+      actualTaskId: task.id,
       tweetId,
       oldXUserId: user.x_user_id,
       fixedXUserId: fixedXUser.xUserId,
       xUsername: fixedXUser.xUsername
     });
 
-    const official = await getOfficialUser();
-
     const result = await checkTaskStatus({
       tweetId,
-      officialId: official.id,
+      officialId: latest.official.id,
       xUserId: fixedXUser.xUserId,
       xUsername: fixedXUser.xUsername,
       accessToken: user.x_access_token
@@ -473,7 +555,8 @@ export default async function handler(req, res) {
 
     console.log("Verify result:", {
       wallet: walletAddress,
-      taskId: task.id,
+      requestedTaskId,
+      actualTaskId: task.id,
       tweetId,
       followed: result.followed,
       liked: result.liked,
@@ -501,7 +584,10 @@ export default async function handler(req, res) {
         success: false,
         message: "Mission is not completed yet.",
         taskId: task.id,
+        requestedTaskId,
+        latestTaskId: task.id,
         tweetId,
+        latestTweetId: tweetId,
         followed: result.followed,
         liked: result.liked,
         reposted: result.reposted,
@@ -515,7 +601,10 @@ export default async function handler(req, res) {
       success: true,
       message: "Mission verified.",
       taskId: task.id,
+      requestedTaskId,
+      latestTaskId: task.id,
       tweetId,
+      latestTweetId: tweetId,
       followed: result.followed,
       liked: result.liked,
       reposted: result.reposted,
