@@ -30,7 +30,7 @@ function buildClaimUrl(walletAddress, xUsername) {
     params.set("x_username", xUsername);
   }
 
-  return `${siteUrl}/?${params.toString()}`;
+  return `${siteUrl}/?${params.toString()}#airdrop`;
 }
 
 async function saveUserAuthorization({
@@ -100,6 +100,7 @@ async function saveUserAuthorization({
 
 function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
   const officialUsername = String(OFFICIAL_X_USERNAME).replace("@", "");
+
   const officialWebUrl = `https://x.com/${officialUsername}`;
   const twitterAppUrl = `twitter://user?screen_name=${officialUsername}`;
   const claimUrl = buildClaimUrl(walletAddress, xUsername);
@@ -190,12 +191,23 @@ function sendConnectedAndOpenXPage(res, walletAddress, xUsername) {
 <body>
   <div class="box">
     <h1>X Connected</h1>
-    <p class="ok">@${safeXUsername} connected successfully.</p>
-    <p>Opening @${safeOfficialUsername} now.</p>
-    <p>Follow, like, repost, and comment on the latest official post, then manually return to the wallet page to claim.</p>
 
-    <a class="btn" id="openXBtn" href="${safeTwitterAppUrl}">Open official X</a>
-    <a class="btn light" id="backBtn" href="${safeClaimUrl}">Back to claim page</a>
+    <p class="ok">@${safeXUsername} connected successfully.</p>
+
+    <p>Opening @${safeOfficialUsername} now.</p>
+
+    <p>
+      Follow @${safeOfficialUsername} first. Then open the latest mission post,
+      like, repost, and comment. After that, manually return to the wallet page to claim.
+    </p>
+
+    <a class="btn" id="openXBtn" href="${safeTwitterAppUrl}">
+      Open official X
+    </a>
+
+    <a class="btn light" id="backBtn" href="${safeClaimUrl}">
+      Back to claim page
+    </a>
 
     <p class="small">Wallet: ${safeWallet}</p>
     <p class="small">Official X: ${safeOfficialWebUrl}</p>
@@ -273,7 +285,7 @@ export default async function handler(req, res) {
     const siteUrl = getSiteUrl();
 
     if (!code || !state) {
-      return res.redirect(`${siteUrl}/?x_error=missing_oauth_params`);
+      return res.redirect(`${siteUrl}/?x_error=missing_oauth_params#airdrop`);
     }
 
     const { data: oauthState, error: stateError } = await supabase
@@ -287,19 +299,19 @@ export default async function handler(req, res) {
     }
 
     if (!oauthState) {
-      return res.redirect(`${siteUrl}/?x_error=oauth_state_not_found`);
+      return res.redirect(`${siteUrl}/?x_error=oauth_state_not_found#airdrop`);
     }
 
     if (new Date(oauthState.expires_at).getTime() < Date.now()) {
       await supabase.from("oauth_states").delete().eq("state", state);
-      return res.redirect(`${siteUrl}/?x_error=oauth_expired`);
+      return res.redirect(`${siteUrl}/?x_error=oauth_expired#airdrop`);
     }
 
     const rawWalletAddress = oauthState.wallet_address;
 
     if (!rawWalletAddress) {
       await supabase.from("oauth_states").delete().eq("state", state);
-      return res.redirect(`${siteUrl}/?x_error=missing_wallet`);
+      return res.redirect(`${siteUrl}/?x_error=missing_wallet#airdrop`);
     }
 
     const walletAddress = String(rawWalletAddress).toLowerCase();
@@ -343,10 +355,10 @@ export default async function handler(req, res) {
     if (
       existingXUser &&
       existingXUser.wallet_address &&
-      existingXUser.wallet_address.toLowerCase() !== walletAddress
+      String(existingXUser.wallet_address).toLowerCase() !== walletAddress
     ) {
       await supabase.from("oauth_states").delete().eq("state", state);
-      return res.redirect(`${siteUrl}/?x_error=already_bound`);
+      return res.redirect(`${siteUrl}/?x_error=already_bound#airdrop`);
     }
 
     const tokenExpiresAt = expiresIn
@@ -372,7 +384,7 @@ export default async function handler(req, res) {
       throw savedUserError;
     }
 
-    if (!savedUser || !savedUser.x_access_token) {
+    if (!savedUser || !savedUser.x_user_id || !savedUser.x_access_token) {
       throw new Error("X authorization was not saved to users table");
     }
 
@@ -389,6 +401,9 @@ export default async function handler(req, res) {
     return sendConnectedAndOpenXPage(res, walletAddress, xUsername);
   } catch (err) {
     console.error("X callback error:", err);
-    return res.status(500).send("X callback failed");
+
+    const siteUrl = getSiteUrl();
+
+    return res.redirect(`${siteUrl}/?x_error=callback_failed#airdrop`);
   }
 }
