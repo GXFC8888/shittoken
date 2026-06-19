@@ -33,7 +33,6 @@ let currentXUsername = null;
 let isConnectingWallet = false;
 let isLoadingTasks = false;
 let isVerifying = false;
-let localClaimLocked = false;
 
 let currentOfficialTweetId =
   localStorage.getItem("current_official_tweet_id") || null;
@@ -81,6 +80,19 @@ function shortAddress(address) {
   return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected";
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function normalizeWallet(address) {
+  return String(address || "").toLowerCase();
+}
+
 function setCurrentOfficialTweetId(tweetId) {
   if (!tweetId) return;
 
@@ -88,17 +100,36 @@ function setCurrentOfficialTweetId(tweetId) {
   localStorage.setItem("current_official_tweet_id", currentOfficialTweetId);
 }
 
-function getOfficialXTargetUrl() {
-  if (currentOfficialTweetId) {
-    return `https://x.com/${OFFICIAL_X_USERNAME}/status/${currentOfficialTweetId}`;
+function getLatestTask() {
+  if (!currentTasks.length) return null;
+
+  return [...currentTasks]
+    .filter((task) => task && task.active !== false)
+    .sort((a, b) => Number(a.id || 0) - Number(b.id || 0))
+    .at(-1) || null;
+}
+
+function getOfficialXTargetUrl(tweetId = null) {
+  const id =
+    tweetId ||
+    currentOfficialTweetId ||
+    (getLatestTask() ? String(getLatestTask().tweet_id) : null);
+
+  if (id) {
+    return `https://x.com/${OFFICIAL_X_USERNAME}/status/${id}`;
   }
 
   return OFFICIAL_X_WEB_URL;
 }
 
-function getOfficialXTargetAppUrl() {
-  if (currentOfficialTweetId) {
-    return `twitter://status?id=${currentOfficialTweetId}`;
+function getOfficialXTargetAppUrl(tweetId = null) {
+  const id =
+    tweetId ||
+    currentOfficialTweetId ||
+    (getLatestTask() ? String(getLatestTask().tweet_id) : null);
+
+  if (id) {
+    return `twitter://status?id=${id}`;
   }
 
   return OFFICIAL_X_APP_URL;
@@ -110,6 +141,9 @@ function getReadableError(error) {
   const rawMessage = [
     error.data && error.data.message,
     error.error && error.error.message,
+    error.responseData && error.responseData.message,
+    error.responseData && error.responseData.error,
+    error.responseData && error.responseData.detail,
     error.reason,
     error.message,
     String(error)
@@ -149,6 +183,9 @@ function getReadableError(error) {
 
   if (error.data && error.data.message) return error.data.message;
   if (error.error && error.error.message) return error.error.message;
+  if (error.responseData && error.responseData.detail) return error.responseData.detail;
+  if (error.responseData && error.responseData.error) return error.responseData.error;
+  if (error.responseData && error.responseData.message) return error.responseData.message;
   if (error.reason) return error.reason;
   if (error.message) return error.message;
 
@@ -204,7 +241,7 @@ async function switchToBSC() {
 }
 
 function getXStorageKey(address) {
-  return `x_connected_${String(address || "").toLowerCase()}`;
+  return `x_connected_${normalizeWallet(address)}`;
 }
 
 function setXConnected(address) {
@@ -248,7 +285,7 @@ function updateWalletUI() {
   }
 
   if (refreshMissionsBtn) {
-    refreshMissionsBtn.innerText = "Connect Wallet";
+    refreshMissionsBtn.innerText = activeWallet ? "Wallet Connected" : "Connect Wallet";
     refreshMissionsBtn.disabled = Boolean(activeWallet);
   }
 }
@@ -264,13 +301,14 @@ function resetWalletUI() {
   currentProgress = [];
   currentXConnected = false;
   currentXUsername = null;
-  localClaimLocked = false;
   currentOfficialTweetId = null;
 
   localStorage.removeItem("wallet_connected");
   localStorage.removeItem("wallet_address");
   localStorage.removeItem("pending_official_verify");
+  localStorage.removeItem("pending_verify_task_id");
   localStorage.removeItem("pending_official_x");
+  localStorage.removeItem("pending_open_tweet_id");
   localStorage.removeItem("pending_x_wallet");
   localStorage.removeItem("x_username");
   localStorage.removeItem("current_official_tweet_id");
@@ -394,9 +432,10 @@ function listenWalletChange() {
   walletProvider.on("accountsChanged", async (accounts) => {
     if (accounts && accounts.length > 0) {
       try {
-        localClaimLocked = false;
         currentOfficialTweetId = null;
         localStorage.removeItem("current_official_tweet_id");
+        localStorage.removeItem("pending_verify_task_id");
+        localStorage.removeItem("pending_open_tweet_id");
 
         await setupWalletAfterConnected();
 
@@ -434,7 +473,7 @@ function connectX() {
   window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
 }
 
-async function loadTasks(runPendingVerify = true) {
+async function loadTasks(runPendingActions = true) {
   if (isLoadingTasks) return;
 
   try {
@@ -448,17 +487,28 @@ async function loadTasks(runPendingVerify = true) {
     const activeWallet = userAddress || localStorage.getItem("wallet_address") || "";
     const walletQuery = activeWallet ? `?wallet=${encodeURIComponent(activeWallet)}` : "";
 
-    const response = await fetch(`/api/tasks${walletQuery}`);
-    const data = await response.json();
+    const response = await fetch(`/api/tasks${walletQuery}`, {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store"
+    });
+
+    const data = await response.json().catch(() => ({}));
 
     if (!data.success) {
       throw new Error(data.detail || data.error || "Failed to load missions");
     }
 
-    currentTasks = data.tasks || [];
-    currentProgress = data.progress || [];
+    currentTasks = Array.isArray(data.tasks) ? data.tasks : [];
+    currentProgress = Array.isArray(data.progress) ? data.progress : [];
     currentXConnected = Boolean(data.xConnected);
     currentXUsername = data.xUsername || null;
+
+    const latestTask = getLatestTask();
+
+    if (latestTask && latestTask.tweet_id) {
+      setCurrentOfficialTweetId(latestTask.tweet_id);
+    }
 
     if (activeWallet) {
       if (currentXConnected) {
@@ -471,6 +521,7 @@ async function loadTasks(runPendingVerify = true) {
         clearXConnected(activeWallet);
         localStorage.removeItem("x_username");
         localStorage.removeItem("pending_official_verify");
+        localStorage.removeItem("pending_verify_task_id");
       }
     }
 
@@ -478,19 +529,35 @@ async function loadTasks(runPendingVerify = true) {
     renderMissions();
 
     if (activeWallet && currentXConnected) {
-      showMessage("X account connected. Finish the latest post, then claim.", "ok");
+      showMessage("X account connected. Complete the latest mission, then claim.", "ok");
 
-      const pendingVerify = localStorage.getItem("pending_official_verify") === "true";
+      if (runPendingActions) {
+        const pendingTweetId = localStorage.getItem("pending_open_tweet_id");
+        const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
 
-      if (runPendingVerify && pendingVerify && !localClaimLocked) {
-        localStorage.removeItem("pending_official_verify");
+        if (pendingTweetId) {
+          localStorage.removeItem("pending_open_tweet_id");
+          setTimeout(() => {
+            openTaskXDirect(pendingTweetId);
+          }, 600);
+          return;
+        }
 
-        setTimeout(() => {
-          verifyAndClaim();
-        }, 600);
+        if (pendingVerifyTaskId) {
+          const pendingTask = getTaskById(pendingVerifyTaskId);
+          localStorage.removeItem("pending_verify_task_id");
+          localStorage.removeItem("pending_official_verify");
+
+          if (pendingTask && isLatestTask(pendingTask)) {
+            setTimeout(() => {
+              verifyAndClaim(pendingTask);
+            }, 600);
+            return;
+          }
+        }
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Tap Open X to authorize first, then tap Claim Reward.", "ok");
+      showMessage("Wallet connected. Connect X first, then complete the latest mission.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -503,14 +570,70 @@ async function loadTasks(runPendingVerify = true) {
     const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
     if (refreshMissionsBtn) {
-      refreshMissionsBtn.innerText = "Connect Wallet";
+      refreshMissionsBtn.innerText = activeWallet ? "Wallet Connected" : "Connect Wallet";
       refreshMissionsBtn.disabled = Boolean(activeWallet);
     }
   }
 }
 
+function getTaskById(taskId) {
+  return currentTasks.find((item) => Number(item.id) === Number(taskId)) || null;
+}
+
+function isLatestTask(task) {
+  const latestTask = getLatestTask();
+
+  if (!task || !latestTask) return false;
+
+  return Number(task.id) === Number(latestTask.id);
+}
+
+function getProgressByTaskId(taskId) {
+  return (
+    currentProgress.find((item) => Number(item.task_id) === Number(taskId)) ||
+    null
+  );
+}
+
+function getProgressByTweetId(tweetId) {
+  return (
+    currentProgress.find((item) => String(item.tweet_id) === String(tweetId)) ||
+    null
+  );
+}
+
+function getProgressForTask(task) {
+  if (!task) return null;
+
+  return (
+    getProgressByTaskId(task.id) ||
+    getProgressByTweetId(task.tweet_id)
+  );
+}
+
+function getLatestTaskProgress() {
+  const latestTask = getLatestTask();
+  return latestTask ? getProgressForTask(latestTask) : null;
+}
+
 function getClaimedCount() {
   return currentProgress.filter((item) => item.claimed).length;
+}
+
+function getTaskStatus(progress) {
+  if (!progress) return "Not completed";
+  if (progress.claimed) return "Claimed";
+  if (progress.claimable || progress.verified) return "Ready";
+  if (
+    progress.followed ||
+    progress.liked ||
+    progress.reposted ||
+    progress.commented
+  ) {
+    return "Checking";
+  }
+
+  return "Not completed";
 }
 
 function renderMissions() {
@@ -521,46 +644,73 @@ function renderMissions() {
   if (!activeWallet) {
     missionList.innerHTML = `
       <div class="mission-card empty">
-        <h3>Connect your wallet to load official X mission.</h3>
+        <h3>Connect your wallet to load the latest official X mission.</h3>
         <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
       </div>
     `;
     return;
   }
 
-  const claimedCount = getClaimedCount();
-  const displayClaimedCount = localClaimLocked ? Math.max(claimedCount, 1) : claimedCount;
-  const connectedX = isXConnected();
-  const openXDisabled = connectedX;
-  const verifyDisabled = localClaimLocked || isVerifying;
-  const verifyButtonText = localClaimLocked ? "claimed" : isVerifying ? "checking..." : "Claim Reward";
+  const latestTask = getLatestTask();
+
+  if (!latestTask) {
+    missionList.innerHTML = `
+      <div class="mission-card empty">
+        <h3>No active mission yet.</h3>
+        <p>Please refresh later.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const progress = getProgressForTask(latestTask);
+  const tweetId = String(latestTask.tweet_id);
+  const tweetUrl = `https://x.com/${OFFICIAL_X_USERNAME}/status/${tweetId}`;
+  const claimed = Boolean(progress && progress.claimed);
+  const claimable = Boolean(progress && progress.claimable);
+  const verified = Boolean(progress && progress.verified);
+  const statusText = getTaskStatus(progress);
+  const verifyDisabled = isVerifying || claimed;
+  const openDisabled = claimed;
+  const verifyButtonText = claimed
+    ? "Claimed"
+    : isVerifying
+      ? "checking..."
+      : claimable || verified
+        ? "Claim Reward"
+        : "Verify & Claim";
 
   missionList.innerHTML = `
-    <div class="mission-card" data-official-x="true">
+    <div class="mission-summary">
+      <span>Latest mission only</span>
+      <span>${currentXConnected ? `@${escapeHtml(currentXUsername || "connected")}` : "X not connected"}</span>
+    </div>
+
+    <div class="mission-card" data-task-id="${latestTask.id}" data-tweet-id="${tweetId}">
       <div class="mission-head">
         <div>
-          <h3>Official X Mission</h3>
-          <p class="reward">Reward: 1 drop for the latest official post</p>
+          <h3>${escapeHtml(latestTask.title || "Official X Mission")}</h3>
+          <p class="reward">Reward: ${escapeHtml(latestTask.reward_amount || "1")} drop</p>
         </div>
-        <span class="mission-status ready">${displayClaimedCount} claimed</span>
+        <span class="mission-status ${claimed ? "done" : "ready"}">${statusText}</span>
       </div>
 
       <p>
         Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
-        Come back here and tap Claim Reward.
-        Only the latest official post can be claimed once.
+        Come back here and tap Verify & Claim.
+        Old posts are not claimable.
       </p>
 
-      <a class="mission-link" href="${getOfficialXTargetUrl()}" target="_blank" rel="noopener noreferrer">
-        ${getOfficialXTargetUrl()}
+      <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
+        ${tweetUrl}
       </a>
 
       <div class="mission-actions">
-        <button class="btn full light open-task-btn" type="button" ${openXDisabled ? "disabled" : ""}>
-          Open X
+        <button class="btn full light open-task-btn" type="button" data-tweet-id="${tweetId}" ${openDisabled ? "disabled" : ""}>
+          ${claimed ? "Completed" : "Open X"}
         </button>
 
-        <button class="btn full gold verify-task-btn" type="button" ${verifyDisabled ? "disabled" : ""}>
+        <button class="btn full gold verify-task-btn" type="button" data-task-id="${latestTask.id}" ${verifyDisabled ? "disabled" : ""}>
           ${verifyButtonText}
         </button>
       </div>
@@ -571,22 +721,40 @@ function renderMissions() {
   const verifyButton = missionList.querySelector(".verify-task-btn");
 
   if (openButton) {
-    openButton.addEventListener("click", openOfficialX);
+    openButton.addEventListener("click", () => {
+      if (claimed) {
+        showMessage("Latest mission already claimed.", "ok");
+        return;
+      }
+
+      openTaskX(tweetId);
+    });
   }
 
   if (verifyButton) {
     verifyButton.addEventListener("click", () => {
-      if (localClaimLocked) {
-        showMessage("This post has already been claimed.", "ok");
+      if (claimed) {
+        showMessage("Latest mission already claimed.", "ok");
         return;
       }
 
-      verifyAndClaim();
+      verifyAndClaim(latestTask);
     });
   }
 }
 
 function openOfficialX() {
+  const latestTask = getLatestTask();
+
+  if (latestTask && latestTask.tweet_id) {
+    openTaskX(latestTask.tweet_id);
+    return;
+  }
+
+  openTaskX(null);
+}
+
+function openTaskX(tweetId) {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (!activeWallet) {
@@ -594,7 +762,26 @@ function openOfficialX() {
     return;
   }
 
+  const latestTask = getLatestTask();
+
+  if (latestTask && tweetId && String(tweetId) !== String(latestTask.tweet_id)) {
+    showMessage("Only the latest official post can be claimed.", "err");
+    return;
+  }
+
+  const latestProgress = getLatestTaskProgress();
+
+  if (latestProgress && latestProgress.claimed) {
+    showMessage("Latest mission already claimed.", "ok");
+    return;
+  }
+
   localStorage.setItem("pending_official_x", "true");
+
+  if (tweetId) {
+    localStorage.setItem("pending_open_tweet_id", String(tweetId));
+    setCurrentOfficialTweetId(tweetId);
+  }
 
   if (!isXConnected()) {
     localStorage.setItem("pending_x_wallet", activeWallet);
@@ -608,19 +795,34 @@ function openOfficialX() {
     return;
   }
 
-  openOfficialXDirect();
+  localStorage.removeItem("pending_open_tweet_id");
+  openTaskXDirect(tweetId);
 }
 
 function openOfficialXDirect() {
-  localStorage.setItem("pending_official_x", "true");
+  const latestTask = getLatestTask();
+  const tweetId =
+    currentOfficialTweetId ||
+    (latestTask && latestTask.tweet_id ? String(latestTask.tweet_id) : null);
+
+  openTaskXDirect(tweetId);
+}
+
+function openTaskXDirect(tweetId) {
+  const latestTask = getLatestTask();
+
+  if (latestTask && tweetId && String(tweetId) !== String(latestTask.tweet_id)) {
+    showMessage("Only the latest official post can be claimed.", "err");
+    return;
+  }
 
   showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest official post, then manually return here to claim.`,
+    `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest post, then manually return here to claim.`,
     "ok"
   );
 
-  const targetWebUrl = getOfficialXTargetUrl();
-  const targetAppUrl = getOfficialXTargetAppUrl();
+  const targetWebUrl = getOfficialXTargetUrl(tweetId);
+  const targetAppUrl = getOfficialXTargetAppUrl(tweetId);
 
   try {
     navigator.clipboard.writeText(targetWebUrl).catch(() => {});
@@ -699,9 +901,13 @@ function needsXAuthorization(data) {
   );
 }
 
-function redirectToXAuthorization(activeWallet) {
+function redirectToXAuthorization(activeWallet, taskId = null) {
   localStorage.setItem("pending_official_verify", "true");
   localStorage.setItem("pending_x_wallet", activeWallet);
+
+  if (taskId) {
+    localStorage.setItem("pending_verify_task_id", String(taskId));
+  }
 
   showMessage("X authorization is required once. Redirecting to X...", "ok");
 
@@ -716,9 +922,10 @@ async function getClaimSignature(activeWallet, tweetId) {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({
       wallet: activeWallet,
-      tweetId
+      tweetId: String(tweetId)
     })
   });
 
@@ -791,6 +998,7 @@ async function recordClaim(activeWallet, taskId, txHash) {
     headers: {
       "Content-Type": "application/json"
     },
+    credentials: "include",
     body: JSON.stringify({
       wallet: activeWallet,
       taskId: Number(taskId),
@@ -809,14 +1017,8 @@ async function recordClaim(activeWallet, taskId, txHash) {
   return data;
 }
 
-async function verifyAndClaim() {
-  if (isVerifying || localClaimLocked) {
-    if (localClaimLocked) {
-      showMessage("This post has already been claimed.", "ok");
-    }
-
-    return;
-  }
+async function verifyAndClaim(task) {
+  if (isVerifying) return;
 
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
@@ -825,19 +1027,46 @@ async function verifyAndClaim() {
     return;
   }
 
+  const latestTask = getLatestTask();
+
+  if (!task || !task.id || !latestTask) {
+    showMessage("Mission data missing. Please refresh and try again.", "err");
+    return;
+  }
+
+  if (!isLatestTask(task)) {
+    showMessage("Only the latest official post can be claimed.", "err");
+    return;
+  }
+
+  const progress = getProgressForTask(task);
+
+  if (progress && progress.claimed) {
+    showMessage("Latest mission already claimed.", "ok");
+    renderMissions();
+    return;
+  }
+
   try {
     isVerifying = true;
     renderMissions();
 
-    showMessage("Scanning latest official X post...");
+    const taskId = Number(task.id);
+    const tweetId = String(task.tweet_id);
+
+    setCurrentOfficialTweetId(tweetId);
+
+    showMessage("Checking latest X mission...");
 
     const verifyResponse = await fetch("/api/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
+      credentials: "include",
       body: JSON.stringify({
-        wallet: activeWallet
+        wallet: activeWallet,
+        taskId
       })
     });
 
@@ -852,62 +1081,47 @@ async function verifyAndClaim() {
         clearXConnected(activeWallet);
         currentXConnected = false;
 
-        showMessage(
-          "X authorization is required. Redirecting to X...",
-          "ok"
-        );
-
         updateWalletUI();
         renderMissions();
 
-        setTimeout(() => {
-          redirectToXAuthorization(activeWallet);
-        }, 800);
-
+        redirectToXAuthorization(activeWallet, taskId);
         return;
       }
 
       if (shouldLockClaimButton(verifyData)) {
-        localClaimLocked = true;
-
         showMessage(
-          verifyData.message || verifyData.error || "Latest official post already claimed.",
+          verifyData.message || verifyData.error || "Latest mission already claimed.",
           "ok"
         );
 
-        renderMissions();
+        await loadTasks(false);
         return;
       }
 
-      if (verifyData.tweetId || verifyData.latestTweetId) {
-        setCurrentOfficialTweetId(verifyData.tweetId || verifyData.latestTweetId);
-      }
-
       showMessage(
-        "Latest official post is not completed yet. Opening the exact X post...",
+        verifyData.message ||
+          verifyData.error ||
+          "Latest mission is not completed yet. Opening the exact X post...",
         "ok"
       );
 
+      await loadTasks(false);
+
       setTimeout(() => {
-        openOfficialXDirect();
+        openTaskXDirect(tweetId);
       }, 800);
 
       return;
     }
 
-    if (!verifyData.taskId || !verifyData.tweetId) {
-      showMessage("Verified, but missing claim data. Please refresh and try again.", "err");
-      await loadTasks(false);
-      return;
-    }
+    const verifiedTweetId = String(verifyData.tweetId || tweetId);
+    const verifiedTaskId = verifyData.taskId || taskId;
 
-    setCurrentOfficialTweetId(verifyData.tweetId);
-
-    showMessage("Latest official post verified. Getting claim signature...", "ok");
+    showMessage("Mission verified. Getting claim signature...", "ok");
 
     const signatureData = await getClaimSignature(
       activeWallet,
-      verifyData.tweetId
+      verifiedTweetId
     );
 
     const txHash = await claimOnChain(signatureData, activeWallet);
@@ -916,15 +1130,11 @@ async function verifyAndClaim() {
 
     await recordClaim(
       activeWallet,
-      signatureData.taskId || verifyData.taskId,
+      signatureData.taskId || verifiedTaskId,
       txHash
     );
 
-    localClaimLocked = true;
-
     showMessage("Claim successful. Tokens sent to your wallet.", "ok");
-
-    renderMissions();
 
     await loadTasks(false);
   } catch (error) {
@@ -937,9 +1147,8 @@ async function verifyAndClaim() {
       shouldLockClaimButton(responseData) ||
       String(readableError).toLowerCase().includes("already claimed")
     ) {
-      localClaimLocked = true;
-      showMessage("Latest official post already claimed.", "ok");
-      renderMissions();
+      showMessage("Latest mission already claimed.", "ok");
+      await loadTasks(false);
     } else {
       showMessage("Claim failed: " + readableError, "err");
     }
@@ -953,8 +1162,8 @@ function handleReturnFromX() {
   const pendingOfficialX = localStorage.getItem("pending_official_x");
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
-  if (pendingOfficialX && activeWallet && !localClaimLocked) {
-    showMessage("Back from X? Tap Claim Reward after following, liking, reposting, and commenting.", "ok");
+  if (pendingOfficialX && activeWallet) {
+    showMessage("Back from X? Tap Verify & Claim after following, liking, reposting, and commenting.", "ok");
   }
 }
 
@@ -965,7 +1174,7 @@ function handleUrlStatus() {
     const walletFromUrl = params.get("wallet");
     const xUsernameFromUrl = params.get("x_username");
 
-    showMessage("X connected. Finish the latest post, then claim.", "ok");
+    showMessage("X connected. Complete the latest mission, then claim.", "ok");
 
     const activeWallet =
       walletFromUrl ||
