@@ -64,6 +64,24 @@ async function getOfficialUser() {
   return data.data;
 }
 
+async function getXUserByUsername(username) {
+  const cleanUsername = String(username || "").replace("@", "").trim();
+
+  if (!cleanUsername) {
+    throw new Error("Missing X username");
+  }
+
+  const data = await xGet(`/users/by/username/${cleanUsername}`, {
+    "user.fields": "id,username"
+  });
+
+  if (!data?.data?.id) {
+    throw new Error("X user not found by username");
+  }
+
+  return data.data;
+}
+
 async function getLatestActiveTask() {
   const { data, error } = await supabase
     .from("tasks")
@@ -109,6 +127,43 @@ async function getUserByWallet(wallet) {
   return data || null;
 }
 
+async function fixAndGetRealXUser(user) {
+  const realXUser = await getXUserByUsername(user.x_username);
+
+  const realXUserId = String(realXUser.id);
+  const realXUsername = String(realXUser.username);
+
+  if (
+    String(user.x_user_id) !== realXUserId ||
+    String(user.x_username) !== realXUsername
+  ) {
+    const { error } = await supabase
+      .from("users")
+      .update({
+        x_user_id: realXUserId,
+        x_username: realXUsername,
+        updated_at: new Date().toISOString()
+      })
+      .eq("wallet_address", String(user.wallet_address).toLowerCase());
+
+    if (error) {
+      throw error;
+    }
+
+    console.log("Fixed users.x_user_id:", {
+      wallet: user.wallet_address,
+      oldXUserId: user.x_user_id,
+      newXUserId: realXUserId,
+      username: realXUsername
+    });
+  }
+
+  return {
+    xUserId: realXUserId,
+    xUsername: realXUsername
+  };
+}
+
 async function hasFollowed(xUserId, officialId, token) {
   try {
     const data = await xGet(
@@ -119,11 +174,25 @@ async function hasFollowed(xUserId, officialId, token) {
       token
     );
 
-    return (data.data || []).some((user) => {
+    const followed = (data.data || []).some((user) => {
       return String(user.id) === String(officialId);
     });
+
+    console.log("Follow check:", {
+      xUserId,
+      officialId,
+      followed,
+      count: data.data ? data.data.length : 0
+    });
+
+    return followed;
   } catch (error) {
-    console.error("Follow check failed:", error.message);
+    console.error("Follow check failed:", {
+      xUserId,
+      officialId,
+      message: error.message
+    });
+
     return false;
   }
 }
@@ -139,11 +208,25 @@ async function hasLiked(tweetId, xUserId, token) {
       token
     );
 
-    return (data.data || []).some((tweet) => {
+    const liked = (data.data || []).some((tweet) => {
       return String(tweet.id) === String(tweetId);
     });
+
+    console.log("Like check:", {
+      tweetId,
+      xUserId,
+      liked,
+      count: data.data ? data.data.length : 0
+    });
+
+    return liked;
   } catch (error) {
-    console.error("Like check failed:", error.message);
+    console.error("Like check failed:", {
+      tweetId,
+      xUserId,
+      message: error.message
+    });
+
     return false;
   }
 }
@@ -154,11 +237,25 @@ async function hasReposted(tweetId, xUserId) {
       max_results: 100
     });
 
-    return (data.data || []).some((user) => {
+    const reposted = (data.data || []).some((user) => {
       return String(user.id) === String(xUserId);
     });
+
+    console.log("Repost check:", {
+      tweetId,
+      xUserId,
+      reposted,
+      count: data.data ? data.data.length : 0
+    });
+
+    return reposted;
   } catch (error) {
-    console.error("Repost check failed:", error.message);
+    console.error("Repost check failed:", {
+      tweetId,
+      xUserId,
+      message: error.message
+    });
+
     return false;
   }
 }
@@ -177,14 +274,30 @@ async function hasCommented(tweetId, xUserId, xUsername) {
       "tweet.fields": "id,author_id,conversation_id"
     });
 
-    return (data.data || []).some((tweet) => {
+    const commented = (data.data || []).some((tweet) => {
       return (
         String(tweet.author_id) === String(xUserId) &&
         String(tweet.conversation_id) === String(tweetId)
       );
     });
+
+    console.log("Comment check:", {
+      tweetId,
+      xUserId,
+      xUsername: username,
+      commented,
+      count: data.data ? data.data.length : 0
+    });
+
+    return commented;
   } catch (error) {
-    console.error("Comment check failed:", error.message);
+    console.error("Comment check failed:", {
+      tweetId,
+      xUserId,
+      xUsername,
+      message: error.message
+    });
+
     return false;
   }
 }
@@ -196,6 +309,13 @@ async function checkTaskStatus({
   xUsername,
   accessToken
 }) {
+  console.log("Check task status params:", {
+    tweetId,
+    officialId,
+    xUserId,
+    xUsername
+  });
+
   const [followed, liked, reposted, commented] = await Promise.all([
     hasFollowed(xUserId, officialId, accessToken),
     hasLiked(tweetId, xUserId, accessToken),
@@ -282,7 +402,7 @@ export default async function handler(req, res) {
 
     const user = await getUserByWallet(walletAddress);
 
-    if (!user?.x_user_id) {
+    if (!user?.x_user_id || !user?.x_username) {
       return res.status(400).json({
         success: false,
         error: "X authorization required",
@@ -330,12 +450,15 @@ export default async function handler(req, res) {
 
     const tweetId = String(task.tweet_id);
 
+    const fixedXUser = await fixAndGetRealXUser(user);
+
     console.log("Verify request:", {
       wallet: walletAddress,
       taskId: task.id,
       tweetId,
-      xUserId: user.x_user_id,
-      xUsername: user.x_username
+      oldXUserId: user.x_user_id,
+      fixedXUserId: fixedXUser.xUserId,
+      xUsername: fixedXUser.xUsername
     });
 
     const official = await getOfficialUser();
@@ -343,8 +466,8 @@ export default async function handler(req, res) {
     const result = await checkTaskStatus({
       tweetId,
       officialId: official.id,
-      xUserId: user.x_user_id,
-      xUsername: user.x_username,
+      xUserId: fixedXUser.xUserId,
+      xUsername: fixedXUser.xUsername,
       accessToken: user.x_access_token
     });
 
@@ -363,8 +486,8 @@ export default async function handler(req, res) {
       task_id: task.id,
       tweet_id: tweetId,
       wallet_address: walletAddress,
-      x_user_id: user.x_user_id,
-      x_username: user.x_username,
+      x_user_id: fixedXUser.xUserId,
+      x_username: fixedXUser.xUsername,
       followed: result.followed,
       liked: result.liked,
       reposted: result.reposted,
