@@ -663,7 +663,7 @@ function renderMissions() {
   const claimable = Boolean(progress && progress.claimable);
   const verified = Boolean(progress && progress.verified);
   const statusText = getTaskStatus(progress);
-  const verifyDisabled = isVerifying || claimed;
+  const verifyDisabled = isVerifying;
   const openDisabled = claimed || currentXConnected;
 
   const openButtonText = claimed
@@ -672,10 +672,10 @@ function renderMissions() {
       ? "X Authorized"
       : "Open X";
 
-  const verifyButtonText = claimed
-    ? "Claimed"
-    : isVerifying
-      ? "checking..."
+  const verifyButtonText = isVerifying
+    ? "checking..."
+    : claimed
+      ? "Check New Mission"
       : claimable || verified
         ? "Claim Reward"
         : "Verify & Claim";
@@ -738,11 +738,6 @@ function renderMissions() {
 
   if (verifyButton) {
     verifyButton.addEventListener("click", () => {
-      if (claimed) {
-        showMessage("Latest mission already claimed.", "ok");
-        return;
-      }
-
       verifyAndClaim(latestTask);
     });
   }
@@ -1013,14 +1008,6 @@ async function verifyAndClaim(task) {
 
   if (!task || !task.id || !latestTask) {
     showMessage("Mission data missing. Please refresh and try again.", "err");
-    return;
-  }
-
-  const progress = getProgressForTask(task);
-
-  if (progress && progress.claimed) {
-    showMessage("Latest mission already claimed.", "ok");
-    renderMissions();
     return;
   }
 
