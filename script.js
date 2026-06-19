@@ -538,16 +538,7 @@ async function loadTasks(runPendingActions = true) {
       showMessage("X account connected. Complete the latest mission, then claim.", "ok");
 
       if (runPendingActions) {
-        const pendingTweetId = localStorage.getItem("pending_open_tweet_id");
         const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
-
-        if (pendingTweetId && !currentXConnected) {
-          localStorage.removeItem("pending_open_tweet_id");
-          setTimeout(() => {
-            openTaskXDirect(pendingTweetId);
-          }, 600);
-          return;
-        }
 
         if (pendingVerifyTaskId) {
           const pendingTask = getTaskById(pendingVerifyTaskId);
@@ -620,10 +611,6 @@ function getProgressForTask(task) {
 function getLatestTaskProgress() {
   const latestTask = getLatestTask();
   return latestTask ? getProgressForTask(latestTask) : null;
-}
-
-function getClaimedCount() {
-  return currentProgress.filter((item) => item.claimed).length;
 }
 
 function getTaskStatus(progress) {
@@ -761,17 +748,6 @@ function renderMissions() {
   }
 }
 
-function openOfficialX() {
-  const latestTask = getLatestTask();
-
-  if (latestTask && latestTask.tweet_id) {
-    openTaskX(latestTask.tweet_id);
-    return;
-  }
-
-  openTaskX(null);
-}
-
 function openTaskX(tweetId) {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
@@ -797,7 +773,6 @@ function openTaskX(tweetId) {
   localStorage.setItem("pending_official_x", "true");
 
   if (tweetId) {
-    localStorage.setItem("pending_open_tweet_id", String(tweetId));
     setCurrentOfficialTweetId(tweetId);
   }
 
@@ -813,16 +788,6 @@ function openTaskX(tweetId) {
     return;
   }
 
-  localStorage.removeItem("pending_open_tweet_id");
-  openTaskXDirect(tweetId);
-}
-
-function openOfficialXDirect() {
-  const latestTask = getLatestTask();
-  const tweetId =
-    currentOfficialTweetId ||
-    (latestTask && latestTask.tweet_id ? String(latestTask.tweet_id) : null);
-
   openTaskXDirect(tweetId);
 }
 
@@ -830,8 +795,7 @@ function openTaskXDirect(tweetId) {
   const latestTask = getLatestTask();
 
   if (latestTask && tweetId && String(tweetId) !== String(latestTask.tweet_id)) {
-    showMessage("Only the latest official post can be claimed.", "err");
-    return;
+    setCurrentOfficialTweetId(tweetId);
   }
 
   showMessage(
@@ -1052,11 +1016,6 @@ async function verifyAndClaim(task) {
     return;
   }
 
-  if (!isLatestTask(task)) {
-    showMessage("Only the latest official post can be claimed.", "err");
-    return;
-  }
-
   const progress = getProgressForTask(task);
 
   if (progress && progress.claimed) {
@@ -1116,6 +1075,10 @@ async function verifyAndClaim(task) {
         return;
       }
 
+      const targetTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
+
+      setCurrentOfficialTweetId(targetTweetId);
+
       showMessage(
         verifyData.message ||
           verifyData.error ||
@@ -1126,14 +1089,14 @@ async function verifyAndClaim(task) {
       await loadTasks(false);
 
       setTimeout(() => {
-        openTaskXDirect(tweetId);
+        openTaskXDirect(targetTweetId);
       }, 800);
 
       return;
     }
 
-    const verifiedTweetId = String(verifyData.tweetId || tweetId);
-    const verifiedTaskId = verifyData.taskId || taskId;
+    const verifiedTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
+    const verifiedTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
 
     showMessage("Mission verified. Getting claim signature...", "ok");
 
