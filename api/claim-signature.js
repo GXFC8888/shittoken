@@ -81,29 +81,39 @@ function getMessageHash({
   return ethers.utils.keccak256(encoded);
 }
 
-async function getClaimableProgress(wallet, tweetId) {
-  let query = supabase
-    .from("task_progress")
+async function getLatestActiveTask() {
+  const { data, error } = await supabase
+    .from("tasks")
     .select("*")
-    .eq("wallet_address", wallet)
-    .eq("verified", true)
-    .eq("claimable", true)
-    .eq("claimed", false)
-    .not("tweet_id", "is", null)
+    .eq("active", true)
     .order("id", { ascending: false })
-    .limit(1);
-
-  if (tweetId) {
-    query = query.eq("tweet_id", String(tweetId));
-  }
-
-  const { data, error } = await query.maybeSingle();
+    .limit(1)
+    .maybeSingle();
 
   if (error) {
     throw error;
   }
 
-  return data;
+  return data || null;
+}
+
+async function getClaimableProgress(wallet, task) {
+  const { data, error } = await supabase
+    .from("task_progress")
+    .select("*")
+    .eq("wallet_address", wallet)
+    .eq("task_id", task.id)
+    .eq("tweet_id", String(task.tweet_id))
+    .eq("verified", true)
+    .eq("claimable", true)
+    .eq("claimed", false)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data || null;
 }
 
 async function getAlreadyClaimedOnChain(claimContract, wallet, tweetHash) {
@@ -151,6 +161,13 @@ export default async function handler(req, res) {
       });
     }
 
+    if (!requestedTweetId) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing tweetId"
+      });
+    }
+
     if (!ethers.utils.isAddress(CLAIM_CONTRACT)) {
       return res.status(500).json({
         success: false,
@@ -158,16 +175,62 @@ export default async function handler(req, res) {
       });
     }
 
-    const progress = await getClaimableProgress(wallet, requestedTweetId);
+    const latestTask = await getLatestActiveTask();
+
+    if (!latestTask) {
+      return res.status(404).json({
+        success: false,
+        error: "No active task"
+      });
+    }
+
+    const latestTweetId = String(latestTask.tweet_id);
+
+    if (String(requestedTweetId) !== latestTweetId) {
+      return res.status(400).json({
+        success: false,
+        error: "Only the latest official post can be claimed",
+        message: "Old posts are not claimable.",
+        requestedTweetId: String(requestedTweetId),
+        latestTweetId,
+        latestTaskId: latestTask.id
+      });
+    }
+
+    const progress = await getClaimableProgress(wallet, latestTask);
 
     if (!progress || !progress.tweet_id) {
       return res.status(400).json({
         success: false,
-        error: "No claimable verified post found"
+        error: "No claimable verified post found",
+        message: "Please complete and verify the latest mission first.",
+        taskId: latestTask.id,
+        tweetId: latestTweetId
       });
     }
 
-    const tweetId = String(progress.tweet_id);
+    if (String(progress.tweet_id) !== latestTweetId) {
+      return res.status(400).json({
+        success: false,
+        error: "Task progress mismatch",
+        message: "Please verify the latest mission again.",
+        taskId: latestTask.id,
+        latestTweetId,
+        progressTweetId: String(progress.tweet_id)
+      });
+    }
+
+    if (Number(progress.task_id) !== Number(latestTask.id)) {
+      return res.status(400).json({
+        success: false,
+        error: "Task progress task mismatch",
+        message: "Please verify the latest mission again.",
+        taskId: latestTask.id,
+        progressTaskId: progress.task_id
+      });
+    }
+
+    const tweetId = latestTweetId;
     const tweetHash = getTweetHash(tweetId);
 
     const provider = new ethers.providers.JsonRpcProvider(BSC_RPC_URL);
@@ -189,7 +252,12 @@ export default async function handler(req, res) {
     if (alreadyClaimedOnChain) {
       return res.status(400).json({
         success: false,
-        error: "Already claimed on chain"
+        error: "Already claimed on chain",
+        message: "Latest mission already claimed.",
+        alreadyClaimed: true,
+        lockClaim: true,
+        taskId: latestTask.id,
+        tweetId
       });
     }
 
@@ -240,7 +308,7 @@ export default async function handler(req, res) {
       user: wallet,
       tweetId,
       tweetHash,
-      taskId: progress.task_id,
+      taskId: latestTask.id,
       amount: onChainClaimAmount.toString(),
       deadline,
       signature
