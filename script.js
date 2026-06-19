@@ -1119,11 +1119,15 @@ async function verifyAndClaim(task) {
       showMessage(
         verifyData.message ||
           verifyData.error ||
-          "Latest mission is not completed yet. Please complete it on X, then tap Verify & Claim again.",
+          "Latest mission is not completed yet. Opening the exact X post...",
         "ok"
       );
 
       await loadTasks(false);
+
+      setTimeout(() => {
+        openTaskXDirect(tweetId);
+      }, 800);
 
       return;
     }
