@@ -82,81 +82,89 @@ async function getLatestOfficialTweet() {
   return tweets[0];
 }
 
-async function ensureLatestTask() {
-  const latestTweet = await getLatestOfficialTweet();
-
-  if (!latestTweet?.id) {
-    const { data: currentTask, error: currentError } = await supabase
-      .from("tasks")
-      .select("*")
-      .eq("active", true)
-      .order("id", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (currentError) {
-      throw currentError;
-    }
-
-    return currentTask || null;
-  }
-
-  const tweetId = String(latestTweet.id);
-
-  const { data: existingTask, error: existingError } = await supabase
+async function getCurrentActiveTask() {
+  const { data, error } = await supabase
     .from("tasks")
     .select("*")
-    .eq("tweet_id", tweetId)
+    .eq("active", true)
+    .order("id", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
-  if (existingError) {
-    throw existingError;
+  if (error) {
+    throw error;
   }
 
-  if (existingTask) {
-    if (!existingTask.active) {
-      await supabase
-        .from("tasks")
-        .update({ active: false })
-        .neq("id", existingTask.id);
+  return data || null;
+}
 
-      const { data: activatedTask, error: activateError } = await supabase
-        .from("tasks")
-        .update({
-          active: true,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", existingTask.id)
-        .select()
-        .maybeSingle();
-
-      if (activateError) {
-        throw activateError;
-      }
-
-      return activatedTask;
-    }
-
-    await supabase
-      .from("tasks")
-      .update({ active: false })
-      .neq("id", existingTask.id);
-
-    return existingTask;
-  }
-
-  await supabase
+async function getTaskByTweetId(tweetId) {
+  const { data, error } = await supabase
     .from("tasks")
-    .update({ active: false })
-    .eq("active", true);
+    .select("*")
+    .eq("tweet_id", String(tweetId))
+    .maybeSingle();
 
-  const title = `Official ${tweetId.slice(-6)}`;
+  if (error) {
+    throw error;
+  }
 
-  const { data: newTask, error: insertError } = await supabase
+  return data || null;
+}
+
+async function closeOtherTasks(activeTaskId) {
+  let query = supabase
+    .from("tasks")
+    .update({
+      active: false
+    });
+
+  if (activeTaskId) {
+    query = query.neq("id", activeTaskId);
+  } else {
+    query = query.eq("active", true);
+  }
+
+  const { error } = await query;
+
+  if (error) {
+    throw error;
+  }
+}
+
+async function activateTask(task) {
+  await closeOtherTasks(task.id);
+
+  if (task.active) {
+    return task;
+  }
+
+  const { data, error } = await supabase
+    .from("tasks")
+    .update({
+      active: true
+    })
+    .eq("id", task.id)
+    .select()
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data || task;
+}
+
+async function createTaskFromTweet(tweetId) {
+  await closeOtherTasks(null);
+
+  const title = `Official ${String(tweetId).slice(-6)}`;
+
+  const { data, error } = await supabase
     .from("tasks")
     .insert({
       title,
-      tweet_id: tweetId,
+      tweet_id: String(tweetId),
       reward_amount: "1",
       active: true,
       created_at: new Date().toISOString()
@@ -164,11 +172,29 @@ async function ensureLatestTask() {
     .select()
     .maybeSingle();
 
-  if (insertError) {
-    throw insertError;
+  if (error) {
+    throw error;
   }
 
-  return newTask;
+  return data;
+}
+
+async function ensureLatestTask() {
+  const latestTweet = await getLatestOfficialTweet();
+
+  if (!latestTweet?.id) {
+    return await getCurrentActiveTask();
+  }
+
+  const tweetId = String(latestTweet.id);
+
+  const existingTask = await getTaskByTweetId(tweetId);
+
+  if (existingTask) {
+    return await activateTask(existingTask);
+  }
+
+  return await createTaskFromTweet(tweetId);
 }
 
 export default async function handler(req, res) {
