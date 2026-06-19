@@ -2,17 +2,24 @@ import { supabase } from "../lib/supabase.js";
 
 export default async function handler(req, res) {
   try {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+
     const wallet = String(req.query.wallet || "").toLowerCase();
 
     const { data: tasks, error: taskError } = await supabase
       .from("tasks")
       .select("*")
       .eq("active", true)
-      .order("id", { ascending: true });
+      .order("id", { ascending: false })
+      .limit(1);
 
     if (taskError) {
       throw taskError;
     }
+
+    const latestTask = tasks && tasks.length > 0 ? tasks[0] : null;
 
     let progress = [];
     let xAccount = null;
@@ -30,22 +37,27 @@ export default async function handler(req, res) {
 
       xAccount = userData || null;
 
-      const { data: progressData, error: progressError } = await supabase
-        .from("task_progress")
-        .select("*")
-        .eq("wallet_address", wallet);
+      if (latestTask) {
+        const { data: progressData, error: progressError } = await supabase
+          .from("task_progress")
+          .select("*")
+          .eq("wallet_address", wallet)
+          .eq("task_id", latestTask.id);
 
-      if (progressError) {
-        throw progressError;
+        if (progressError) {
+          throw progressError;
+        }
+
+        progress = progressData || [];
       }
-
-      progress = progressData || [];
     }
 
     return res.status(200).json({
       success: true,
-      tasks,
+      tasks: latestTask ? [latestTask] : [],
       progress,
+      latestTaskId: latestTask ? latestTask.id : null,
+      latestTweetId: latestTask ? String(latestTask.tweet_id) : null,
       xConnected: Boolean(xAccount && xAccount.x_user_id),
       xUsername: xAccount ? xAccount.x_username : null
     });
