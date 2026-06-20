@@ -1,825 +1,113 @@
-@import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=DynaPuff:wght@500;600;700&family=Fredoka:wght@400;500;600;700&family=Inter:wght@800;900&display=swap');
-
-:root {
-  --yellow: #fcb609;
-  --yellow-deep: #eaa000;
-  --gold: #fcb609;
-  --ink: #111111;
-  --soft-white: #fffdf4;
-  --muted: rgba(17, 17, 17, .68);
-  --card: rgba(255, 214, 35, .38);
-  --border-light: rgba(255, 255, 255, .75);
-  --shadow: rgba(0, 0, 0, .24);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Fredoka, Inter, Arial, sans-serif;
-  color: var(--ink);
-  background: #fcb609;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: none;
-}
-
-body::after {
-  content: none;
-}
-
-.page-shell {
-  width: min(100%, 920px);
-  margin: 0 auto;
-  padding: 24px 42px 46px;
-}
-
-.hero-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  min-height: 120px;
-}
-
-.brand-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 16px;
-  color: var(--soft-white);
-  text-decoration: none;
-  font-family: "Cooper Black", "Cooper Std Black", "Bookman Old Style", Georgia, serif;
-  font-size: clamp(48px, 8vw, 82px);
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: -4px;
-  text-transform: lowercase;
-  -webkit-text-stroke: 0;
-  text-shadow: 4px 5px 0 rgba(0,0,0,.20);
-  transform: rotate(-4deg);
-}
-
-.brand-mark img {
-  width: 112px;
-  height: 112px;
-  object-fit: contain;
-  mix-blend-mode: normal;
-  filter: none;
-}
-
-.top-wallet-link {
-  flex: 0 0 auto;
-  min-width: 190px;
-  min-height: 58px;
-  padding: 12px 32px;
-  border: 2px solid rgba(255,255,255,.92);
-  border-radius: 999px;
-  background: rgba(255,255,255,.06);
-  color: var(--soft-white);
-  font-family: inherit;
-  font-size: clamp(18px, 2.2vw, 25px);
-  font-weight: 900;
-  letter-spacing: .02em;
-  text-transform: none;
-  cursor: pointer;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 6px 12px rgba(0,0,0,.10);
-  transition: transform .12s ease, background .12s ease, opacity .12s ease;
-}
-
-.top-wallet-link:hover {
-  transform: translateY(-1px);
-  background: rgba(255,255,255,.16);
-}
-
-.top-wallet-link:active {
-  transform: translateY(2px);
-}
-
-.top-wallet-link:disabled {
-  opacity: .65;
-  cursor: not-allowed;
-  transform: none;
-}
-
-
-.hero-card {
-  position: relative;
-  min-height: 490px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 40px 10px 22px;
-  border-top: 1px solid rgba(0,0,0,.08);
-  box-shadow: inset 0 14px 14px -22px rgba(0,0,0,.55);
-  overflow: hidden;
-}
-
-.ghost-character {
-  position: absolute;
-  right: -30px;
-  top: -12px;
-  width: min(60vw, 520px);
-  opacity: .10;
-  mix-blend-mode: normal;
-  filter: none;
-  transform: rotate(-8deg);
-  pointer-events: none;
-}
-
-.shit-title {
-  position: relative;
-  z-index: 1;
-  color: var(--soft-white);
-  font-family: "Cooper Black", "Cooper Std Black", "Bookman Old Style", Georgia, serif;
-  font-size: clamp(118px, 21vw, 242px);
-  font-weight: 900;
-  font-style: italic;
-  line-height: .78;
-  letter-spacing: -16px;
-  text-transform: lowercase;
-  -webkit-text-stroke: 5px #161616;
-  text-shadow: 0 8px 0 rgba(0,0,0,.30), 12px 14px 14px rgba(0,0,0,.22);
-  transform: rotate(-5deg);
-}
-
-.tagline {
-  position: relative;
-  z-index: 1;
-  margin: 30px 0 40px;
-  color: var(--soft-white);
-  font-size: clamp(30px, 4.6vw, 45px);
-  line-height: 1.34;
-  font-weight: 500;
-  letter-spacing: .02em;
-  text-shadow: 0 3px 4px rgba(0,0,0,.28);
-}
-
-.shit-inline {
-  display: inline-block;
-  color: var(--soft-white);
-  font-family: "Cooper Black", "Cooper Std Black", "Bookman Old Style", Georgia, serif;
-  font-style: italic;
-  font-weight: 900;
-  letter-spacing: -2px;
-  text-transform: lowercase;
-  -webkit-text-stroke: 2px #161616;
-  text-shadow: 3px 4px 0 rgba(0,0,0,.24), 0 3px 4px rgba(0,0,0,.28);
-  transform: rotate(-3deg);
-}
-
-.social-actions {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 42px;
-  width: 100%;
-}
-
-.social-pill,
-.btn,
-.wallet-cta,
-.top-wallet-link {
-  -webkit-tap-highlight-color: transparent;
-}
-
-.social-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  min-height: 104px;
-  padding: 14px 24px;
-  color: var(--ink);
-  text-decoration: none;
-  background: rgba(255,255,255,.94);
-  border: 2px solid rgba(255,255,255,.86);
-  border-radius: 999px;
-  box-shadow: 0 15px 20px rgba(0,0,0,.20), inset 0 -3px 0 rgba(0,0,0,.08);
-}
-
-.social-pill strong {
-  font-size: clamp(24px, 3vw, 35px);
-  font-weight: 900;
-}
-
-.social-icon {
-  display: grid;
-  place-items: center;
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 45px;
-  font-weight: 800;
-  flex: 0 0 auto;
-}
-
-.x-icon,
-.round-x {
-  background: #111;
-}
-
-.tg-icon {
-  background: linear-gradient(135deg, #36c6ff, #198bd8);
-  font-size: 38px;
-}
-
-
-.icon-only-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 34px;
-  width: auto;
-}
-
-.icon-only-actions .social-pill {
-  width: 98px;
-  height: 98px;
-  min-height: 98px;
-  padding: 0;
-  border-radius: 50%;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-}
-
-.icon-only-actions .social-icon {
-  width: 98px;
-  height: 98px;
-  font-size: 58px;
-  box-shadow: 0 14px 18px rgba(0,0,0,.18);
-}
-
-.icon-only-actions .tg-icon {
-  font-size: 46px;
-}
-
-.airdrop-stack {
-  display: grid;
-  gap: 22px;
-  margin-top: 10px;
-}
-
-.glass-card {
-  position: relative;
-  padding: 26px 32px 28px;
-  background: var(--card);
-  border: 2px solid var(--border-light);
-  border-radius: 24px;
-  box-shadow: 0 18px 25px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.68);
-  backdrop-filter: blur(8px);
-  overflow: hidden;
-}
-
-.glass-card::before {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  border-radius: 22px;
-  pointer-events: none;
-  border: 1px solid rgba(255,255,255,.35);
-}
-
-.card-title-row {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.card-avatar,
-.round-x {
-  display: grid;
-  place-items: center;
-  width: 116px;
-  height: 116px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  border: 4px solid #fff;
-  box-shadow: 0 10px 15px rgba(0,0,0,.16);
-}
-
-.card-avatar {
-  object-fit: contain;
-  background: rgba(252,182,9,.42);
-  padding: 10px;
-  mix-blend-mode: multiply;
-}
-
-.round-x {
-  color: #fff;
-  font-size: 70px;
-  font-weight: 500;
-}
-
-h2 {
-  margin: 0 0 8px;
-  font-size: clamp(42px, 6vw, 63px);
-  line-height: .95;
-  font-weight: 900;
-  letter-spacing: -2px;
-}
-
-.card-title-row p {
-  margin: 0;
-  color: var(--ink);
-  font-size: clamp(20px, 3vw, 28px);
-  line-height: 1.22;
-  font-weight: 600;
-}
-
-.ref-link-box {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 62px;
-  align-items: center;
-  gap: 12px;
-  min-height: 76px;
-  margin: 24px 0 22px;
-  padding: 8px 14px 8px 26px;
-  background: rgba(255, 220, 45, .55);
-  border: 2px dashed rgba(17,17,17,.58);
-  border-radius: 22px;
-}
-
-.ref-link-box input {
-  width: 100%;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: clamp(19px, 3vw, 28px);
-  color: #111;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.icon-copy {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font-size: 44px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.two-actions,
-.mission-actions {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 26px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 78px;
-  border: 2px solid rgba(255,255,255,.74);
-  border-radius: 999px;
-  padding: 16px 22px;
-  font-family: inherit;
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 900;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 10px 16px rgba(0,0,0,.22), inset 0 -3px 0 rgba(0,0,0,.08);
-  transition: transform .12s ease, opacity .12s ease;
-}
-
-.btn:hover,
-.social-pill:hover,
-.wallet-cta:hover {
-  transform: translateY(-1px);
-}
-
-.btn:active,
-.social-pill:active,
-.wallet-cta:active {
-  transform: translateY(2px);
-}
-
-.btn:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-}
-
-.btn.dark {
-  color: #fff;
-  background: #111;
-}
-
-.btn.light,
-.btn.gold {
-  color: #111;
-  background: rgba(255,255,255,.94);
-}
-
-.task-card {
-  padding-bottom: 22px;
-}
-
-.wallet-status-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 20px;
-}
-
-.status-pill {
-  min-width: 0;
-  padding: 14px 16px;
-  border: 1px solid rgba(255,255,255,.58);
-  border-radius: 18px;
-  background: rgba(255,255,255,.24);
-}
-
-.status-pill span {
-  display: block;
-  color: rgba(17,17,17,.62);
-  font-size: 15px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-
-.status-pill strong {
-  display: block;
-  margin-top: 4px;
-  font-size: 22px;
-  overflow-wrap: anywhere;
-}
-
-.message {
-  min-height: 22px;
-  margin: 14px 0 0;
-  font-size: 17px;
-  line-height: 1.35;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-
-.message.ok {
-  color: #0f6b10;
-}
-
-.message.err {
-  color: #b00020;
-}
-
-.small-message {
-  margin-top: 12px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.mission-list {
-  margin-top: 14px;
-}
-
-.mission-summary {
-  display: none;
-}
-
-.mission-card {
-  color: var(--ink);
-  background: rgba(255,255,255,.22);
-  border: 1px solid rgba(255,255,255,.55);
-  border-radius: 20px;
-  padding: 16px;
-}
-
-.mission-card.empty h3,
-.mission-card h3 {
-  margin: 0 0 8px;
-  font-size: 24px;
-  line-height: 1.05;
-}
-
-.mission-card p {
-  margin: 0 0 12px;
-  color: rgba(17,17,17,.75);
-  font-size: 16px;
-  line-height: 1.35;
-}
-
-.mission-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-
-.reward {
-  margin-bottom: 0 !important;
-}
-
-.mission-status {
-  flex: 0 0 auto;
-  padding: 7px 12px;
-  border-radius: 999px;
-  color: #111;
-  background: rgba(255,255,255,.86);
-  border: 1px solid rgba(17,17,17,.12);
-  font-weight: 900;
-  font-size: 14px;
-}
-
-.mission-status.done {
-  background: #9eff9e;
-}
-
-.mission-link {
-  display: block;
-  margin: 10px 0 16px;
-  color: #111;
-  font-size: 14px;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-
-.mission-actions .btn {
-  min-height: 72px;
-  margin: 0;
-  font-size: clamp(20px, 3vw, 29px);
-}
-
-.wallet-cta {
-  width: 100%;
-  min-height: 120px;
-  margin: 26px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  border: 3px solid rgba(255,255,255,.76);
-  border-radius: 999px;
-  background: #111;
-  color: #fff;
-  box-shadow: 0 18px 24px rgba(0,0,0,.28), inset 0 -4px 0 rgba(255,255,255,.08);
-  font-family: inherit;
-  font-size: clamp(36px, 6vw, 57px);
-  font-weight: 900;
-  letter-spacing: -2px;
-  cursor: pointer;
-}
-
-.wallet-cta span {
-  display: grid;
-  place-items: center;
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  color: #111;
-  font-size: 54px;
-}
-
-.footer-note {
-  padding: 26px 10px 0;
-  text-align: center;
-  color: rgba(17,17,17,.62);
-  font-size: 15px;
-  font-weight: 700;
-}
-
-@media (max-width: 760px) {
-  .page-shell {
-    padding: 18px 18px 36px;
-  }
-
-  .hero-top {
-    min-height: 88px;
-    gap: 12px;
-  }
-
-  .brand-mark {
-    gap: 10px;
-    font-size: 42px;
-    -webkit-text-stroke: 0;
-    text-shadow: 3px 4px 0 rgba(0,0,0,.18);
-  }
-
-  .brand-mark img {
-    width: 82px;
-    height: 64px;
-  }
-
-  .top-wallet-link {
-    min-width: 132px;
-    min-height: 46px;
-    padding: 9px 17px;
-    font-size: 17px;
-  }
-
-  .hero-card {
-    min-height: 420px;
-    padding-top: 28px;
-  }
-
-  .ghost-character {
-    right: -78px;
-    top: 18px;
-    width: 360px;
-  }
-
-  .shit-title {
-    letter-spacing: -9px;
-    -webkit-text-stroke: 3px #161616;
-  }
-
-  .shit-inline {
-    -webkit-text-stroke: 1.5px #161616;
-    letter-spacing: -1px;
-  }
-
-  .tagline {
-    margin: 24px 0 30px;
-  }
-
-  .social-actions {
-    gap: 14px;
-  }
-
-  .social-pill {
-    min-height: 74px;
-    gap: 10px;
-    padding: 10px 12px;
-  }
-
-  .social-icon {
-    width: 52px;
-    height: 52px;
-    font-size: 34px;
-  }
-
-  .tg-icon {
-    font-size: 28px;
-  }
-
-  .icon-only-actions {
-    flex-direction: row;
-    gap: 24px;
-  }
-
-  .icon-only-actions .social-pill,
-  .icon-only-actions .social-icon {
-    width: 86px;
-    height: 86px;
-    min-height: 86px;
-  }
-
-  .icon-only-actions .social-icon {
-    font-size: 50px;
-  }
-
-  .icon-only-actions .tg-icon {
-    font-size: 40px;
-  }
-
-  .glass-card {
-    padding: 18px 16px 20px;
-    border-radius: 20px;
-  }
-
-  .card-title-row {
-    gap: 16px;
-  }
-
-  .card-avatar,
-  .round-x {
-    width: 84px;
-    height: 84px;
-  }
-
-  .round-x {
-    font-size: 52px;
-  }
-
-  h2 {
-    letter-spacing: -1px;
-  }
-
-  .ref-link-box {
-    grid-template-columns: 1fr 46px;
-    min-height: 62px;
-    margin: 18px 0;
-    padding-left: 14px;
-    border-radius: 17px;
-  }
-
-  .icon-copy {
-    width: 40px;
-    height: 40px;
-    font-size: 34px;
-  }
-
-  .two-actions,
-  .mission-actions,
-  .wallet-status-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .btn {
-    min-height: 64px;
-  }
-
-  .mission-head {
-    display: block;
-  }
-
-  .mission-status {
-    display: inline-flex;
-    margin-top: 8px;
-  }
-
-  .wallet-cta {
-    min-height: 86px;
-    gap: 12px;
-    letter-spacing: -1px;
-  }
-
-  .wallet-cta span {
-    width: 52px;
-    height: 52px;
-    font-size: 36px;
-  }
-}
-
-@media (max-width: 430px) {
-  .page-shell {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-
-  .brand-mark {
-    font-size: 38px;
-    letter-spacing: -3px;
-  }
-
-  .brand-mark img {
-    width: 68px;
-    height: 54px;
-  }
-
-  .top-wallet-link {
-    min-width: 112px;
-    min-height: 42px;
-    padding: 8px 12px;
-    font-size: 15px;
-  }
-
-  .social-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .icon-only-actions {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .shit-title {
-    font-size: 112px;
-    letter-spacing: -8px;
-  }
-
-  .tagline {
-    font-size: 29px;
-  }
-
-  .card-title-row p {
-    font-size: 18px;
-  }
-
-  .card-avatar,
-  .round-x {
-    width: 72px;
-    height: 72px;
-  }
-
-  h2 {
-    font-size: 34px;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shit - Referral Airdrop & X Tasks</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="page-shell">
+    <header class="hero-top" id="home">
+      <a class="brand-mark" href="#home" aria-label="shit home">
+        <img src="shit-logo-original-color.jpg" alt="SHIT character" />
+        <span>shit</span>
+      </a>
+
+      <button id="connectBtn" class="top-wallet-link" type="button">Link wallet</button>
+    </header>
+
+    <section class="hero-card">
+      <img class="ghost-character" src="shit-logo-original-color.jpg" alt="" />
+
+      <div class="shit-title" aria-label="shit">shit</div>
+
+      <p class="tagline">
+        The frogs had their day.<br />
+        Now it’s time for <span class="shit-inline">shit</span>.
+      </p>
+
+      <div class="social-actions icon-only-actions">
+        <a class="social-pill" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="Join X">
+          <span class="social-icon x-icon">𝕏</span>
+        </a>
+
+        <a class="social-pill" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Join Telegram">
+          <span class="social-icon tg-icon">✈</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="airdrop-stack" id="airdrop">
+      <article class="glass-card referral-card">
+        <div class="card-title-row">
+          <img class="card-avatar" src="shit-logo-original-color.jpg" alt="SHIT" />
+          <div>
+            <h2>Referral Airdrop</h2>
+            <p>Invite frens and earn 5-level referral rewards.</p>
+          </div>
+        </div>
+
+        <div class="ref-link-box">
+          <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
+          <button id="copyRefBtn" class="icon-copy" type="button" aria-label="Copy referral link">⧉</button>
+        </div>
+
+        <div class="two-actions">
+          <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">⧉ Copy Link</button>
+          <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
+        </div>
+
+        <p id="refMessage" class="message small-message"></p>
+      </article>
+
+      <article class="glass-card task-card">
+        <div class="card-title-row">
+          <div class="round-x">𝕏</div>
+          <div>
+            <h2>X Tasks</h2>
+            <p>Complete X tasks and claim rewards.</p>
+          </div>
+        </div>
+
+        <div class="wallet-status-grid">
+          <div class="status-pill">
+            <span>Wallet</span>
+            <strong id="walletText">Not connected</strong>
+          </div>
+          <div class="status-pill">
+            <span>X account</span>
+            <strong id="xStatusText">Not connected</strong>
+          </div>
+        </div>
+
+        <button id="connectXBtn" class="hidden" type="button" disabled>connect X</button>
+        <p id="message" class="message"></p>
+
+        <div id="missionList" class="mission-list compact-missions">
+          <div class="mission-card empty">
+            <h3>Connect your wallet to load the latest official X mission.</h3>
+            <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer-note">
+      $SHIT is a meme coin for entertainment purposes only.
+    </footer>
+  </main>
+
+  <script>
+    document.addEventListener("click", (event) => {
+      const proxy = event.target.closest(".copy-ref-proxy");
+      if (!proxy) return;
+      const realCopyButton = document.getElementById("copyRefBtn");
+      if (realCopyButton) realCopyButton.click();
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="script.js?v=20260620e"></script>
+</body>
+</html>
