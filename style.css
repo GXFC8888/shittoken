@@ -60,6 +60,8 @@ body::after {
 .hero-top {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 24px;
   min-height: 120px;
 }
 
@@ -83,6 +85,41 @@ body::after {
   object-fit: contain;
   filter: drop-shadow(0 4px 0 rgba(0,0,0,.18));
 }
+
+.top-wallet-link {
+  flex: 0 0 auto;
+  min-width: 190px;
+  min-height: 58px;
+  padding: 12px 32px;
+  border: 2px solid rgba(255,255,255,.92);
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  color: var(--soft-white);
+  font-family: inherit;
+  font-size: clamp(18px, 2.2vw, 25px);
+  font-weight: 900;
+  letter-spacing: .02em;
+  text-transform: lowercase;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 6px 12px rgba(0,0,0,.10);
+  transition: transform .12s ease, background .12s ease, opacity .12s ease;
+}
+
+.top-wallet-link:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.16);
+}
+
+.top-wallet-link:active {
+  transform: translateY(2px);
+}
+
+.top-wallet-link:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
+
 
 .hero-card {
   position: relative;
@@ -144,7 +181,8 @@ body::after {
 
 .social-pill,
 .btn,
-.wallet-cta {
+.wallet-cta,
+.top-wallet-link {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -535,6 +573,7 @@ h2 {
 
   .hero-top {
     min-height: 88px;
+    gap: 12px;
   }
 
   .brand-mark {
@@ -547,6 +586,13 @@ h2 {
   .brand-mark img {
     width: 82px;
     height: 64px;
+  }
+
+  .top-wallet-link {
+    min-width: 132px;
+    min-height: 46px;
+    padding: 9px 17px;
+    font-size: 17px;
   }
 
   .hero-card {
@@ -663,6 +709,23 @@ h2 {
   .page-shell {
     padding-left: 12px;
     padding-right: 12px;
+  }
+
+  .brand-mark {
+    font-size: 35px;
+    letter-spacing: -2px;
+  }
+
+  .brand-mark img {
+    width: 68px;
+    height: 54px;
+  }
+
+  .top-wallet-link {
+    min-width: 112px;
+    min-height: 42px;
+    padding: 8px 12px;
+    font-size: 15px;
   }
 
   .social-actions {
