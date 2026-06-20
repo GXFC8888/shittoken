@@ -13,6 +13,15 @@ const OFFICIAL_X_USERNAME = "GXFCLJ";
 const OFFICIAL_X_WEB_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
 const OFFICIAL_X_APP_URL = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
 
+const REFERRAL_AIRDROP_CONTRACT = "0x45B5004bbeF9575ebEC3C84b493Ae0D4daF53403";
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+const REFERRAL_AIRDROP_ABI = [
+  "function claim(address referrer) payable",
+  "function claimFee() view returns (uint256)",
+  "function claimed(address user) view returns (bool)"
+];
+
 const TWITTER_TASK_CLAIM_ABI = [
   "function claim(bytes32 tweetHash, uint256 deadline, bytes signature) payable",
   "function claimFee() view returns (uint256)",
@@ -61,6 +70,11 @@ const xStatusText =
   document.getElementById("xStatusText") ||
   document.getElementById("xAccountText");
 
+const refLinkInput = document.getElementById("refLink");
+const copyRefBtn = document.getElementById("copyRefBtn");
+const claimReferralBtn = document.getElementById("claimReferralBtn");
+const refMessage = document.getElementById("refMessage");
+
 const menuBtn = document.getElementById("menuBtn");
 const navMenu = document.getElementById("navMenu");
 
@@ -76,6 +90,44 @@ function showMessage(text, type) {
 
   if (type === "err") {
     message.classList.add("err");
+  }
+}
+
+function showRefMessage(text, type) {
+  if (!refMessage) return;
+
+  refMessage.innerText = text || "";
+  refMessage.classList.remove("ok", "err");
+
+  if (type === "ok") {
+    refMessage.classList.add("ok");
+  }
+
+  if (type === "err") {
+    refMessage.classList.add("err");
+  }
+}
+
+function getRefParam() {
+  const params = new URLSearchParams(window.location.search);
+  const value = params.get("ref") || params.get("r") || "";
+  return ethers.utils.isAddress(value) ? ethers.utils.getAddress(value) : ZERO_ADDRESS;
+}
+
+function getReferralLink(address) {
+  const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+  return address ? `${cleanUrl}?ref=${address}` : `${cleanUrl}?ref=YOURID`;
+}
+
+function updateReferralUI() {
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (refLinkInput) {
+    refLinkInput.value = getReferralLink(activeWallet);
+  }
+
+  if (claimReferralBtn) {
+    claimReferralBtn.disabled = !activeWallet;
   }
 }
 
@@ -291,6 +343,8 @@ function updateWalletUI() {
     refreshMissionsBtn.innerText = activeWallet ? "Wallet Connected" : "Connect Wallet";
     refreshMissionsBtn.disabled = Boolean(activeWallet);
   }
+
+  updateReferralUI();
 }
 
 function resetWalletUI() {
@@ -466,6 +520,84 @@ function listenWalletChange() {
       window.location.reload();
     }
   });
+}
+
+async function claimReferralAirdrop() {
+  if (isVerifying) return;
+
+  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+
+  if (!activeWallet) {
+    showRefMessage("Please connect wallet first.", "err");
+    return;
+  }
+
+  try {
+    if (claimReferralBtn) {
+      claimReferralBtn.disabled = true;
+      claimReferralBtn.innerText = "claiming...";
+    }
+
+    showRefMessage("Preparing referral airdrop claim...", "ok");
+
+    const walletProvider = getWalletProvider();
+
+    if (!walletProvider) {
+      throw new Error("No wallet provider found");
+    }
+
+    await switchToBSC();
+
+    const web3Provider = new ethers.providers.Web3Provider(walletProvider, "any");
+    const web3Signer = web3Provider.getSigner();
+    const connectedAddress = await web3Signer.getAddress();
+
+    if (connectedAddress.toLowerCase() !== activeWallet.toLowerCase()) {
+      throw new Error("Connected wallet does not match current wallet");
+    }
+
+    const contract = new ethers.Contract(
+      REFERRAL_AIRDROP_CONTRACT,
+      REFERRAL_AIRDROP_ABI,
+      web3Signer
+    );
+
+    const alreadyClaimed = await contract.claimed(activeWallet);
+
+    if (alreadyClaimed) {
+      showRefMessage("This wallet has already claimed the referral airdrop.", "ok");
+      return;
+    }
+
+    let referrer = getRefParam();
+
+    if (referrer.toLowerCase() === activeWallet.toLowerCase()) {
+      referrer = ZERO_ADDRESS;
+    }
+
+    const claimFee = await contract.claimFee();
+
+    showRefMessage("Please confirm the referral airdrop transaction in your wallet.", "ok");
+
+    const tx = await contract.claim(referrer, {
+      value: claimFee
+    });
+
+    showRefMessage("Transaction submitted. Waiting for confirmation...", "ok");
+
+    await tx.wait();
+
+    showRefMessage("Referral airdrop claimed successfully.", "ok");
+  } catch (error) {
+    console.error(error);
+    showRefMessage("Referral claim failed: " + getReadableError(error), "err");
+  } finally {
+    if (claimReferralBtn) {
+      claimReferralBtn.innerText = "Claim Airdrop";
+    }
+
+    updateReferralUI();
+  }
 }
 
 function connectX() {
@@ -1246,6 +1378,23 @@ if (connectBtn) {
 
 if (connectXBtn) {
   connectXBtn.addEventListener("click", connectX);
+}
+
+if (copyRefBtn) {
+  copyRefBtn.addEventListener("click", async () => {
+    const link = refLinkInput ? refLinkInput.value : getReferralLink(userAddress || localStorage.getItem("wallet_address"));
+
+    try {
+      await navigator.clipboard.writeText(link);
+      showRefMessage("Referral link copied.", "ok");
+    } catch (error) {
+      showRefMessage("Copy failed. Please copy the link manually.", "err");
+    }
+  });
+}
+
+if (claimReferralBtn) {
+  claimReferralBtn.addEventListener("click", claimReferralAirdrop);
 }
 
 if (refreshMissionsBtn) {
