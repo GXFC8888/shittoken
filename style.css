@@ -893,7 +893,7 @@ h2 {
 
 /* 20260620g: header logo bigger, hero title smaller, tagline SHIT back to normal text */
 .brand-word-img {
-  width: clamp(190px, 26vw, 360px);
+  width: clamp(165px, 22vw, 300px);
   filter: drop-shadow(4px 5px 0 rgba(0,0,0,.18));
 }
 
@@ -910,7 +910,7 @@ h2 {
 
 @media (max-width: 760px) {
   .brand-word-img {
-    width: clamp(150px, 38vw, 220px);
+    width: clamp(132px, 34vw, 185px);
   }
 
   .shit-title-img {
@@ -923,7 +923,7 @@ h2 {
 
 @media (max-width: 430px) {
   .brand-word-img {
-    width: 165px;
+    width: 138px;
   }
 
   .brand-mark img:first-child {
@@ -933,5 +933,36 @@ h2 {
 
   .shit-title-img {
     width: 48vw;
+  }
+}
+
+/* 20260620h: header shit +50%, card titles half size */
+.brand-word-img {
+  width: clamp(248px, 33vw, 450px);
+}
+
+h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.02;
+  letter-spacing: -1px;
+}
+
+@media (max-width: 760px) {
+  .brand-word-img {
+    width: clamp(198px, 51vw, 278px);
+  }
+
+  h2 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-word-img {
+    width: 207px;
+  }
+
+  h2 {
+    font-size: 22px;
   }
 }
