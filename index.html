@@ -3,87 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SHIT - Airdrop & X Tasks</title>
+  <title>SHIT - Referral Airdrop & X Tasks</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <header class="topbar" id="home">
-    <a class="brand" href="#home" aria-label="SHIT home">
-      <img src="shit-character.jpeg" alt="SHIT" />
-      <span>shit</span>
-    </a>
-
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="#home">home</a>
-      <a href="#airdrop">airdrop</a>
-      <a href="#tasks">x tasks</a>
-      <a href="#join">join</a>
-    </nav>
-
-    <button id="connectBtn" class="top-connect" type="button">connect wallet</button>
-  </header>
-
-  <main>
-    <section class="hero-section">
-      <img class="hero-watermark" src="shit-character.jpeg" alt="" />
-
-      <div class="hero-copy">
-        <div class="mini-logo">$shit</div>
-        <h1>SHIT</h1>
-        <p>
-          The frogs had their day.<br />
-          Now it’s time for SHIT.
-        </p>
-
-        <div class="hero-socials" id="join">
-          <a class="social-circle x" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="Join X">𝕏</a>
-          <a class="social-circle tg" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Join Telegram">✈</a>
-          <a class="social-circle bsc" href="https://bscscan.com" target="_blank" rel="noopener noreferrer" aria-label="BSCScan">B</a>
-          <a class="social-circle chart" href="#airdrop" aria-label="Airdrop">$</a>
-        </div>
-      </div>
-
-      <div class="hero-art">
+  <main class="page-shell">
+    <header class="hero-top" id="home">
+      <a class="brand-mark" href="#home" aria-label="SHIT home">
         <img src="shit-character.jpeg" alt="SHIT character" />
+        <span>SHIT</span>
+      </a>
+    </header>
+
+    <section class="hero-card">
+      <img class="ghost-character" src="shit-character.jpeg" alt="" />
+
+      <div class="shit-title" aria-label="SHIT">SHIT</div>
+
+      <p class="tagline">
+        The frogs had their day.<br />
+        Now it’s time for SHIT.
+      </p>
+
+      <div class="social-actions">
+        <a class="social-pill" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer">
+          <span class="social-icon x-icon">𝕏</span>
+          <strong>Join X</strong>
+        </a>
+
+        <a class="social-pill" href="https://t.me/" target="_blank" rel="noopener noreferrer">
+          <span class="social-icon tg-icon">✈</span>
+          <strong>Join Telegram</strong>
+        </a>
       </div>
     </section>
 
-    <section class="tools-section" id="airdrop">
-      <article class="tool-card referral-card">
-        <div class="tool-heading">
-          <img src="shit-character.jpeg" alt="SHIT" />
+    <section class="airdrop-stack" id="airdrop">
+      <article class="glass-card referral-card">
+        <div class="card-title-row">
+          <img class="card-avatar" src="shit-character.jpeg" alt="SHIT" />
           <div>
-            <span>5-level referral</span>
             <h2>Referral Airdrop</h2>
-            <p>Copy your invite link. Invite frens. Claim your $SHIT.</p>
+            <p>Invite frens and earn 5-level referral rewards.</p>
           </div>
         </div>
 
         <div class="ref-link-box">
           <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
-          <button id="copyRefBtn" class="copy-icon" type="button" aria-label="Copy referral link">⧉</button>
+          <button id="copyRefBtn" class="icon-copy" type="button" aria-label="Copy referral link">⧉</button>
         </div>
 
-        <div class="action-row">
-          <button class="btn light copy-ref-proxy" type="button">Copy Link</button>
+        <div class="two-actions">
+          <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">⧉ Copy Link</button>
           <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
         </div>
 
-        <p id="refMessage" class="message"></p>
+        <p id="refMessage" class="message small-message"></p>
       </article>
 
-      <article class="tool-card task-card" id="tasks">
-        <div class="tool-heading">
-          <div class="x-badge">𝕏</div>
+      <article class="glass-card task-card">
+        <div class="card-title-row">
+          <div class="round-x">𝕏</div>
           <div>
-            <span>latest mission only</span>
             <h2>X Tasks</h2>
-            <p>Open the latest post, finish the task, then verify and claim.</p>
+            <p>Complete X tasks and claim rewards.</p>
           </div>
         </div>
 
-        <div class="status-grid">
+        <div class="wallet-status-grid">
           <div class="status-pill">
             <span>Wallet</span>
             <strong id="walletText">Not connected</strong>
@@ -97,25 +85,24 @@
         <button id="connectXBtn" class="hidden" type="button" disabled>connect X</button>
         <p id="message" class="message"></p>
 
-        <div id="missionList" class="mission-list">
+        <div id="missionList" class="mission-list compact-missions">
           <div class="mission-card empty">
-            <h3>Connect wallet to load the latest X mission.</h3>
+            <h3>Connect your wallet to load the latest official X mission.</h3>
             <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
           </div>
         </div>
       </article>
     </section>
 
-    <section class="bottom-cta">
-      <h2>Start earning $SHIT</h2>
-      <p>One page. Two ways to claim. Referral airdrop and X task rewards.</p>
-      <a href="#airdrop" class="btn dark">Start Now</a>
-    </section>
-  </main>
+    <button id="connectBtn" class="wallet-cta" type="button">
+      <span>💰</span>
+      Start Earning $SHIT
+    </button>
 
-  <footer class="footer-note">
-    $SHIT is a meme coin for entertainment purposes only.
-  </footer>
+    <footer class="footer-note">
+      $SHIT is a meme coin for entertainment purposes only.
+    </footer>
+  </main>
 
   <script>
     document.addEventListener("click", (event) => {
@@ -126,6 +113,6 @@
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script src="script.js?v=20260620b"></script>
+  <script src="script.js?v=20260620a"></script>
 </body>
 </html>
