@@ -825,7 +825,6 @@ h2 {
 }
 
 
-/* Use the uploaded shit word image instead of a simulated web font */
 .brand-mark {
   gap: 18px;
   transform: none;
@@ -891,7 +890,6 @@ h2 {
 }
 
 
-/* 20260620g: header logo bigger, hero title smaller, tagline SHIT back to normal text */
 .brand-word-img {
   width: clamp(165px, 22vw, 300px);
   filter: drop-shadow(4px 5px 0 rgba(0,0,0,.18));
@@ -936,7 +934,6 @@ h2 {
   }
 }
 
-/* 20260620h: header shit +50%, card titles half size */
 .brand-word-img {
   width: clamp(248px, 33vw, 450px);
 }
@@ -964,5 +961,21 @@ h2 {
 
   h2 {
     font-size: 22px;
+  }
+}
+
+.brand-word-img {
+  width: clamp(320px, 42vw, 560px);
+}
+
+@media (max-width: 760px) {
+  .brand-word-img {
+    width: clamp(270px, 68vw, 390px);
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-word-img {
+    width: 300px;
   }
 }
