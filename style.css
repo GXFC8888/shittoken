@@ -57,13 +57,15 @@ body::after {
   gap: 16px;
   color: var(--soft-white);
   text-decoration: none;
-  font-family: "Cherry Bomb One", "DynaPuff", Fredoka, Inter, Arial, sans-serif;
-  font-size: clamp(44px, 8vw, 78px);
-  font-weight: 400;
-  letter-spacing: -1px;
+  font-family: "Cooper Black", "Cooper Std Black", "Bookman Old Style", Georgia, serif;
+  font-size: clamp(48px, 8vw, 82px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -4px;
+  text-transform: lowercase;
   -webkit-text-stroke: 0;
   text-shadow: 4px 5px 0 rgba(0,0,0,.20);
-  transform: rotate(-1deg);
+  transform: rotate(-4deg);
 }
 
 .brand-mark img {
@@ -137,15 +139,16 @@ body::after {
   position: relative;
   z-index: 1;
   color: var(--soft-white);
-  font-family: "Cherry Bomb One", "DynaPuff", Fredoka, Inter, Arial, sans-serif;
-  font-size: clamp(112px, 20vw, 230px);
-  font-weight: 400;
-  font-style: normal;
-  line-height: .82;
-  letter-spacing: -8px;
+  font-family: "Cooper Black", "Cooper Std Black", "Bookman Old Style", Georgia, serif;
+  font-size: clamp(118px, 21vw, 242px);
+  font-weight: 900;
+  font-style: italic;
+  line-height: .78;
+  letter-spacing: -16px;
+  text-transform: lowercase;
   -webkit-text-stroke: 5px #161616;
   text-shadow: 0 8px 0 rgba(0,0,0,.30), 12px 14px 14px rgba(0,0,0,.22);
-  transform: rotate(-2deg);
+  transform: rotate(-5deg);
 }
 
 .tagline {
@@ -158,6 +161,19 @@ body::after {
   font-weight: 500;
   letter-spacing: .02em;
   text-shadow: 0 3px 4px rgba(0,0,0,.28);
+}
+
+.shit-inline {
+  display: inline-block;
+  color: var(--soft-white);
+  font-family: "Cooper Black", "Cooper Std Black", "Bookman Old Style", Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: -2px;
+  text-transform: lowercase;
+  -webkit-text-stroke: 2px #161616;
+  text-shadow: 3px 4px 0 rgba(0,0,0,.24), 0 3px 4px rgba(0,0,0,.28);
+  transform: rotate(-3deg);
 }
 
 .social-actions {
@@ -629,8 +645,13 @@ h2 {
   }
 
   .shit-title {
-    letter-spacing: -5px;
+    letter-spacing: -9px;
     -webkit-text-stroke: 3px #161616;
+  }
+
+  .shit-inline {
+    -webkit-text-stroke: 1.5px #161616;
+    letter-spacing: -1px;
   }
 
   .tagline {
@@ -754,8 +775,8 @@ h2 {
   }
 
   .brand-mark {
-    font-size: 35px;
-    letter-spacing: -1px;
+    font-size: 38px;
+    letter-spacing: -3px;
   }
 
   .brand-mark img {
@@ -780,7 +801,8 @@ h2 {
   }
 
   .shit-title {
-    font-size: 104px;
+    font-size: 112px;
+    letter-spacing: -8px;
   }
 
   .tagline {
@@ -799,5 +821,71 @@ h2 {
 
   h2 {
     font-size: 34px;
+  }
+}
+
+
+/* Use the uploaded shit word image instead of a simulated web font */
+.brand-mark {
+  gap: 18px;
+  transform: none;
+  text-shadow: none;
+  letter-spacing: 0;
+}
+
+.brand-word-img {
+  width: clamp(118px, 18vw, 230px);
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(4px 5px 0 rgba(0,0,0,.18));
+}
+
+.shit-title {
+  display: none;
+}
+
+.shit-title-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(78vw, 640px);
+  height: auto;
+  margin: 0 auto;
+  filter:
+    drop-shadow(0 8px 0 #161616)
+    drop-shadow(10px 12px 10px rgba(0,0,0,.24));
+}
+
+@media (max-width: 760px) {
+  .brand-word-img {
+    width: clamp(86px, 24vw, 145px);
+  }
+
+  .brand-mark img:first-child {
+    width: 82px;
+    height: 82px;
+  }
+
+  .shit-title-img {
+    width: min(84vw, 520px);
+    filter:
+      drop-shadow(0 6px 0 #161616)
+      drop-shadow(7px 9px 8px rgba(0,0,0,.22));
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-word-img {
+    width: 105px;
+  }
+
+  .brand-mark img:first-child {
+    width: 66px;
+    height: 66px;
+  }
+
+  .shit-title-img {
+    width: 78vw;
   }
 }
