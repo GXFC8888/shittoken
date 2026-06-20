@@ -893,7 +893,7 @@ h2 {
 
 /* 20260620g: header logo bigger, hero title smaller, tagline SHIT back to normal text */
 .brand-word-img {
-  width: clamp(165px, 22vw, 300px);
+  width: clamp(190px, 26vw, 360px);
   filter: drop-shadow(4px 5px 0 rgba(0,0,0,.18));
 }
 
@@ -910,7 +910,7 @@ h2 {
 
 @media (max-width: 760px) {
   .brand-word-img {
-    width: clamp(132px, 34vw, 185px);
+    width: clamp(150px, 38vw, 220px);
   }
 
   .shit-title-img {
@@ -923,7 +923,7 @@ h2 {
 
 @media (max-width: 430px) {
   .brand-word-img {
-    width: 138px;
+    width: 165px;
   }
 
   .brand-mark img:first-child {
