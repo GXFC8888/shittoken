@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Fredoka:wght@500;600;700&family=Inter:wght@800;900&display=swap');
 
 :root {
-  --yellow: #f1b941;
-  --yellow-deep: #d89b27;
-  --gold: #f1b941;
+  --yellow: #e9bf64;
+  --yellow-deep: #d7a64d;
+  --gold: #e9bf64;
   --ink: #111111;
   --soft-white: #fffdf4;
   --muted: rgba(17, 17, 17, .68);
-  --card: rgba(255, 236, 150, .42);
+  --card: rgba(255, 221, 129, .36);
   --border-light: rgba(255, 255, 255, .75);
   --shadow: rgba(0, 0, 0, .24);
 }
@@ -25,7 +25,7 @@ body {
   min-height: 100vh;
   font-family: Fredoka, Inter, Arial, sans-serif;
   color: var(--ink);
-  background: #f1b941;
+  background: #e9bf64;
   overflow-x: hidden;
 }
 
@@ -79,10 +79,10 @@ body::after {
 }
 
 .brand-mark img {
-  width: 118px;
-  height: 96px;
+  width: 112px;
+  height: 112px;
   object-fit: contain;
-  mix-blend-mode: multiply;
+  mix-blend-mode: normal;
   filter: none;
 }
 
@@ -138,8 +138,8 @@ body::after {
   right: -30px;
   top: -12px;
   width: min(60vw, 520px);
-  opacity: .12;
-  mix-blend-mode: multiply;
+  opacity: .10;
+  mix-blend-mode: normal;
   filter: none;
   transform: rotate(-8deg);
   pointer-events: none;
