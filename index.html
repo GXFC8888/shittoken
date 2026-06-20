@@ -3,211 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SHIT - The Real Shitcoin</title>
+  <title>SHIT - Airdrop & X Tasks</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <header class="topbar">
-    <a class="brand" href="#home">
-      <img src="shit-character.jpeg" alt="SHIT">
-      <span>SHIT</span>
+  <header class="topbar" id="home">
+    <a class="brand" href="#home" aria-label="SHIT home">
+      <img src="shit-character.jpeg" alt="SHIT" />
+      <span>shit</span>
     </a>
 
-    <button id="menuBtn" class="menu" type="button">☰</button>
-
-    <nav id="navMenu">
+    <nav class="nav-links" aria-label="Main navigation">
       <a href="#home">home</a>
-      <a href="#about">about</a>
       <a href="#airdrop">airdrop</a>
-      <a href="#buy">how to buy</a>
-      <a href="#tokenomics">tokenomics</a>
+      <a href="#tasks">x tasks</a>
+      <a href="#join">join</a>
     </nav>
 
-    <a class="pill desktop-buy" href="#airdrop">claim now</a>
+    <button id="connectBtn" class="top-connect" type="button">connect wallet</button>
   </header>
 
   <main>
-    <section id="home" class="hero panel">
+    <section class="hero-section">
+      <img class="hero-watermark" src="shit-character.jpeg" alt="" />
+
       <div class="hero-copy">
-        <div class="mini-logo">SHIT</div>
-
+        <div class="mini-logo">$shit</div>
+        <h1>SHIT</h1>
         <p>
-          The real shitcoin has arrived. Everyone talks shit — now you can own it.
-          Built for loud memes, unserious energy, and community-first chaos.
+          The frogs had their day.<br />
+          Now it’s time for SHIT.
         </p>
 
-        <div class="hero-actions">
-          <a class="btn dark" href="#airdrop">claim airdrop</a>
-          <a class="btn light" href="#buy">how to buy</a>
+        <div class="hero-socials" id="join">
+          <a class="social-circle x" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="Join X">𝕏</a>
+          <a class="social-circle tg" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Join Telegram">✈</a>
+          <a class="social-circle bsc" href="https://bscscan.com" target="_blank" rel="noopener noreferrer" aria-label="BSCScan">B</a>
+          <a class="social-circle chart" href="#airdrop" aria-label="Airdrop">$</a>
         </div>
       </div>
 
-      <img class="hero-img" src="shit-character.jpeg" alt="SHIT character">
-    </section>
-
-    <section id="about" class="about section">
-      <img class="about-img" src="shit-character.jpeg" alt="SHIT character">
-
-      <div>
-        <h2>about</h2>
-
-        <p>
-          SHIT is tired of watching the market recycle the same old dog, frog,
-          and copycat memes. So we made the only project honest enough to call
-          itself SHIT.
-        </p>
-
-        <p>
-          No fake deep lore. No pretending. Just loud, funny, community-first
-          memecoin built to embrace the chaos.
-        </p>
+      <div class="hero-art">
+        <img src="shit-character.jpeg" alt="SHIT character" />
       </div>
     </section>
 
-    <section id="airdrop" class="section claim-wrap">
-      <h2>shitpost to earn</h2>
-
-      <div class="claim-card shitpost-card">
-        <div class="claim-left">
-          <img src="shit-character.jpeg" alt="SHIT">
-
-          <h3>1 post = 1 drop</h3>
-
-          <p>
-            Connect your wallet, open the mission post, then follow, like, repost,
-            and leave your own comment. Come back here to claim your reward.
-            X authorization may be required once when you claim.
-          </p>
-
-          <p class="airdrop-note">
-            Each wallet and X account can claim each mission once.
-          </p>
+    <section class="tools-section" id="airdrop">
+      <article class="tool-card referral-card">
+        <div class="tool-heading">
+          <img src="shit-character.jpeg" alt="SHIT" />
+          <div>
+            <span>5-level referral</span>
+            <h2>Referral Airdrop</h2>
+            <p>Copy your invite link. Invite frens. Claim your $SHIT.</p>
+          </div>
         </div>
 
-        <div class="claim-right">
-          <div class="status">
+        <div class="ref-link-box">
+          <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
+          <button id="copyRefBtn" class="copy-icon" type="button" aria-label="Copy referral link">⧉</button>
+        </div>
+
+        <div class="action-row">
+          <button class="btn light copy-ref-proxy" type="button">Copy Link</button>
+          <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
+        </div>
+
+        <p id="refMessage" class="message"></p>
+      </article>
+
+      <article class="tool-card task-card" id="tasks">
+        <div class="tool-heading">
+          <div class="x-badge">𝕏</div>
+          <div>
+            <span>latest mission only</span>
+            <h2>X Tasks</h2>
+            <p>Open the latest post, finish the task, then verify and claim.</p>
+          </div>
+        </div>
+
+        <div class="status-grid">
+          <div class="status-pill">
             <span>Wallet</span>
             <strong id="walletText">Not connected</strong>
           </div>
-
-          <div class="status">
+          <div class="status-pill">
             <span>X account</span>
             <strong id="xStatusText">Not connected</strong>
           </div>
+        </div>
 
-          <button id="connectBtn" class="btn full dark" type="button">
-            connect wallet
-          </button>
+        <button id="connectXBtn" class="hidden" type="button" disabled>connect X</button>
+        <p id="message" class="message"></p>
 
-          <button id="connectXBtn" class="btn full light hidden" type="button" disabled>
-            connect X
-          </button>
-
-          <button id="refreshMissionsBtn" class="btn full gold" type="button">
-            Connect Wallet
-          </button>
-
-          <p id="message" class="message"></p>
-
-          <div id="missionList" class="mission-list">
-            <div class="mission-card empty">
-              <h3>Connect your wallet to load airdrop missions.</h3>
-              <p>
-                Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.
-              </p>
-            </div>
+        <div id="missionList" class="mission-list">
+          <div class="mission-card empty">
+            <h3>Connect wallet to load the latest X mission.</h3>
+            <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
           </div>
         </div>
-      </div>
+      </article>
     </section>
 
-    <section id="buy" class="section buy">
-      <h2>how to buy</h2>
-
-      <div class="steps">
-        <div class="step">
-          <b>1</b>
-          <div>
-            <h3>create a wallet</h3>
-            <p>
-              Download MetaMask, OKX Wallet, TokenPocket, Trust Wallet,
-              or your wallet of choice.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <b>2</b>
-          <div>
-            <h3>get some BNB</h3>
-            <p>
-              Buy BNB on an exchange and send it to your wallet for gas and swaps.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <b>3</b>
-          <div>
-            <h3>go to PancakeSwap</h3>
-            <p>
-              Open PancakeSwap, connect your wallet, and paste the $SHIT token address.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <b>4</b>
-          <div>
-            <h3>swap for $SHIT</h3>
-            <p>
-              Confirm the trade and welcome to the sewer.
-            </p>
-          </div>
-        </div>
-      </div>
+    <section class="bottom-cta">
+      <h2>Start earning $SHIT</h2>
+      <p>One page. Two ways to claim. Referral airdrop and X task rewards.</p>
+      <a href="#airdrop" class="btn dark">Start Now</a>
     </section>
-
-    <section id="tokenomics" class="section tokenomics">
-      <h2>tokenomics</h2>
-
-      <div class="supply">
-        token supply:<br>
-        <strong>1,000,000,000,000,000</strong>
-      </div>
-
-      <div class="contract-box">
-        <span>SHIT contract address</span>
-        <strong id="tokenAddress">0X000</strong>
-      </div>
-
-      <div class="tok-grid">
-        <div>
-          0%
-          <span>tax</span>
-        </div>
-
-        <div>
-          ∞
-          <span>meme power</span>
-        </div>
-
-        <div>
-          100%
-          <span>community driven</span>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <img src="shit-character.jpeg" alt="SHIT">
-      <span>SHIT</span>
-      <p>$SHIT is a meme coin for entertainment purposes only.</p>
-    </footer>
   </main>
 
+  <footer class="footer-note">
+    $SHIT is a meme coin for entertainment purposes only.
+  </footer>
+
+  <script>
+    document.addEventListener("click", (event) => {
+      const proxy = event.target.closest(".copy-ref-proxy");
+      if (!proxy) return;
+      const realCopyButton = document.getElementById("copyRefBtn");
+      if (realCopyButton) realCopyButton.click();
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script src="script.js?v=20260619f"></script>
+  <script src="script.js?v=20260620b"></script>
 </body>
 </html>
