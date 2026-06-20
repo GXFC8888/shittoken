@@ -889,3 +889,49 @@ h2 {
     width: 78vw;
   }
 }
+
+
+/* 20260620g: header logo bigger, hero title smaller, tagline SHIT back to normal text */
+.brand-word-img {
+  width: clamp(165px, 22vw, 300px);
+  filter: drop-shadow(4px 5px 0 rgba(0,0,0,.18));
+}
+
+.shit-title-img {
+  width: min(42vw, 380px);
+  filter:
+    drop-shadow(0 5px 0 #161616)
+    drop-shadow(7px 9px 8px rgba(0,0,0,.22));
+}
+
+.tagline .shit-inline {
+  all: unset;
+}
+
+@media (max-width: 760px) {
+  .brand-word-img {
+    width: clamp(132px, 34vw, 185px);
+  }
+
+  .shit-title-img {
+    width: min(50vw, 290px);
+    filter:
+      drop-shadow(0 4px 0 #161616)
+      drop-shadow(6px 7px 6px rgba(0,0,0,.20));
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-word-img {
+    width: 138px;
+  }
+
+  .brand-mark img:first-child {
+    width: 66px;
+    height: 66px;
+  }
+
+  .shit-title-img {
+    width: 48vw;
+  }
+}
