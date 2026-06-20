@@ -979,3 +979,69 @@ h2 {
     width: 300px;
   }
 }
+
+.brand-word-img {
+  width: clamp(390px, 50vw, 660px);
+  flex: 0 0 auto;
+}
+
+.brand-mark {
+  min-width: 0;
+}
+
+.brand-mark img:first-child,
+.card-avatar,
+.ghost-character {
+  filter: none;
+}
+
+@media (max-width: 760px) {
+  .hero-top {
+    gap: 8px;
+  }
+
+  .brand-mark {
+    gap: 8px;
+  }
+
+  .brand-word-img {
+    width: clamp(330px, 78vw, 470px);
+  }
+
+  .top-wallet-link {
+    min-width: 118px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 430px) {
+  .page-shell {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .hero-top {
+    gap: 6px;
+  }
+
+  .brand-mark {
+    gap: 6px;
+  }
+
+  .brand-mark img:first-child {
+    width: 64px;
+    height: 64px;
+  }
+
+  .brand-word-img {
+    width: 360px;
+  }
+
+  .top-wallet-link {
+    min-width: 106px;
+    padding: 7px 8px;
+    font-size: 13px;
+  }
+}
