@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Fredoka:wght@500;600;700&family=Inter:wght@800;900&display=swap');
 
 :root {
-  --yellow: #e9bf64;
-  --yellow-deep: #d7a64d;
-  --gold: #e9bf64;
+  --yellow: #fcb609;
+  --yellow-deep: #eaa000;
+  --gold: #fcb609;
   --ink: #111111;
   --soft-white: #fffdf4;
   --muted: rgba(17, 17, 17, .68);
-  --card: rgba(255, 221, 129, .36);
+  --card: rgba(255, 214, 35, .38);
   --border-light: rgba(255, 255, 255, .75);
   --shadow: rgba(0, 0, 0, .24);
 }
@@ -25,28 +25,16 @@ body {
   min-height: 100vh;
   font-family: Fredoka, Inter, Arial, sans-serif;
   color: var(--ink);
-  background: #e9bf64;
+  background: #fcb609;
   overflow-x: hidden;
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 18% 10%, rgba(255,255,255,.14), transparent 18%),
-    radial-gradient(circle at 92% 62%, rgba(255,255,255,.10), transparent 26%);
+  content: none;
 }
 
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(90deg, rgba(255,255,255,.05), transparent 18%, transparent 82%, rgba(0,0,0,.04));
+  content: none;
 }
 
 .page-shell {
@@ -277,7 +265,7 @@ body::after {
 
 .card-avatar {
   object-fit: contain;
-  background: rgba(241,185,65,.34);
+  background: rgba(252,182,9,.42);
   padding: 10px;
   mix-blend-mode: multiply;
 }
