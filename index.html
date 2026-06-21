@@ -4,10 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>shit - Referral Airdrop & X Tasks</title>
-  <link rel="stylesheet" href="MyWebfontsKit.css" />
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <style>
+    @font-face {
+      font-family: "GentyRegular";
+      src: url("/webFonts/GentyRegular/font.woff2") format("woff2"),
+           url("/webFonts/GentyRegular/font.woff") format("woff");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
 
+    html,
+    body,
+    body *,
+    button,
+    input,
+    textarea,
+    select,
+    a,
+    p,
+    span,
+    div,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong {
+      font-family: "GentyRegular", Arial, sans-serif !important;
+    }
+  </style>
+  <link rel="stylesheet" href="MyWebfontsKit.css?v=20260621genty3" />
+  <link rel="stylesheet" href="style.css?v=20260621genty3" />
+</head>
 <body>
   <main class="page-shell">
     <header class="hero-top" id="home">
@@ -15,25 +45,20 @@
         <img src="shit-logo-original-color-bold.png" alt="SHIT character" />
         <img class="brand-word-img" src="shit-word-transparent.png" alt="shit" />
       </a>
-
       <button id="connectBtn" class="top-wallet-link" type="button">Link wallet</button>
     </header>
 
     <section class="hero-card">
       <img class="ghost-character" src="shit-logo-original-color-bold.png" alt="" />
-
       <img class="shit-title-img" src="shit-word-transparent.png" alt="shit" />
-
       <p class="tagline">
         The frogs had their day.<br />
         Now it’s time for SHIT.
       </p>
-
       <div class="social-actions icon-only-actions">
         <a class="social-pill" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="Join X">
           <span class="social-icon x-icon">𝕏</span>
         </a>
-
         <a class="social-pill" href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Join Telegram">
           <span class="social-icon tg-icon">✈</span>
         </a>
@@ -49,17 +74,14 @@
             <p>Invite frens and earn 5-level referral rewards.</p>
           </div>
         </div>
-
         <div class="ref-link-box">
           <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
           <button id="copyRefBtn" class="icon-copy" type="button" aria-label="Copy referral link">⧉</button>
         </div>
-
         <div class="two-actions">
           <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">⧉ Copy Link</button>
           <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
         </div>
-
         <p id="refMessage" class="message small-message"></p>
       </article>
 
@@ -71,7 +93,6 @@
             <p>Complete X tasks and claim rewards.</p>
           </div>
         </div>
-
         <div class="wallet-status-grid">
           <div class="status-pill">
             <span>Wallet</span>
@@ -82,10 +103,8 @@
             <strong id="xStatusText">Not connected</strong>
           </div>
         </div>
-
         <button id="connectXBtn" class="hidden" type="button" disabled>connect X</button>
         <p id="message" class="message"></p>
-
         <div id="missionList" class="mission-list compact-missions">
           <div class="mission-card empty">
             <h3>Connect your wallet to load the latest official X mission.</h3>
