@@ -95,13 +95,23 @@ filter: none;
 filter: none;
 }
 
-.brand-word-img {
-width: clamp(390px, 50vw, 660px);
-height: auto;
-display: block;
-object-fit: contain;
-filter: drop-shadow(4px 5px 0 rgba(0,0,0,.18));
+.brand-word-text {
+display: inline-block;
+color: var(–soft-white);
+font-size: clamp(74px, 9vw, 126px);
+font-weight: normal;
+line-height: .78;
+text-transform: lowercase;
+letter-spacing: 0;
+text-shadow:
+0 4px 0 #161616,
+5px 7px 8px rgba(0,0,0,.24);
+transform: rotate(-3deg);
 flex: 0 0 auto;
+}
+
+.brand-word-img {
+display: none;
 }
 
 .top-wallet-link {
@@ -161,19 +171,24 @@ pointer-events: none;
 }
 
 .shit-title {
-display: none;
-}
-
-.shit-title-img {
 position: relative;
 z-index: 1;
 display: block;
-width: min(42vw, 380px);
-height: auto;
 margin: 0 auto;
-filter:
-drop-shadow(0 5px 0 #161616)
-drop-shadow(7px 9px 8px rgba(0,0,0,.22));
+color: var(–soft-white);
+font-size: clamp(170px, 25vw, 330px);
+font-weight: normal;
+line-height: .68;
+text-transform: lowercase;
+letter-spacing: 0;
+text-shadow:
+0 8px 0 #161616,
+10px 13px 12px rgba(0,0,0,.24);
+transform: rotate(-4deg);
+}
+
+.shit-title-img {
+display: none;
 }
 
 .tagline {
@@ -655,8 +670,11 @@ width: 82px;
 height: 82px;
 }
 
-.brand-word-img {
-width: clamp(330px, 78vw, 470px);
+.brand-word-text {
+font-size: clamp(62px, 17vw, 96px);
+text-shadow:
+0 3px 0 #161616,
+4px 6px 7px rgba(0,0,0,.22);
 }
 
 .top-wallet-link {
@@ -677,11 +695,11 @@ top: 18px;
 width: 360px;
 }
 
-.shit-title-img {
-width: min(50vw, 290px);
-filter:
-drop-shadow(0 4px 0 #161616)
-drop-shadow(6px 7px 6px rgba(0,0,0,.20));
+.shit-title {
+font-size: clamp(125px, 34vw, 205px);
+text-shadow:
+0 6px 0 #161616,
+7px 9px 9px rgba(0,0,0,.22);
 }
 
 .tagline {
@@ -825,8 +843,8 @@ width: 64px;
 height: 64px;
 }
 
-.brand-word-img {
-width: 360px;
+.brand-word-text {
+font-size: 72px;
 }
 
 .top-wallet-link {
@@ -845,8 +863,8 @@ display: flex;
 flex-direction: row;
 }
 
-.shit-title-img {
-width: 48vw;
+.shit-title {
+font-size: 138px;
 }
 
 .tagline {
