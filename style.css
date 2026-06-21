@@ -74,7 +74,6 @@ font-size: clamp(48px, 8vw, 82px);
 font-weight: 900;
 font-style: normal;
 letter-spacing: 0;
-text-transform: lowercase;
 -webkit-text-stroke: 0;
 text-shadow: none;
 transform: none;
@@ -101,7 +100,6 @@ color: #fffdf4;
 font-size: clamp(58px, 7vw, 98px);
 font-weight: normal;
 line-height: .78;
-text-transform: lowercase;
 letter-spacing: 0;
 -webkit-text-stroke: 1.5px #111;
 paint-order: stroke fill;
@@ -128,7 +126,6 @@ color: var(–soft-white);
 font-size: clamp(18px, 2.2vw, 25px);
 font-weight: 900;
 letter-spacing: .02em;
-text-transform: none;
 cursor: pointer;
 box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 6px 12px rgba(0,0,0,.10);
 transition: transform .12s ease, background .12s ease, opacity .12s ease;
@@ -181,7 +178,6 @@ color: #fffdf4;
 font-size: clamp(105px, 14vw, 190px);
 font-weight: normal;
 line-height: .78;
-text-transform: lowercase;
 letter-spacing: 0;
 -webkit-text-stroke: 2px #111;
 paint-order: stroke fill;
@@ -213,7 +209,6 @@ color: var(–soft-white);
 font-style: normal;
 font-weight: 900;
 letter-spacing: -1px;
-text-transform: lowercase;
 -webkit-text-stroke: 2px #161616;
 text-shadow: 3px 4px 0 rgba(0,0,0,.24), 0 3px 4px rgba(0,0,0,.28);
 transform: rotate(-3deg);
@@ -502,7 +497,6 @@ display: block;
 color: rgba(17,17,17,.62);
 font-size: 15px;
 font-weight: 900;
-text-transform: uppercase;
 letter-spacing: .04em;
 }
 
@@ -675,12 +669,13 @@ height: 82px;
 }
 
 .brand-word-text {
-font-size: clamp(62px, 17vw, 96px);
+font-size: clamp(54px, 14vw, 82px);
 color: #fffdf4;
 -webkit-text-stroke: 1.2px #111;
 text-shadow:
 0 3px 0 rgba(0, 0, 0, .25),
 4px 6px 7px rgba(0, 0, 0, .18);
+transform: rotate(-3deg) translateY(12px);
 }
 
 .top-wallet-link {
@@ -852,8 +847,9 @@ height: 64px;
 }
 
 .brand-word-text {
-font-size: 72px;
+font-size: 58px;
 -webkit-text-stroke: 1.1px #111;
+transform: rotate(-3deg) translateY(10px);
 }
 
 .top-wallet-link {
