@@ -824,7 +824,7 @@ function renderMissions() {
     ? "Completed"
     : currentXConnected
       ? "X Authorized"
-      : "Open X";
+      : "Link X";
 
   const verifyButtonText = isVerifying
     ? "checking..."
