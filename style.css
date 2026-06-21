@@ -4,7 +4,7 @@ src: url(”/webFonts/GentyRegular/font.woff2”) format(“woff2”),
 url(”/webFonts/GentyRegular/font.woff”) format(“woff”);
 font-weight: normal;
 font-style: normal;
-font-display: swap;
+font-display: block;
 }
 
 * {
