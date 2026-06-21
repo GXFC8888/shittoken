@@ -834,7 +834,7 @@ function renderMissions() {
         ? "Check New Mission"
         : claimable || verified
           ? "Claim Reward"
-          : "Verify & Claim";
+          : "Claim Reward";
 
   missionList.innerHTML = `
     <div class="mission-summary">
@@ -853,7 +853,7 @@ function renderMissions() {
 
       <p>
         Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
-        Come back here and tap Verify & Claim.
+        Come back here and tap Claim Reward.
         Old posts are not claimable.
       </p>
 
@@ -884,7 +884,7 @@ function renderMissions() {
       }
 
       if (currentXConnected) {
-        showMessage("X already authorized. Complete the mission on X, then tap Verify & Claim.", "ok");
+        showMessage("X already authorized. Complete the mission on X, then tap Claim Reward.", "ok");
         return;
       }
 
@@ -1318,7 +1318,7 @@ function handleReturnFromX() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (pendingOfficialX && activeWallet) {
-    showMessage("Back from X? Tap Verify & Claim after following, liking, reposting, and commenting.", "ok");
+    showMessage("Back from X? Tap Claim Reward after following, liking, reposting, and commenting.", "ok");
   }
 }
 
