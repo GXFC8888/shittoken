@@ -953,3 +953,52 @@ font-size: 22px;
   background: #111;
   border-radius: 50%;
 }
+
+
+/* 20260623 update: clean copy buttons, complete avatar, clean X icon */
+.ref-link-box {
+  grid-template-columns: 1fr;
+  padding-right: 26px;
+}
+
+.icon-copy.hidden {
+  display: none !important;
+}
+
+.copy-ref-proxy::before,
+.copy-ref-proxy::after {
+  content: none !important;
+}
+
+.card-avatar {
+  object-fit: cover;
+  background: #fcb609;
+  padding: 0;
+  mix-blend-mode: normal;
+  overflow: hidden;
+}
+
+.round-x {
+  background: #111;
+  overflow: hidden;
+}
+
+.round-x img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.x-image-icon img {
+  background: #111;
+  border-radius: 50%;
+}
+
+@media (max-width: 760px) {
+  .ref-link-box {
+    grid-template-columns: 1fr;
+    padding-right: 14px;
+  }
+}
