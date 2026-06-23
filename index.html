@@ -37,7 +37,26 @@
     }
   </style>
   <link rel="stylesheet" href="MyWebfontsKit.css?v=20260621genty10" />
-  <link rel="stylesheet" href="style.css?v=20260623update25" />
+  <link rel="stylesheet" href="style.css?v=20260623update26" />
+  <style id="mobile-copy-indent-v20">
+    @media (max-width: 760px) {
+      .tokenomics-card > .aligned-card-copy,
+      .overview-card > .aligned-card-copy {
+        padding-left: 82px !important;
+        padding-right: 4px !important;
+        margin-left: 0 !important;
+        box-sizing: border-box !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .tokenomics-card > .aligned-card-copy,
+      .overview-card > .aligned-card-copy {
+        padding-left: 82px !important;
+        padding-right: 4px !important;
+      }
+    }
+  </style>
 </head>
 <body>
   <main class="page-shell">
@@ -93,8 +112,7 @@
 
     <section class="airdrop-stack" id="airdrop">
       <article class="glass-card referral-card">
-        <div class="card-title-row">
-          <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
+        <div class="card-title-row center-card-title-row">
           <div>
             <h2>Referral Airdrop</h2>
             <p>Invite frens and earn 5-level referral rewards.</p>
@@ -148,8 +166,7 @@
       </article>
 
       <article class="glass-card tokenomics-card" id="tokenomics">
-        <div class="card-title-row tokenomics-title-row aligned-section-row">
-          <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
+        <div class="card-title-row tokenomics-title-row aligned-section-row center-card-title-row">
           <div class="aligned-section-content">
             <h2>Tokenomics</h2>
             <p>No Taxes, No Bullshit. It’s that simple.</p>
@@ -167,8 +184,7 @@
       </article>
 
       <article class="glass-card overview-card" id="project-overview">
-        <div class="card-title-row overview-title-row aligned-section-row">
-          <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
+        <div class="card-title-row overview-title-row aligned-section-row center-card-title-row">
           <div class="aligned-section-content">
             <h2>Project Overview</h2>
             <p>Pure community chaos. Free claim. No whale games.</p>
@@ -209,6 +225,6 @@
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script src="script.js?v=20260623update25"></script>
+  <script src="script.js?v=20260623update26"></script>
 </body>
 </html>
