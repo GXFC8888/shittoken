@@ -1651,3 +1651,26 @@ font-size: 19px;
     padding-right: 10px !important;
   }
 }
+
+.referral-card .card-title-row,
+.referral-card > .center-card-title-row {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.referral-card .card-title-row > div,
+.referral-card > .center-card-title-row > div {
+  width: 100% !important;
+}
+
+.referral-card h2 {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  text-align: left !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
