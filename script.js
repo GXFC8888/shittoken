@@ -81,6 +81,33 @@ const navMenu = document.getElementById("navMenu");
 const COMING_SOON_TEXT = "$SHIT is still in the airdrop phase. Trading has not launched yet.";
 let isShowingComingSoonAlert = false;
 
+function showCustomAlert(text) {
+  const alertBox = document.getElementById("customAlert");
+  const alertText = document.getElementById("customAlertText");
+  const alertOk = document.getElementById("customAlertOk");
+
+  if (!alertBox || !alertText || !alertOk) {
+    showMessage(text, "ok");
+    isShowingComingSoonAlert = false;
+    return;
+  }
+
+  alertText.innerText = text;
+  alertBox.classList.remove("hidden");
+
+  alertOk.onclick = () => {
+    alertBox.classList.add("hidden");
+    isShowingComingSoonAlert = false;
+  };
+
+  alertBox.onclick = (event) => {
+    if (event.target === alertBox) {
+      alertBox.classList.add("hidden");
+      isShowingComingSoonAlert = false;
+    }
+  };
+}
+
 function bindComingSoonLinks() {
   document.querySelectorAll(".coming-soon-link").forEach((link) => {
     if (link.dataset.boundComingSoon === "true") return;
@@ -95,11 +122,7 @@ function bindComingSoonLinks() {
 
       isShowingComingSoonAlert = true;
       showMessage(COMING_SOON_TEXT, "ok");
-      alert(COMING_SOON_TEXT);
-
-      setTimeout(() => {
-        isShowingComingSoonAlert = false;
-      }, 300);
+      showCustomAlert(COMING_SOON_TEXT);
     });
   });
 }
