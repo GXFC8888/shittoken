@@ -1335,67 +1335,198 @@ font-size: 19px;
   }
 }
 
-.tokenomics-card,
-.overview-card {
-  margin-top: 0;
+.referral-card > .center-card-title-row,
+.tokenomics-card > .center-card-title-row,
+.overview-card > .center-card-title-row {
+  justify-content: center;
+  text-align: center;
+  gap: 0;
 }
 
-.tokenomics-title-row,
-.overview-title-row {
-  margin-bottom: 22px;
+.referral-card > .center-card-title-row > div,
+.tokenomics-card > .center-card-title-row > div,
+.overview-card > .center-card-title-row > div {
+  width: 100%;
 }
 
-.tokenomics-card .aligned-section-row,
-.overview-card .aligned-section-row {
-  align-items: flex-start;
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2 {
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1;
+}
+
+.referral-card .card-title-row p,
+.task-card .card-title-row p,
+.tokenomics-card .card-title-row p,
+.overview-card .card-title-row p {
+  font-size: clamp(22px, 3.2vw, 31px);
+}
+
+.social-actions.icon-only-actions.arc-icons {
+  max-width: 690px;
+  min-height: 150px;
+  margin: 4px auto 26px;
+  gap: 20px;
+}
+
+.arc-icons .social-pill,
+.arc-icons .social-icon {
+  width: 80px;
+  height: 80px;
+  min-height: 80px;
+}
+
+.arc-icons .arc-1 {
+  transform: translateY(46px);
+}
+
+.arc-icons .arc-2 {
+  transform: translateY(14px);
+}
+
+.arc-icons .arc-3 {
+  transform: translateY(-34px);
+}
+
+.arc-icons .arc-4 {
+  transform: translateY(14px);
+}
+
+.arc-icons .arc-5 {
+  transform: translateY(46px);
+}
+
+.arc-icons .arc-item:hover {
+  transform: translateY(-38px) scale(1.04);
+}
+
+.arc-icons .arc-1:hover,
+.arc-icons .arc-5:hover {
+  transform: translateY(36px) scale(1.04);
+}
+
+.arc-icons .arc-2:hover,
+.arc-icons .arc-4:hover {
+  transform: translateY(4px) scale(1.04);
+}
+
+.hero-tagline {
+  margin: 18px auto 18px;
 }
 
 .tokenomics-card > .aligned-card-copy,
 .overview-card > .aligned-card-copy {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 12px;
-  margin-top: 20px;
-  padding-left: 144px;
-  padding-right: 0;
-  box-sizing: border-box;
-}
-
-.tokenomics-card > .aligned-card-copy p,
-.overview-card > .aligned-card-copy p {
-  margin: 0;
-  color: #111;
-  font-size: clamp(18px, 2.4vw, 24px);
-  line-height: 1.32;
-  font-weight: 600;
-  text-align: left;
-}
-
-.tokenomics-card > .aligned-card-copy strong,
-.overview-card > .aligned-card-copy strong {
-  font-weight: 900;
+  padding-left: 18px !important;
+  padding-right: 10px !important;
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 @media (max-width: 760px) {
+  .social-actions.icon-only-actions.arc-icons {
+    max-width: 390px;
+    min-height: 116px;
+    margin: 2px auto 22px;
+    gap: 8px;
+  }
+
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 62px;
+    height: 62px;
+    min-height: 62px;
+  }
+
+  .arc-icons .arc-1 {
+    transform: translateY(30px);
+  }
+
+  .arc-icons .arc-2 {
+    transform: translateY(9px);
+  }
+
+  .arc-icons .arc-3 {
+    transform: translateY(-24px);
+  }
+
+  .arc-icons .arc-4 {
+    transform: translateY(9px);
+  }
+
+  .arc-icons .arc-5 {
+    transform: translateY(30px);
+  }
+
+  .hero-tagline {
+    margin: 18px auto 18px;
+  }
+
+  .referral-card > .center-card-title-row,
+  .tokenomics-card > .center-card-title-row,
+  .overview-card > .center-card-title-row {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2 {
+    font-size: 30px;
+  }
+
+  .referral-card .card-title-row p,
+  .task-card .card-title-row p,
+  .tokenomics-card .card-title-row p,
+  .overview-card .card-title-row p {
+    font-size: 21px;
+  }
+
   .tokenomics-card > .aligned-card-copy,
   .overview-card > .aligned-card-copy {
     padding-left: 18px !important;
     padding-right: 10px !important;
-    margin-left: 0 !important;
-    margin-top: 20px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .tokenomics-card > .aligned-card-copy p,
-  .overview-card > .aligned-card-copy p {
-    text-align: left !important;
   }
 }
 
 @media (max-width: 430px) {
+  .social-actions.icon-only-actions.arc-icons {
+    max-width: 350px;
+    min-height: 110px;
+    gap: 6px;
+  }
+
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 58px;
+    height: 58px;
+    min-height: 58px;
+  }
+
+  .arc-icons .arc-1 {
+    transform: translateY(29px);
+  }
+
+  .arc-icons .arc-2 {
+    transform: translateY(8px);
+  }
+
+  .arc-icons .arc-3 {
+    transform: translateY(-24px);
+  }
+
+  .arc-icons .arc-4 {
+    transform: translateY(8px);
+  }
+
+  .arc-icons .arc-5 {
+    transform: translateY(29px);
+  }
+
   .tokenomics-card > .aligned-card-copy,
   .overview-card > .aligned-card-copy {
     padding-left: 18px !important;
