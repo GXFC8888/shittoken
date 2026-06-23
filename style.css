@@ -1334,3 +1334,146 @@ font-size: 19px;
     font-size: 18px;
   }
 }
+
+
+/* 20260623 update17: keep original card layout and move mobile body copy about two characters to the right */
+.tokenomics-card,
+.overview-card {
+  margin-top: 0;
+}
+
+.tokenomics-title-row,
+.overview-title-row {
+  margin-bottom: 22px;
+}
+
+.tokenomics-card .aligned-section-row,
+.overview-card .aligned-section-row {
+  align-items: flex-start;
+}
+
+.tokenomics-card .aligned-section-content,
+.overview-card .aligned-section-content {
+  min-width: 0;
+}
+
+.tokenomics-card > .aligned-card-copy,
+.overview-card > .aligned-card-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  padding-left: 144px;
+  padding-right: 0;
+  margin-top: 18px;
+}
+
+.tokenomics-card > .aligned-card-copy p,
+.overview-card > .aligned-card-copy p {
+  margin: 0;
+  color: #111;
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.32;
+  font-weight: 600;
+}
+
+.tokenomics-card > .aligned-card-copy strong,
+.overview-card > .aligned-card-copy strong {
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 112px !important;
+    padding-right: 4px !important;
+    margin-top: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 112px !important;
+    padding-right: 4px !important;
+  }
+
+  .tokenomics-card > .aligned-card-copy p,
+  .overview-card > .aligned-card-copy p {
+    font-size: 18px;
+  }
+}
+
+
+/* 20260623 update18: stronger mobile indent for Tokenomics and Project Overview body copy */
+@media (max-width: 760px) {
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 112px !important;
+    padding-right: 4px !important;
+    margin-top: 20px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 112px !important;
+    padding-right: 4px !important;
+  }
+}
+
+
+/* 20260623 update19: force mobile indent for Tokenomics and Project Overview body copy, including old and new HTML structures */
+@media (max-width: 760px) {
+  .tokenomics-copy,
+  .overview-copy,
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 52px !important;
+    padding-right: 4px !important;
+    margin-left: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .tokenomics-copy p,
+  .overview-copy p,
+  .tokenomics-card > .aligned-card-copy p,
+  .overview-card > .aligned-card-copy p {
+    text-align: left !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-copy,
+  .overview-copy,
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 52px !important;
+    padding-right: 4px !important;
+    margin-left: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+
+/* 20260623 update20: mobile body copy indent for Tokenomics and Project Overview */
+@media (max-width: 760px) {
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 82px !important;
+    padding-right: 4px !important;
+    margin-left: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-card > .aligned-card-copy,
+  .overview-card > .aligned-card-copy {
+    padding-left: 82px !important;
+    padding-right: 4px !important;
+  }
+}
