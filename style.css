@@ -1479,14 +1479,14 @@ font-size: 19px;
 }
 
 
-/* 20260623 update21: keep header indent, restore body copy to normal mobile flow with slight right offset */
+/* 20260623 update22: mobile body copy aligned slightly left from update21 */
 @media (max-width: 760px) {
   .tokenomics-card > .aligned-card-copy,
   .overview-card > .aligned-card-copy,
   .tokenomics-copy,
   .overview-copy {
-    padding-left: 42px !important;
-    padding-right: 8px !important;
+    padding-left: 28px !important;
+    padding-right: 10px !important;
     margin-left: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -1506,7 +1506,7 @@ font-size: 19px;
   .overview-card > .aligned-card-copy,
   .tokenomics-copy,
   .overview-copy {
-    padding-left: 42px !important;
-    padding-right: 8px !important;
+    padding-left: 28px !important;
+    padding-right: 10px !important;
   }
 }
