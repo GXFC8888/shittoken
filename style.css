@@ -118,7 +118,7 @@ display: none;
 flex: 0 0 auto;
 min-width: 190px;
 min-height: 58px;
-padding: 12px 32px;
+padding: 15px 32px 9px;
 border: 2px solid rgba(255, 255, 255, .92);
 border-radius: 999px;
 background: rgba(255, 255, 255, .06);
@@ -129,6 +129,10 @@ letter-spacing: .02em;
 cursor: pointer;
 box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18), 0 6px 12px rgba(0, 0, 0, .10);
 transition: transform .12s ease, background .12s ease, opacity .12s ease;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+line-height: 1;
 }
 
 .top-wallet-link:hover {
@@ -432,15 +436,24 @@ border: 2px dashed rgba(17, 17, 17, .58);
 border-radius: 22px;
 }
 
-.ref-link-box input {
+.ref-link-box input,
+.ref-link-box textarea {
 width: 100%;
 border: 0;
 outline: 0;
+resize: none;
 background: transparent;
 font-size: clamp(19px, 3vw, 28px);
 color: #111;
 overflow: hidden;
 text-overflow: ellipsis;
+white-space: nowrap;
+line-height: 1.25;
+}
+
+.ref-link-box textarea {
+height: 42px;
+min-height: 42px;
 }
 
 .icon-copy {
@@ -807,8 +820,12 @@ transform: rotate(-3deg) translateY(8px);
 .top-wallet-link {
 min-width: 118px;
 min-height: 46px;
-padding: 9px 10px;
+padding: 12px 10px 7px;
 font-size: 15px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+line-height: 1;
 }
 
 .hero-card {
@@ -908,6 +925,15 @@ padding-right: 14px;
 border-radius: 17px;
 }
 
+.ref-link-box textarea {
+height: 42px;
+min-height: 42px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+font-size: clamp(19px, 5vw, 30px);
+}
+
 .icon-copy {
 width: 40px;
 height: 40px;
@@ -1000,8 +1026,12 @@ transform: rotate(-3deg) translateY(7px);
 .top-wallet-link {
 min-width: 106px;
 min-height: 42px;
-padding: 7px 8px;
+padding: 11px 8px 6px;
 font-size: 13px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+line-height: 1;
 }
 
 .social-actions {
