@@ -37,7 +37,7 @@
     }
   </style>
   <link rel="stylesheet" href="MyWebfontsKit.css?v=20260621genty10" />
-  <link rel="stylesheet" href="style.css?v=20260623update8" />
+  <link rel="stylesheet" href="style.css?v=20260623update10" />
 </head>
 <body>
   <main class="page-shell">
@@ -54,29 +54,36 @@
       <img class="ghost-character" src="shit-logo-original-color-bold.png" alt="" />
 
       <p class="tagline hero-tagline">
-        Oh yeah! The craziest memecoin airdrop experiment in existence is starting! Claim $shit for free and have fun!!!
+        <span class="hero-oh">Oh yeah!</span>
+        <span class="hero-copy">The craziest memecoin airdrop experiment in existence is starting! Claim $shit for free and have fun!!!</span>
       </p>
 
-      <div class="social-actions icon-only-actions">
-        <a class="social-pill" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="X">
-          <span class="social-icon image-icon x-image-icon">
-            <img src="x.svg" alt="X" />
-          </span>
-        </a>
-
-        <a class="social-pill coming-soon-link" href="#" aria-label="CoinGecko">
+      <div class="social-actions icon-only-actions arc-icons">
+        <a class="social-pill coming-soon-link arc-item arc-1" href="#" aria-label="CoinGecko">
           <span class="social-icon image-icon">
             <img src="coingecko.svg" alt="CoinGecko" />
           </span>
         </a>
 
-        <a class="social-pill coming-soon-link" href="#" aria-label="CoinMarketCap">
+        <a class="social-pill coming-soon-link arc-item arc-2" href="#" aria-label="CoinMarketCap">
           <span class="social-icon image-icon">
             <img src="coinmarketcap.png" alt="CoinMarketCap" />
           </span>
         </a>
 
-        <a class="social-pill coming-soon-link" href="#" aria-label="DEXTools">
+        <a class="social-pill arc-item arc-3" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <span class="social-icon image-icon x-image-icon">
+            <img src="x.svg" alt="X" />
+          </span>
+        </a>
+
+        <a class="social-pill uniswap-link arc-item arc-4" href="https://app.uniswap.org/swap" target="_blank" rel="noopener noreferrer" aria-label="Uniswap">
+          <span class="social-icon image-icon">
+            <img src="uniswap.png" alt="Uniswap" />
+          </span>
+        </a>
+
+        <a class="social-pill coming-soon-link arc-item arc-5" href="#" aria-label="DEXTools">
           <span class="social-icon image-icon">
             <img src="dextools.png" alt="DEXTools" />
           </span>
@@ -140,6 +147,25 @@
         </div>
       </article>
 
+      <article class="glass-card tokenomics-card" id="tokenomics">
+        <div class="card-title-row tokenomics-title-row">
+          <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
+          <div>
+            <h2>Tokenomics</h2>
+            <p>No Taxes, No Bullshit. It’s that simple.</p>
+          </div>
+        </div>
+
+        <div class="tokenomics-copy aligned-card-copy">
+          <p><strong>Token Supply:</strong></p>
+          <p>10000000....</p>
+          <p><strong>Airdrop Supply:</strong></p>
+          <p>99%</p>
+          <p>No Taxes, No Bullshit. It’s that simple.</p>
+          <p>LP tokens are burnt, and contract ownership is renounced.</p>
+        </div>
+      </article>
+
       <article class="glass-card overview-card" id="project-overview">
         <div class="card-title-row overview-title-row">
           <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
@@ -149,7 +175,7 @@
           </div>
         </div>
 
-        <div class="overview-copy">
+        <div class="overview-copy aligned-card-copy">
           <p>$SHIT is a wild memecoin airdrop experiment, launched organically by crypto lovers from communities all around the world.</p>
           <p>You no longer need to buy the token.</p>
           <p>99% of the total $SHIT supply will be airdropped to the community.</p>
@@ -157,7 +183,6 @@
           <p>The more you refer, the more you claim.</p>
           <p>The community has already raised 100 ETH for token buybacks.</p>
           <p>No insiders. No whale games. Just pure community chaos.</p>
-          <p>SHIT is a meme coin with no intrinsic value or expectation of financial return. There is no formal team or roadmap. The coin is completely useless and for entertainment purposes only.</p>
         </div>
       </article>
     </section>
@@ -184,6 +209,6 @@
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script src="script.js?v=20260623update8"></script>
+  <script src="script.js?v=20260623update10"></script>
 </body>
 </html>
