@@ -1463,7 +1463,7 @@ font-size: 19px;
 @media (max-width: 760px) {
   .tokenomics-card > .aligned-card-copy,
   .overview-card > .aligned-card-copy {
-    padding-left: 82px !important;
+    padding-left: 38px !important;
     padding-right: 4px !important;
     margin-left: 0 !important;
     box-sizing: border-box !important;
@@ -1485,7 +1485,7 @@ font-size: 19px;
   .overview-card > .aligned-card-copy,
   .tokenomics-copy,
   .overview-copy {
-    padding-left: 1px !important;
+    padding-left: 10px !important;
     padding-right: 10px !important;
     margin-left: 0 !important;
     width: 100% !important;
