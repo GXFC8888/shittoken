@@ -78,6 +78,32 @@ const refMessage = document.getElementById("refMessage");
 const menuBtn = document.getElementById("menuBtn");
 const navMenu = document.getElementById("navMenu");
 
+const COMING_SOON_TEXT = "$SHIT is still in the airdrop phase. Trading has not launched yet.";
+let isShowingComingSoonAlert = false;
+
+function bindComingSoonLinks() {
+  document.querySelectorAll(".coming-soon-link").forEach((link) => {
+    if (link.dataset.boundComingSoon === "true") return;
+
+    link.dataset.boundComingSoon = "true";
+
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (isShowingComingSoonAlert) return;
+
+      isShowingComingSoonAlert = true;
+      showMessage(COMING_SOON_TEXT, "ok");
+      alert(COMING_SOON_TEXT);
+
+      setTimeout(() => {
+        isShowingComingSoonAlert = false;
+      }, 300);
+    });
+  });
+}
+
 function showMessage(text, type) {
   if (!message) return;
 
@@ -317,18 +343,7 @@ function updateWalletUI() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
   const connectedX = isXConnected();
 
-  
-const COMING_SOON_TEXT = "$SHIT is still in the airdrop phase. Trading has not launched yet.";
-
-document.querySelectorAll(".coming-soon-link").forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    showMessage(COMING_SOON_TEXT, "ok");
-    alert(COMING_SOON_TEXT);
-  });
-});
-
-if (connectBtn) {
+  if (connectBtn) {
     connectBtn.innerText = activeWallet ? shortAddress(activeWallet) : "connect wallet";
     connectBtn.disabled = false;
   }
@@ -1382,6 +1397,8 @@ function handleUrlStatus() {
     window.history.replaceState({}, document.title, cleanUrl);
   }
 }
+
+bindComingSoonLinks();
 
 if (connectBtn) {
   connectBtn.addEventListener("click", connectWallet);
