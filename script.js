@@ -317,7 +317,18 @@ function updateWalletUI() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
   const connectedX = isXConnected();
 
-  if (connectBtn) {
+  
+const COMING_SOON_TEXT = "$SHIT is still in the airdrop phase. Trading has not launched yet.";
+
+document.querySelectorAll(".coming-soon-link").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showMessage(COMING_SOON_TEXT, "ok");
+    alert(COMING_SOON_TEXT);
+  });
+});
+
+if (connectBtn) {
     connectBtn.innerText = activeWallet ? shortAddress(activeWallet) : "connect wallet";
     connectBtn.disabled = false;
   }
