@@ -1674,3 +1674,27 @@ font-size: 19px;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p {
+  display: none !important;
+}
+
+.tokenomics-title-row,
+.overview-title-row {
+  margin-bottom: 10px !important;
+}
+
+.tokenomics-card > .aligned-card-copy,
+.overview-card > .aligned-card-copy {
+  margin-top: 0 !important;
+  gap: 12px !important;
+}
+
+.tokenomics-card > .aligned-card-copy p,
+.overview-card > .aligned-card-copy p {
+  margin: 0 !important;
+  line-height: 1.32 !important;
+  text-align: left !important;
+}
