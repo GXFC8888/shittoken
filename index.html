@@ -37,7 +37,7 @@
     }
   </style>
   <link rel="stylesheet" href="MyWebfontsKit.css?v=20260621genty10" />
-  <link rel="stylesheet" href="style.css?v=20260623update1" />
+  <link rel="stylesheet" href="style.css?v=20260623update2" />
 </head>
 <body>
   <main class="page-shell">
@@ -87,7 +87,7 @@
     <section class="airdrop-stack" id="airdrop">
       <article class="glass-card referral-card">
         <div class="card-title-row">
-          <img class="card-avatar" src="shit-logo-original-color-bold.png" alt="SHIT" />
+          <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
           <div>
             <h2>Referral Airdrop</h2>
             <p>Invite frens and earn 5-level referral rewards.</p>
@@ -96,11 +96,12 @@
 
         <div class="ref-link-box">
           <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
-          <button id="copyRefBtn" class="icon-copy" type="button" aria-label="Copy referral link">⧉</button>
         </div>
 
+        <button id="copyRefBtn" class="icon-copy hidden" type="button" aria-label="Copy referral link"></button>
+
         <div class="two-actions">
-          <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">⧉ Copy Link</button>
+          <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">Copy Link</button>
           <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
         </div>
 
@@ -109,7 +110,7 @@
 
       <article class="glass-card task-card">
         <div class="card-title-row">
-          <div class="round-x">𝕏</div>
+          <div class="round-x"><img src="x.svg" alt="X" /></div>
           <div>
             <h2>X Tasks</h2>
             <p>Complete X tasks and claim rewards.</p>
@@ -140,7 +141,7 @@
 
       <article class="glass-card overview-card" id="project-overview">
         <div class="card-title-row overview-title-row">
-          <img class="card-avatar" src="shit-logo-original-color-bold.png" alt="SHIT" />
+          <img class="card-avatar" src="shit-avatar-round.png" alt="SHIT" />
           <div>
             <h2>Project Overview</h2>
             <p>Pure community chaos. Free claim. No whale games.</p>
@@ -174,6 +175,6 @@
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-  <script src="script.js?v=20260623update1"></script>
+  <script src="script.js?v=20260623update2"></script>
 </body>
 </html>
