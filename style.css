@@ -1625,3 +1625,29 @@ font-size: 19px;
     padding-right: 10px !important;
   }
 }
+
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p {
+  text-align: left !important;
+  padding-left: 18px !important;
+  padding-right: 10px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 760px) {
+  .tokenomics-card .aligned-section-content p,
+  .overview-card .aligned-section-content p {
+    text-align: left !important;
+    padding-left: 18px !important;
+    padding-right: 10px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-card .aligned-section-content p,
+  .overview-card .aligned-section-content p {
+    text-align: left !important;
+    padding-left: 18px !important;
+    padding-right: 10px !important;
+  }
+}
