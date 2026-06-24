@@ -4271,142 +4271,134 @@ strong {
   }
 }
 
-
-.x-task-message,
-#message.message {
-  margin: 6px auto 26px !important;
+/* 20260624 mobile first-page right-side overflow fix */
+html,
+body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
 }
 
-.mission-list {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+.page-shell,
+.hero-card,
+.hero-top,
+.hero-tagline,
+.hero-dogs-wrap,
+.social-actions.icon-only-actions.arc-icons {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-.mission-head {
-  margin-top: 0 !important;
-  margin-bottom: 14px !important;
+.page-shell {
+  overflow-x: hidden !important;
 }
 
-.mission-actions {
-  margin-top: 30px !important;
+.hero-card {
+  overflow: hidden !important;
 }
 
-@media (max-width: 760px) {
-  .x-task-message,
-  #message.message {
-    margin: 6px auto 24px !important;
-  }
-
-  .mission-head {
-    margin-bottom: 12px !important;
-  }
+.hero-tagline {
+  width: 100% !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  overflow-wrap: break-word !important;
 }
 
-
-/* 20260624: put green X task guide above the buttons and keep clear spacing */
-.mission-card .x-task-message {
-  display: block !important;
-  margin: 14px auto 22px !important;
-  color: #0f6b10 !important;
-  text-align: center !important;
+.hero-oh,
+.hero-copy {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
 }
 
-.mission-card .mission-actions {
-  margin-top: 18px !important;
+.hero-dogs-wrap {
+  overflow: hidden !important;
 }
 
-.mission-card .mission-head {
-  margin-bottom: 8px !important;
-}
-
-@media (max-width: 760px) {
-  .mission-card .x-task-message {
-    margin: 12px auto 20px !important;
-  }
-
-  .mission-card .mission-actions {
-    margin-top: 16px !important;
-  }
-}
-
-
-/* 20260624: X icon text back to Complete X tasks copy */
-.x-task-intro p {
-  color: #111 !important;
-  font-size: clamp(25px, 3.7vw, 38px) !important;
-  line-height: 1.15 !important;
-  font-weight: 900 !important;
-  text-align: left !important;
+.hero-dogs-image {
+  max-width: 100% !important;
+  object-fit: contain !important;
 }
 
 @media (max-width: 760px) {
-  .x-task-intro p {
-    font-size: clamp(25px, 7vw, 35px) !important;
+  .page-shell {
+    width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero-card {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .hero-tagline {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .hero-oh {
+    font-size: clamp(38px, 10vw, 50px) !important;
+    line-height: 1.02 !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(25px, 7vw, 34px) !important;
     line-height: 1.18 !important;
   }
-}
 
-
-/* 20260624 final: keep X task guide visible between reward and buttons, use new hero image */
-.hero-main-image {
-  position: relative !important;
-  z-index: 1 !important;
-  display: block !important;
-  width: min(82vw, 620px) !important;
-  max-height: 520px !important;
-  height: auto !important;
-  margin: 8px auto 18px !important;
-  object-fit: contain !important;
-  mix-blend-mode: normal !important;
-  filter: none !important;
-}
-
-#message.hidden {
-  display: none !important;
-}
-
-.mission-card .mission-head {
-  margin-bottom: 8px !important;
-}
-
-.mission-card .x-task-message {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  color: #0f6b10 !important;
-  text-align: center !important;
-  font-size: clamp(24px, 3.4vw, 37px) !important;
-  line-height: 1.28 !important;
-  font-weight: 400 !important;
-  margin: 18px auto 26px !important;
-  max-width: 100% !important;
-}
-
-.mission-card .mission-actions {
-  margin-top: 0 !important;
-}
-
-@media (max-width: 760px) {
-  .hero-main-image {
-    width: min(92vw, 520px) !important;
-    max-height: 420px !important;
-    margin: 4px auto 16px !important;
+  .hero-dogs-image {
+    width: min(88vw, 520px) !important;
   }
 
-  .mission-card .x-task-message {
-    font-size: clamp(21px, 5.8vw, 29px) !important;
-    line-height: 1.32 !important;
-    margin: 16px auto 24px !important;
+  .social-actions.icon-only-actions.arc-icons {
+    width: calc(100vw - 28px) !important;
+    max-width: calc(100vw - 28px) !important;
+    gap: 6px !important;
+    overflow: visible !important;
   }
 }
 
 @media (max-width: 430px) {
-  .hero-main-image {
-    width: min(96vw, 390px) !important;
-    max-height: 320px !important;
+  .page-shell {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
   }
 
-  .mission-card .x-task-message {
-    font-size: clamp(20px, 5.8vw, 25px) !important;
+  .hero-card {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .hero-tagline {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .hero-oh {
+    font-size: clamp(35px, 9.6vw, 43px) !important;
+    line-height: 1.02 !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(22px, 6.7vw, 29px) !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-dogs-image {
+    width: min(84vw, 340px) !important;
+  }
+
+  .social-actions.icon-only-actions.arc-icons {
+    width: calc(100vw - 18px) !important;
+    max-width: calc(100vw - 18px) !important;
+    gap: 4px !important;
+  }
+
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 52px !important;
+    height: 52px !important;
+    min-height: 52px !important;
   }
 }
