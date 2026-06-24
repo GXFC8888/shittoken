@@ -4338,7 +4338,7 @@ body {
   }
 
   .hero-oh {
-    font-size: clamp(38px, 10vw, 50px) !important;
+    font-size: clamp(46px, 12vw, 64px) !important;
     line-height: 1.02 !important;
   }
 
@@ -4376,7 +4376,7 @@ body {
   }
 
   .hero-oh {
-    font-size: clamp(35px, 9.6vw, 43px) !important;
+    font-size: clamp(44px, 12.5vw, 56px) !important;
     line-height: 1.02 !important;
   }
 
@@ -4401,4 +4401,31 @@ body {
     height: 52px !important;
     min-height: 52px !important;
   }
+}
+
+/* Final X task order: X status -> Reward -> green note -> buttons */
+#message.message {
+  display: none !important;
+}
+.mission-card .x-task-message {
+  display: block !important;
+  order: 2 !important;
+  margin: 18px auto 30px !important;
+  color: #0f6b10 !important;
+  text-align: center !important;
+  font-size: clamp(21px, 3vw, 30px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.mission-card .mission-head {
+  order: 1 !important;
+}
+.mission-card .mission-actions {
+  order: 3 !important;
+}
+.mission-card {
+  display: flex !important;
+  flex-direction: column !important;
 }
