@@ -2339,3 +2339,122 @@ strong {
     border-radius: 0 30px 0 30px !important;
   }
 }
+
+
+/* spacing update */
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card {
+  padding-top: 44px !important;
+  padding-bottom: 44px !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  margin-top: 0 !important;
+  margin-bottom: 28px !important;
+}
+
+.referral-card > .center-card-title-row,
+.task-card > .task-title-row,
+.tokenomics-card > .tokenomics-title-row,
+.overview-card > .overview-title-row {
+  margin-bottom: 28px !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p,
+.x-task-intro,
+.overview-card > .aligned-card-copy,
+.tokenomics-card > .tokenomics-center-copy {
+  margin-top: 0 !important;
+}
+
+.tokenomics-card {
+  padding-top: 56px !important;
+  padding-bottom: 56px !important;
+}
+
+.tokenomics-card > .tokenomics-title-row {
+  margin-bottom: 46px !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy {
+  gap: 24px !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  margin-top: 2px !important;
+  margin-bottom: 18px !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy p:last-child {
+  margin-top: 8px !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card {
+    padding-top: 36px !important;
+    padding-bottom: 36px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-bottom: 22px !important;
+  }
+
+  .referral-card > .center-card-title-row,
+  .task-card > .task-title-row,
+  .tokenomics-card > .tokenomics-title-row,
+  .overview-card > .overview-title-row {
+    margin-bottom: 22px !important;
+  }
+
+  .tokenomics-card {
+    padding-top: 46px !important;
+    padding-bottom: 46px !important;
+  }
+
+  .tokenomics-card > .tokenomics-title-row {
+    margin-bottom: 36px !important;
+  }
+
+  .tokenomics-card > .tokenomics-center-copy {
+    gap: 20px !important;
+  }
+
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    margin-bottom: 14px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+
+  .tokenomics-card {
+    padding-top: 42px !important;
+    padding-bottom: 42px !important;
+  }
+
+  .tokenomics-card > .tokenomics-title-row {
+    margin-bottom: 34px !important;
+  }
+}
