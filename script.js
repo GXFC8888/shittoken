@@ -46,7 +46,7 @@ let isVerifying = false;
 let noNewMissionLocked = false;
 let noNewMissionTaskId = null;
 
-let currentOfficialTweetId =
+let currentTweetId =
   localStorage.getItem("current_official_tweet_id") || null;
 
 const connectBtn = document.getElementById("connectBtn");
@@ -197,11 +197,11 @@ function normalizeWallet(address) {
   return String(address || "").toLowerCase();
 }
 
-function setCurrentOfficialTweetId(tweetId) {
+function setCurrentTweetId(tweetId) {
   if (!tweetId) return;
 
-  currentOfficialTweetId = String(tweetId);
-  localStorage.setItem("current_official_tweet_id", currentOfficialTweetId);
+  currentTweetId = String(tweetId);
+  localStorage.setItem("current_official_tweet_id", currentTweetId);
 }
 
 function getLatestTask() {
@@ -213,10 +213,10 @@ function getLatestTask() {
     .at(-1) || null;
 }
 
-function getOfficialXTargetUrl(tweetId = null) {
+function getXTargetUrl(tweetId = null) {
   const id =
     tweetId ||
-    currentOfficialTweetId ||
+    currentTweetId ||
     (getLatestTask() ? String(getLatestTask().tweet_id) : null);
 
   if (id) {
@@ -226,10 +226,10 @@ function getOfficialXTargetUrl(tweetId = null) {
   return OFFICIAL_X_WEB_URL;
 }
 
-function getOfficialXTargetAppUrl(tweetId = null) {
+function getXTargetAppUrl(tweetId = null) {
   const id =
     tweetId ||
-    currentOfficialTweetId ||
+    currentTweetId ||
     (getLatestTask() ? String(getLatestTask().tweet_id) : null);
 
   if (id) {
@@ -407,7 +407,7 @@ function resetWalletUI() {
   currentProgress = [];
   currentXConnected = false;
   currentXUsername = null;
-  currentOfficialTweetId = null;
+  currentTweetId = null;
   noNewMissionLocked = false;
   noNewMissionTaskId = null;
 
@@ -540,7 +540,7 @@ function listenWalletChange() {
   walletProvider.on("accountsChanged", async (accounts) => {
     if (accounts && accounts.length > 0) {
       try {
-        currentOfficialTweetId = null;
+        currentTweetId = null;
         noNewMissionLocked = false;
         noNewMissionTaskId = null;
 
@@ -702,7 +702,7 @@ async function loadTasks(runPendingActions = true) {
     const latestTask = getLatestTask();
 
     if (latestTask && latestTask.tweet_id) {
-      setCurrentOfficialTweetId(latestTask.tweet_id);
+      setCurrentTweetId(latestTask.tweet_id);
 
       if (
         noNewMissionTaskId &&
@@ -894,14 +894,14 @@ function renderMissions() {
     <div class="mission-card" data-task-id="${latestTask.id}" data-tweet-id="${tweetId}">
       <div class="mission-head">
         <div>
-          <h3>${escapeHtml(latestTask.title || "Official X Mission")}</h3>
+          <h3>${escapeHtml(latestTask.title || "")}</h3>
           <p class="reward">Reward: ${escapeHtml(latestTask.reward_amount || "1")} drop</p>
         </div>
         <span class="mission-status ${claimed ? "done" : "ready"}">${statusText}</span>
       </div>
 
       <p>
-        Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment.
+        
         
       </p>
 
@@ -972,7 +972,7 @@ function openTaskX(tweetId) {
   localStorage.setItem("pending_official_x", "true");
 
   if (tweetId) {
-    setCurrentOfficialTweetId(tweetId);
+    setCurrentTweetId(tweetId);
   }
 
   if (!isXConnected()) {
@@ -994,7 +994,7 @@ function openTaskXDirect(tweetId) {
   const latestTask = getLatestTask();
 
   if (latestTask && tweetId && String(tweetId) !== String(latestTask.tweet_id)) {
-    setCurrentOfficialTweetId(tweetId);
+    setCurrentTweetId(tweetId);
   }
 
   showMessage(
@@ -1002,8 +1002,8 @@ function openTaskXDirect(tweetId) {
     "ok"
   );
 
-  const targetWebUrl = getOfficialXTargetUrl(tweetId);
-  const targetAppUrl = getOfficialXTargetAppUrl(tweetId);
+  const targetWebUrl = getXTargetUrl(tweetId);
+  const targetAppUrl = getXTargetAppUrl(tweetId);
 
   try {
     navigator.clipboard.writeText(targetWebUrl).catch(() => {});
@@ -1224,7 +1224,7 @@ async function verifyAndClaim(task) {
     const taskId = Number(task.id);
     const tweetId = String(task.tweet_id);
 
-    setCurrentOfficialTweetId(tweetId);
+    setCurrentTweetId(tweetId);
 
     showMessage("Checking latest X mission...");
 
@@ -1243,7 +1243,7 @@ async function verifyAndClaim(task) {
     const verifyData = await verifyResponse.json().catch(() => ({}));
 
     if (verifyData.tweetId || verifyData.latestTweetId) {
-      setCurrentOfficialTweetId(verifyData.tweetId || verifyData.latestTweetId);
+      setCurrentTweetId(verifyData.tweetId || verifyData.latestTweetId);
     }
 
     if (!verifyData.success) {
@@ -1285,7 +1285,7 @@ async function verifyAndClaim(task) {
         return;
       }
 
-      setCurrentOfficialTweetId(targetTweetId);
+      setCurrentTweetId(targetTweetId);
 
       showMessage(
         verifyData.message ||
@@ -1362,11 +1362,11 @@ async function verifyAndClaim(task) {
 }
 
 function handleReturnFromX() {
-  const pendingOfficialX = localStorage.getItem("pending_official_x");
+  const pendingX = localStorage.getItem("pending_official_x");
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
-  if (pendingOfficialX && activeWallet) {
-    showMessage("Back from X? Tap Claim Reward after following, liking, reposting, and commenting.", "ok");
+  if (pendingX && activeWallet) {
+    showMessage("", "ok");
   }
 }
 
