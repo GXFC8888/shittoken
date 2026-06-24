@@ -1698,3 +1698,358 @@ font-size: 19px;
   line-height: 1.32 !important;
   text-align: left !important;
 }
+
+body,
+p,
+span,
+div,
+input,
+textarea,
+select,
+a,
+button,
+.message,
+.status-pill span,
+.status-pill strong,
+.mission-card p,
+.mission-link,
+.reward,
+.aligned-card-copy p,
+.card-title-row p,
+.overview-copy p,
+.ref-link-box input,
+.ref-link-box textarea {
+  font-weight: 400 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.hero-oh,
+.brand-word-text,
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.mission-card h3,
+.custom-alert-box h3 {
+  font-weight: 900 !important;
+}
+
+strong {
+  font-weight: 400 !important;
+}
+
+.btn,
+.top-wallet-link,
+.wallet-cta,
+.mission-actions .btn,
+.two-actions .btn,
+.copy-ref-proxy,
+#claimReferralBtn,
+#copyRefBtnMobile,
+.open-task-btn,
+.verify-task-btn,
+.custom-alert-box button {
+  font-weight: 400 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding-top: 20px !important;
+  padding-bottom: 12px !important;
+}
+
+.top-wallet-link {
+  padding-top: 17px !important;
+  padding-bottom: 8px !important;
+}
+
+.ref-link-box {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  line-height: 1 !important;
+  transform: translateY(4px);
+  font-weight: 400 !important;
+}
+
+.referral-card .card-title-row,
+.referral-card > .center-card-title-row {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.referral-card .card-title-row > div,
+.referral-card > .center-card-title-row > div {
+  width: 100% !important;
+}
+
+.referral-card h2 {
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  text-align: left !important;
+  padding-left: 28px !important;
+  padding-right: 0 !important;
+  font-weight: 400 !important;
+}
+
+.referral-card .ref-link-box,
+.referral-card .two-actions,
+.referral-card #refMessage {
+  margin-left: 28px !important;
+  width: calc(100% - 28px) !important;
+}
+
+.task-title-row {
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 0 !important;
+  margin-bottom: 14px !important;
+}
+
+.task-title-row > div {
+  width: 100% !important;
+}
+
+.x-task-intro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 18px;
+}
+
+.small-round-x {
+  width: 68px !important;
+  height: 68px !important;
+  border-width: 3px !important;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, .16) !important;
+}
+
+.x-task-intro p {
+  margin: 0 !important;
+  color: #111 !important;
+  font-size: clamp(22px, 3.2vw, 31px) !important;
+  line-height: 1.22 !important;
+  font-weight: 400 !important;
+}
+
+.mission-head {
+  display: block !important;
+  text-align: center !important;
+}
+
+.mission-head > div {
+  text-align: center !important;
+}
+
+.mission-head h3,
+.mission-head .reward {
+  text-align: center !important;
+  font-weight: 400 !important;
+}
+
+.mission-status {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 12px auto 0 !important;
+  font-weight: 400 !important;
+}
+
+.tokenomics-center-copy {
+  text-align: center !important;
+  display: grid !important;
+  gap: 12px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+}
+
+.tokenomics-center-copy p {
+  text-align: center !important;
+  margin: 0 !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+}
+
+.tokenomics-center-copy .token-number {
+  display: grid !important;
+  gap: 0 !important;
+  font-size: clamp(25px, 4vw, 44px) !important;
+  line-height: 1.05 !important;
+}
+
+.tokenomics-title-row,
+.overview-title-row {
+  margin-bottom: 12px !important;
+}
+
+.overview-card .aligned-section-content h2 {
+  text-align: center !important;
+}
+
+.overview-card > .aligned-card-copy p {
+  font-weight: 400 !important;
+}
+
+.hero-copy {
+  font-weight: 400 !important;
+}
+
+.social-actions.icon-only-actions.arc-icons {
+  min-height: 168px !important;
+}
+
+.arc-icons .arc-1 {
+  transform: translateY(46px) !important;
+}
+
+.arc-icons .arc-2 {
+  transform: translateY(20px) !important;
+}
+
+.arc-icons .arc-3 {
+  transform: translateY(-40px) !important;
+}
+
+.arc-icons .arc-4 {
+  transform: translateY(20px) !important;
+}
+
+.arc-icons .arc-5 {
+  transform: translateY(46px) !important;
+}
+
+@media (max-width: 760px) {
+  .btn,
+  .top-wallet-link,
+  .wallet-cta,
+  .mission-actions .btn,
+  .two-actions .btn,
+  .copy-ref-proxy,
+  #claimReferralBtn,
+  #copyRefBtnMobile,
+  .open-task-btn,
+  .verify-task-btn {
+    padding-top: 17px !important;
+    padding-bottom: 9px !important;
+  }
+
+  .top-wallet-link {
+    padding-top: 13px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .referral-card .card-title-row p,
+  .referral-card > .center-card-title-row p {
+    padding-left: 18px !important;
+  }
+
+  .referral-card .ref-link-box,
+  .referral-card .two-actions,
+  .referral-card #refMessage {
+    margin-left: 18px !important;
+    width: calc(100% - 18px) !important;
+  }
+
+  .x-task-intro {
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .small-round-x {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .x-task-intro p {
+    font-size: 21px !important;
+  }
+
+  .tokenomics-center-copy {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .tokenomics-center-copy .token-number {
+    font-size: 28px !important;
+  }
+
+  .social-actions.icon-only-actions.arc-icons {
+    min-height: 128px !important;
+  }
+
+  .arc-icons .arc-1 {
+    transform: translateY(42px) !important;
+  }
+
+  .arc-icons .arc-2 {
+    transform: translateY(20px) !important;
+  }
+
+  .arc-icons .arc-3 {
+    transform: translateY(-30px) !important;
+  }
+
+  .arc-icons .arc-4 {
+    transform: translateY(20px) !important;
+  }
+
+  .arc-icons .arc-5 {
+    transform: translateY(42px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-intro {
+    grid-template-columns: 50px 1fr;
+    gap: 12px;
+  }
+
+  .small-round-x {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .x-task-intro p {
+    font-size: 18px !important;
+  }
+
+  .tokenomics-center-copy .token-number {
+    font-size: 25px !important;
+  }
+
+  .arc-icons .arc-1 {
+    transform: translateY(40px) !important;
+  }
+
+  .arc-icons .arc-2 {
+    transform: translateY(19px) !important;
+  }
+
+  .arc-icons .arc-3 {
+    transform: translateY(-30px) !important;
+  }
+
+  .arc-icons .arc-4 {
+    transform: translateY(19px) !important;
+  }
+
+  .arc-icons .arc-5 {
+    transform: translateY(40px) !important;
+  }
+}
