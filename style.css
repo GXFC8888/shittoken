@@ -2053,3 +2053,207 @@ strong {
     transform: translateY(40px) !important;
   }
 }
+
+.hero-copy,
+.card-title-row p,
+.referral-card .card-title-row p,
+.task-card .card-title-row p,
+.x-task-intro p,
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p,
+.tokenomics-card > .aligned-card-copy p,
+.overview-card > .aligned-card-copy p,
+.overview-copy p,
+.tokenomics-center-copy p,
+.mission-card p,
+.reward,
+.message,
+.small-message,
+.status-pill span,
+.status-pill strong,
+.mission-link,
+.ref-link-box input,
+.ref-link-box textarea {
+  font-weight: 400 !important;
+}
+
+.btn,
+.top-wallet-link,
+.wallet-cta,
+.mission-actions .btn,
+.two-actions .btn,
+.copy-ref-proxy,
+#claimReferralBtn,
+#copyRefBtnMobile,
+.open-task-btn,
+.verify-task-btn {
+  font-weight: 400 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding-top: 18px !important;
+  padding-bottom: 10px !important;
+}
+
+.top-wallet-link {
+  padding-top: 15px !important;
+  padding-bottom: 9px !important;
+}
+
+.ref-link-box {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  line-height: 1 !important;
+  transform: translateY(3px) !important;
+}
+
+.referral-card .card-title-row,
+.referral-card > .center-card-title-row {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.referral-card .card-title-row > div,
+.referral-card > .center-card-title-row > div {
+  width: 100% !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  width: 100% !important;
+  text-align: center !important;
+  font-size: clamp(30px, 4vw, 42px) !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  margin: 0 0 12px !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  text-align: left !important;
+  padding-left: 18px !important;
+  padding-right: 0 !important;
+}
+
+.referral-card .ref-link-box,
+.referral-card .two-actions,
+.referral-card #refMessage {
+  margin-left: 18px !important;
+  width: calc(100% - 18px) !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy {
+  display: grid !important;
+  justify-items: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin: 12px auto 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 14px !important;
+  box-sizing: border-box !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy p {
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+  line-height: 1.28 !important;
+  font-weight: 400 !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0 !important;
+  text-align: center !important;
+  font-size: clamp(25px, 4vw, 40px) !important;
+  line-height: 1.05 !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number span {
+  display: block !important;
+  text-align: center !important;
+}
+
+.overview-card > .aligned-card-copy p {
+  text-align: left !important;
+  font-weight: 400 !important;
+}
+
+.mission-head {
+  display: block !important;
+  text-align: center !important;
+}
+
+.mission-head > div,
+.mission-head h3,
+.mission-head .reward {
+  text-align: center !important;
+}
+
+.mission-status {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 12px auto 0 !important;
+  font-weight: 400 !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    font-size: 30px !important;
+  }
+
+  .btn,
+  .top-wallet-link,
+  .wallet-cta,
+  .mission-actions .btn,
+  .two-actions .btn,
+  .copy-ref-proxy,
+  #claimReferralBtn,
+  #copyRefBtnMobile,
+  .open-task-btn,
+  .verify-task-btn {
+    padding-top: 17px !important;
+    padding-bottom: 9px !important;
+  }
+
+  .top-wallet-link {
+    padding-top: 13px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .tokenomics-card > .tokenomics-center-copy {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 14px !important;
+  }
+
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: 28px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: 25px !important;
+  }
+}
