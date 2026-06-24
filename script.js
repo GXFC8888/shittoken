@@ -902,8 +902,8 @@ function renderMissions() {
 
       <p>
         Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
-        Come back here and tap Claim Reward.
-        Old posts are not claimable.
+        Then claim reward.
+        
       </p>
 
       <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
