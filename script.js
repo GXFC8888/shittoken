@@ -751,7 +751,7 @@ async function loadTasks(runPendingActions = true) {
         }
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Wallet connected. Connect X first, then complete the latest mission.", "ok");
+      showMessage("", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -901,8 +901,7 @@ function renderMissions() {
       </div>
 
       <p>
-        Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment on the latest official post.
-        Then claim reward.
+        Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment.
         
       </p>
 
