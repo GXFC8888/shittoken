@@ -4301,3 +4301,47 @@ strong {
     margin-bottom: 12px !important;
   }
 }
+
+
+/* 20260624: put green X task guide above the buttons and keep clear spacing */
+.mission-card .x-task-message {
+  display: block !important;
+  margin: 14px auto 22px !important;
+  color: #0f6b10 !important;
+  text-align: center !important;
+}
+
+.mission-card .mission-actions {
+  margin-top: 18px !important;
+}
+
+.mission-card .mission-head {
+  margin-bottom: 8px !important;
+}
+
+@media (max-width: 760px) {
+  .mission-card .x-task-message {
+    margin: 12px auto 20px !important;
+  }
+
+  .mission-card .mission-actions {
+    margin-top: 16px !important;
+  }
+}
+
+
+/* 20260624: X icon text back to Complete X tasks copy */
+.x-task-intro p {
+  color: #111 !important;
+  font-size: clamp(25px, 3.7vw, 38px) !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+  text-align: left !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-intro p {
+    font-size: clamp(25px, 7vw, 35px) !important;
+    line-height: 1.18 !important;
+  }
+}
