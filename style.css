@@ -3005,3 +3005,104 @@ strong {
   }
 }
 
+/* mobile X icon and balanced section title spacing */
+@media (max-width: 760px) {
+  .x-task-intro {
+    grid-template-columns: 78px 1fr !important;
+    gap: 18px !important;
+    align-items: center !important;
+  }
+
+  .small-round-x {
+    width: 76px !important;
+    height: 76px !important;
+    min-width: 76px !important;
+    min-height: 76px !important;
+    border-width: 4px !important;
+  }
+
+  .task-title-row .round-x,
+  .task-card .round-x {
+    width: 76px !important;
+    height: 76px !important;
+    min-width: 76px !important;
+    min-height: 76px !important;
+  }
+
+  .referral-card,
+  .task-card,
+  .overview-card {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+
+  .tokenomics-card {
+    padding-top: 72px !important;
+    padding-bottom: 72px !important;
+  }
+
+  .referral-card > .center-card-title-row,
+  .task-card > .task-title-row,
+  .overview-card > .overview-title-row {
+    margin-bottom: 46px !important;
+  }
+
+  .tokenomics-card > .tokenomics-title-row {
+    margin-bottom: 58px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .overview-card h2,
+  .tokenomics-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-intro {
+    grid-template-columns: 72px 1fr !important;
+    gap: 16px !important;
+  }
+
+  .small-round-x {
+    width: 70px !important;
+    height: 70px !important;
+    min-width: 70px !important;
+    min-height: 70px !important;
+  }
+
+  .task-title-row .round-x,
+  .task-card .round-x {
+    width: 70px !important;
+    height: 70px !important;
+    min-width: 70px !important;
+    min-height: 70px !important;
+  }
+
+  .referral-card,
+  .task-card,
+  .overview-card {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+
+  .tokenomics-card {
+    padding-top: 68px !important;
+    padding-bottom: 68px !important;
+  }
+
+  .referral-card > .center-card-title-row,
+  .task-card > .task-title-row,
+  .overview-card > .overview-title-row {
+    margin-bottom: 44px !important;
+  }
+
+  .tokenomics-card > .tokenomics-title-row {
+    margin-bottom: 54px !important;
+  }
+}
+
