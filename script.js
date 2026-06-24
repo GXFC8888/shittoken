@@ -367,7 +367,7 @@ function updateWalletUI() {
   const connectedX = isXConnected();
 
   if (connectBtn) {
-    connectBtn.innerText = activeWallet ? shortAddress(activeWallet) : "connect wallet";
+    connectBtn.innerText = activeWallet ? shortAddress(activeWallet) : "Link wallet";
     connectBtn.disabled = false;
   }
 
@@ -492,7 +492,7 @@ async function connectWallet() {
     showMessage("Wallet connection failed: " + getReadableError(error), "err");
 
     if (connectBtn) {
-      connectBtn.innerText = "connect wallet";
+      connectBtn.innerText = "Link wallet";
     }
 
     if (refreshMissionsBtn) {
@@ -751,7 +751,7 @@ async function loadTasks(runPendingActions = true) {
         }
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("", "ok");
+      showMessage("Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -1366,7 +1366,7 @@ function handleReturnFromX() {
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (pendingX && activeWallet) {
-    showMessage("", "ok");
+    showMessage("Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.", "ok");
   }
 }
 
