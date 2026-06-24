@@ -2313,3 +2313,29 @@ strong {
     margin-bottom: 22px;
   }
 }
+
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card {
+  border: 2px solid rgb(255, 254, 248) !important;
+  border-radius: 0 30px 0 30px !important;
+  background: rgba(255, 214, 35, .5) !important;
+  box-shadow: 0 0 50px 20px rgba(255, 254, 248, .18) !important;
+}
+
+.referral-card::before,
+.task-card::before,
+.tokenomics-card::before,
+.overview-card::before {
+  content: none !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card {
+    border-radius: 0 30px 0 30px !important;
+  }
+}
