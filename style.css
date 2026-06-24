@@ -2258,61 +2258,58 @@ strong {
   }
 }
 
-/* Pepe-style section dividers */
-.airdrop-stack {
-  gap: 0 !important;
-}
-
-.pepe-divider-wrap {
-  position: relative;
+.pepe-divider {
   width: 100vw;
   height: 20px;
   margin-left: calc(50% - 50vw);
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.pepe-divider {
-  width: 100%;
-  height: 20px;
+  margin-top: 28px;
+  margin-bottom: 28px;
   background-image: url("pepe-divider.svg");
   background-repeat: repeat-x;
   background-size: 481px 100%;
   background-position: center top;
   transform: scale(1, -1);
+  pointer-events: none;
 }
 
-.section-divider {
-  margin-top: 34px;
-  margin-bottom: 34px;
+.hero-card + .pepe-divider {
+  margin-top: 22px;
+  margin-bottom: 28px;
 }
 
-.hero-section-divider {
-  margin-top: 8px;
-  margin-bottom: 34px;
+.airdrop-stack {
+  gap: 0 !important;
+}
+
+.airdrop-stack > .glass-card {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 @media (max-width: 760px) {
-  .section-divider {
-    margin-top: 26px;
-    margin-bottom: 26px;
+  .pepe-divider {
+    height: 20px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    background-size: 481px 100%;
   }
 
-  .hero-section-divider {
-    margin-top: 4px;
-    margin-bottom: 28px;
+  .hero-card + .pepe-divider {
+    margin-top: 18px;
+    margin-bottom: 24px;
   }
 }
 
 @media (max-width: 430px) {
-  .section-divider {
+  .pepe-divider {
+    height: 20px;
     margin-top: 22px;
     margin-bottom: 22px;
+    background-size: 481px 100%;
   }
 
-  .hero-section-divider {
-    margin-top: 2px;
-    margin-bottom: 24px;
+  .hero-card + .pepe-divider {
+    margin-top: 16px;
+    margin-bottom: 22px;
   }
 }
