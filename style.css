@@ -2845,3 +2845,88 @@ strong {
   }
 }
 
+/* remove main card borders, keep referral link box */
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card,
+.glass-card.referral-card,
+.glass-card.task-card,
+.glass-card.tokenomics-card,
+.glass-card.overview-card {
+  background: #fcb609 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.referral-card::before,
+.task-card::before,
+.tokenomics-card::before,
+.overview-card::before,
+.glass-card.referral-card::before,
+.glass-card.task-card::before,
+.glass-card.tokenomics-card::before,
+.glass-card.overview-card::before {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ref-link-box {
+  background: rgba(255, 220, 45, .55) !important;
+  border: 2px dashed rgba(17, 17, 17, .58) !important;
+  border-radius: 22px !important;
+  box-shadow: none !important;
+}
+
+.mission-card,
+.status-pill {
+  background: #fcb609 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.airdrop-stack > .glass-card {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card,
+  .glass-card.referral-card,
+  .glass-card.task-card,
+  .glass-card.tokenomics-card,
+  .glass-card.overview-card {
+    background: #fcb609 !important;
+    border: 0 !important;
+    outline: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .ref-link-box {
+    background: rgba(255, 220, 45, .55) !important;
+    border: 2px dashed rgba(17, 17, 17, .58) !important;
+    border-radius: 22px !important;
+  }
+
+  .mission-card,
+  .status-pill {
+    background: #fcb609 !important;
+    border: 0 !important;
+    outline: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
