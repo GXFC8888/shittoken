@@ -3207,3 +3207,37 @@ strong {
   }
 }
 
+/* referral title vertical balance fix */
+@media (max-width: 760px) {
+  .referral-card {
+    padding-top: 60px !important;
+    padding-bottom: 72px !important;
+  }
+
+  .referral-card > .center-card-title-row {
+    margin-bottom: 52px !important;
+  }
+
+  .referral-card h2 {
+    margin-top: 0 !important;
+    margin-bottom: 40px !important;
+    transform: translateY(-18px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .referral-card {
+    padding-top: 58px !important;
+    padding-bottom: 70px !important;
+  }
+
+  .referral-card > .center-card-title-row {
+    margin-bottom: 50px !important;
+  }
+
+  .referral-card h2 {
+    margin-bottom: 38px !important;
+    transform: translateY(-16px) !important;
+  }
+}
+
