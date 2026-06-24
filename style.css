@@ -2596,3 +2596,58 @@ strong {
     margin-bottom: 42px !important;
   }
 }
+
+
+/* mobile edge and section spacing fix 4 */
+@media (max-width: 760px) {
+  .page-shell {
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    padding-bottom: 48px !important;
+  }
+
+  .pepe-divider {
+    margin-top: 38px !important;
+    margin-bottom: 38px !important;
+  }
+
+  .hero-card + .pepe-divider {
+    margin-top: 30px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .airdrop-stack > .glass-card {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .page-shell {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-bottom: 46px !important;
+  }
+
+  .pepe-divider {
+    margin-top: 36px !important;
+    margin-bottom: 36px !important;
+  }
+
+  .hero-card + .pepe-divider {
+    margin-top: 28px !important;
+    margin-bottom: 38px !important;
+  }
+
+  .referral-card,
+  .task-card,
+  .overview-card {
+    padding-top: 52px !important;
+    padding-bottom: 48px !important;
+  }
+
+  .tokenomics-card {
+    padding-top: 62px !important;
+    padding-bottom: 58px !important;
+  }
+}
