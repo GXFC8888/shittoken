@@ -3147,3 +3147,63 @@ strong {
   }
 }
 
+/* stronger referral title-to-text spacing fix */
+.referral-card h2 {
+  margin-top: 0 !important;
+  margin-bottom: 42px !important;
+}
+
+.referral-card > .center-card-title-row {
+  margin-bottom: 48px !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  margin-top: 0 !important;
+  line-height: 1.38 !important;
+}
+
+.referral-card .ref-link-box {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card {
+    padding-top: 78px !important;
+    padding-bottom: 72px !important;
+  }
+
+  .referral-card h2 {
+    margin-top: 0 !important;
+    margin-bottom: 42px !important;
+  }
+
+  .referral-card > .center-card-title-row {
+    margin-bottom: 52px !important;
+  }
+
+  .referral-card .card-title-row p,
+  .referral-card > .center-card-title-row p {
+    line-height: 1.4 !important;
+  }
+
+  .referral-card .ref-link-box {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .referral-card {
+    padding-top: 76px !important;
+    padding-bottom: 70px !important;
+  }
+
+  .referral-card h2 {
+    margin-bottom: 40px !important;
+  }
+
+  .referral-card > .center-card-title-row {
+    margin-bottom: 50px !important;
+  }
+}
+
