@@ -128,17 +128,19 @@ function bindComingSoonLinks() {
 }
 
 function showMessage(text, type) {
-  if (!message) return;
+  const activeMessage = document.getElementById("message") || message;
 
-  message.innerText = text || "";
-  message.classList.remove("ok", "err");
+  if (!activeMessage) return;
+
+  activeMessage.innerText = text || "";
+  activeMessage.classList.remove("ok", "err");
 
   if (type === "ok") {
-    message.classList.add("ok");
+    activeMessage.classList.add("ok");
   }
 
   if (type === "err") {
-    message.classList.add("err");
+    activeMessage.classList.add("err");
   }
 }
 
@@ -836,6 +838,7 @@ function renderMissions() {
       <div class="mission-card empty">
         <h3>Connect your wallet to load the latest official X mission.</h3>
         <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
+        <p class="message x-task-message">Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.</p>
       </div>
     `;
     return;
@@ -848,6 +851,7 @@ function renderMissions() {
       <div class="mission-card empty">
         <h3>No active mission yet.</h3>
         <p>Please refresh later.</p>
+        <p id="message" class="message x-task-message"></p>
       </div>
     `;
     return;
@@ -900,14 +904,7 @@ function renderMissions() {
         <span class="mission-status ${claimed ? "done" : "ready"}">${statusText}</span>
       </div>
 
-      <p>
-        
-        
-      </p>
-
-      <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
-        ${tweetUrl}
-      </a>
+      <p class="message x-task-message">Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.</p>
 
       <div class="mission-actions">
         <button class="btn full light open-task-btn" type="button" data-tweet-id="${tweetId}" ${openDisabled ? "disabled" : ""}>
