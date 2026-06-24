@@ -4163,3 +4163,110 @@ strong {
   }
 }
 
+
+
+/* 20260624 user changes: show hero image, show X note, place reward below X note, lower action buttons */
+.hero-main-image {
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  width: min(58vw, 360px) !important;
+  height: auto !important;
+  margin: 2px auto 12px !important;
+  object-fit: contain !important;
+  filter: none !important;
+}
+
+.x-task-message,
+#message.message {
+  display: block !important;
+  min-height: auto !important;
+  margin: 16px auto 10px !important;
+  color: #0f6b10 !important;
+  font-size: clamp(21px, 3vw, 30px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.wallet-status-grid {
+  margin-bottom: 0 !important;
+}
+
+.mission-list {
+  margin-top: 0 !important;
+}
+
+.mission-card {
+  padding-top: 0 !important;
+}
+
+.mission-head {
+  margin-top: 0 !important;
+  margin-bottom: 32px !important;
+  text-align: center !important;
+}
+
+.mission-head .reward {
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.two-actions {
+  margin-top: 34px !important;
+}
+
+.referral-card .ref-link-box {
+  margin-bottom: 30px !important;
+}
+
+.mission-actions {
+  margin-top: 34px !important;
+}
+
+@media (max-width: 760px) {
+  .hero-main-image {
+    width: min(72vw, 300px) !important;
+    margin: 0 auto 10px !important;
+  }
+
+  .x-task-message,
+  #message.message {
+    margin: 14px auto 8px !important;
+    font-size: clamp(20px, 5.6vw, 28px) !important;
+    line-height: 1.35 !important;
+  }
+
+  .mission-head {
+    margin-top: 0 !important;
+    margin-bottom: 30px !important;
+  }
+
+  .two-actions,
+  .mission-actions {
+    margin-top: 30px !important;
+  }
+
+  .referral-card .ref-link-box {
+    margin-bottom: 28px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-main-image {
+    width: min(78vw, 260px) !important;
+  }
+
+  .x-task-message,
+  #message.message {
+    font-size: clamp(19px, 5.6vw, 25px) !important;
+  }
+
+  .two-actions,
+  .mission-actions {
+    margin-top: 28px !important;
+  }
+}
