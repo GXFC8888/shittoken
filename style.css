@@ -4024,3 +4024,142 @@ strong {
   }
 }
 
+/* X task final 6: hide green note, move reward directly under X */
+.x-always-note,
+#xMessage,
+#taskMessage {
+  display: none !important;
+}
+
+.wallet-status-grid {
+  display: block !important;
+  text-align: center !important;
+  margin-top: 28px !important;
+  margin-bottom: 6px !important;
+}
+
+.status-pill:first-child {
+  display: none !important;
+}
+
+.status-pill {
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.status-pill span {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.status-pill span::after {
+  content: "X:";
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+}
+
+.status-pill strong,
+#xStatus {
+  display: inline !important;
+  margin-left: 0 !important;
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+  white-space: normal !important;
+  text-align: center !important;
+}
+
+.mission-head {
+  display: block !important;
+  margin-top: 8px !important;
+  margin-bottom: 24px !important;
+  text-align: center !important;
+}
+
+.mission-head h3 {
+  display: none !important;
+}
+
+.mission-head .reward {
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  color: #111 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+}
+
+.mission-status,
+.mission-status.done {
+  display: none !important;
+}
+
+.mission-card p {
+  display: none !important;
+}
+
+.mission-link,
+.mission-link[href],
+.mission-link[href]::before,
+.mission-link[href]::after {
+  display: none !important;
+  content: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-decoration: none !important;
+}
+
+@media (max-width: 760px) {
+  .wallet-status-grid {
+    margin-top: 24px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .mission-head {
+    margin-top: 6px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .status-pill span::after,
+  .status-pill strong,
+  #xStatus,
+  .mission-head .reward {
+    font-size: clamp(25px, 6.4vw, 33px) !important;
+    line-height: 1.28 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .wallet-status-grid {
+    margin-bottom: 2px !important;
+  }
+
+  .mission-head {
+    margin-top: 4px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .status-pill span::after,
+  .status-pill strong,
+  #xStatus,
+  .mission-head .reward {
+    font-size: clamp(24px, 6.2vw, 28px) !important;
+  }
+}
+
