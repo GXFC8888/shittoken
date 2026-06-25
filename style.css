@@ -1,1110 +1,734 @@
 @font-face {
-font-family: "GentyRegular";
-src: url("/webFonts/GentyRegular/font.woff2") format("woff2"),
-url("/webFonts/GentyRegular/font.woff") format("woff");
-font-weight: normal;
-font-style: normal;
-font-display: block;
+  font-family: "GentyRegular";
+  src: url("/webFonts/GentyRegular/font.woff2") format("woff2"),
+  url("/webFonts/GentyRegular/font.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
 
 * {
-box-sizing: border-box;
-font-family: "GentyRegular", Arial, sans-serif !important;
+  box-sizing: border-box;
+  font-family: "GentyRegular", Arial, sans-serif !important;
 }
 
 *::before,
 *::after {
-box-sizing: border-box;
-font-family: "GentyRegular", Arial, sans-serif !important;
+  box-sizing: border-box;
+  font-family: "GentyRegular", Arial, sans-serif !important;
 }
 
 :root {
---yellow: #fcb609;
---yellow-deep: #eaa000;
---gold: #fcb609;
---ink: #111111;
---soft-white: #fffdf4;
---muted: rgba(17, 17, 17, .68);
---card: rgba(255, 214, 35, .38);
---border-light: rgba(255, 255, 255, .75);
---shadow: rgba(0, 0, 0, .24);
+  --yellow: #fcb609;
+  --yellow-deep: #eaa000;
+  --gold: #fcb609;
+  --ink: #111111;
+  --soft-white: #fffdf4;
+  --muted: rgba(17, 17, 17, .68);
+  --card: rgba(255, 214, 35, .38);
+  --border-light: rgba(255, 255, 255, .75);
+  --shadow: rgba(0, 0, 0, .24);
 }
 
 html {
-scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 body {
-margin: 0;
-min-height: 100vh;
-color: var(--ink);
-background: #fcb609;
-overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: #fcb609;
+  overflow-x: hidden;
 }
 
 body::before {
-content: none;
+  content: none;
 }
 
 body::after {
-content: none;
+  content: none;
 }
 
 .page-shell {
-width: min(100%, 920px);
-margin: 0 auto;
-padding: 24px 42px 46px;
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding: 24px 42px 46px;
 }
 
 .hero-top {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 24px;
-min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 120px;
 }
 
 .brand-mark {
-display: inline-flex;
-align-items: center;
-gap: 18px;
-color: var(--soft-white);
-text-decoration: none;
-font-size: clamp(48px, 8vw, 82px);
-font-weight: 900;
-font-style: normal;
-letter-spacing: 0;
--webkit-text-stroke: 0;
-text-shadow: none;
-transform: none;
-min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--soft-white);
+  text-decoration: none;
+  font-size: clamp(48px, 8vw, 82px);
+  font-weight: 900;
+  font-style: normal;
+  letter-spacing: 0;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  transform: none;
+  min-width: 0;
 }
 
 .brand-mark img {
-width: 112px;
-height: 112px;
-object-fit: contain;
-mix-blend-mode: normal;
-filter: none;
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  mix-blend-mode: normal;
+  filter: none;
 }
 
 .brand-mark img:first-child,
 .card-avatar,
 .ghost-character {
-filter: none;
+  filter: none;
 }
 
 .brand-word-text {
-display: inline-block;
-color: #fffdf4;
-font-size: clamp(58px, 7vw, 98px);
-font-weight: normal;
-line-height: .78;
-letter-spacing: 0;
--webkit-text-stroke: 1.5px #111;
-paint-order: stroke fill;
-text-shadow:
-0 4px 0 rgba(0, 0, 0, .25),
+  display: inline-block;
+  color: #fffdf4;
+  font-size: clamp(58px, 7vw, 98px);
+  font-weight: normal;
+  line-height: .78;
+  letter-spacing: 0;
+  -webkit-text-stroke: 1.5px #111;
+  paint-order: stroke fill;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, .25),
 5px 7px 8px rgba(0, 0, 0, .18);
-transform: rotate(-3deg) translateY(16px);
-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 
 .brand-word-img {
-display: none;
+  display: none;
 }
 
 .top-wallet-link {
-flex: 0 0 auto;
-min-width: 190px;
-min-height: 58px;
-padding: 15px 32px 9px;
-border: 2px solid rgba(255, 255, 255, .92);
-border-radius: 999px;
-background: rgba(255, 255, 255, .06);
-color: var(--soft-white);
-font-size: clamp(18px, 2.2vw, 25px);
-font-weight: 900;
-letter-spacing: .02em;
-cursor: pointer;
-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18), 0 6px 12px rgba(0, 0, 0, .10);
-transition: transform .12s ease, background .12s ease, opacity .12s ease;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-line-height: 1;
+  flex: 0 0 auto;
+  min-width: 190px;
+  min-height: 58px;
+  padding: 15px 32px 9px;
+  border: 2px solid rgba(255, 255, 255, .92);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  color: var(--soft-white);
+  font-size: clamp(18px, 2.2vw, 25px);
+  font-weight: 900;
+  letter-spacing: .02em;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18), 0 6px 12px rgba(0, 0, 0, .10);
+  transition: transform .12s ease, background .12s ease, opacity .12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .top-wallet-link:hover {
-transform: translateY(-1px);
-background: rgba(255, 255, 255, .16);
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, .16);
 }
 
 .top-wallet-link:active {
-transform: translateY(2px);
+  transform: translateY(2px);
 }
 
 .top-wallet-link:disabled {
-opacity: .65;
-cursor: not-allowed;
-transform: none;
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .hero-card {
-position: relative;
-min-height: 490px;
-display: grid;
-place-items: center;
-text-align: center;
-padding: 40px 10px 22px;
-border-top: 1px solid rgba(0, 0, 0, .08);
-box-shadow: inset 0 14px 14px -22px rgba(0, 0, 0, .55);
-overflow: hidden;
+  position: relative;
+  min-height: 490px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 40px 10px 22px;
+  border-top: 1px solid rgba(0, 0, 0, .08);
+  box-shadow: inset 0 14px 14px -22px rgba(0, 0, 0, .55);
 }
 
 .ghost-character {
-position: absolute;
-right: -30px;
-top: -12px;
-width: min(60vw, 520px);
-opacity: .10;
-mix-blend-mode: normal;
-transform: rotate(-8deg);
-pointer-events: none;
+  position: absolute;
+  right: -30px;
+  top: -12px;
+  width: min(60vw, 520px);
+  opacity: .10;
+  mix-blend-mode: normal;
+  transform: rotate(-8deg);
+  pointer-events: none;
 }
 
 .shit-title {
-position: relative;
-z-index: 1;
-display: block;
-margin: 0 auto;
-color: #fffdf4;
-font-size: clamp(105px, 14vw, 190px);
-font-weight: normal;
-line-height: .78;
-letter-spacing: 0;
--webkit-text-stroke: 2px #111;
-paint-order: stroke fill;
-text-shadow:
-0 5px 0 rgba(0, 0, 0, .28),
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 0 auto;
+  color: #fffdf4;
+  font-size: clamp(105px, 14vw, 190px);
+  font-weight: normal;
+  line-height: .78;
+  letter-spacing: 0;
+  -webkit-text-stroke: 2px #111;
+  paint-order: stroke fill;
+  text-shadow: 0 5px 0 rgba(0, 0, 0, .28),
 6px 8px 8px rgba(0, 0, 0, .18);
-transform: rotate(-4deg);
+  transform: rotate(-4deg);
 }
 
 .shit-title-img {
-display: none;
+  display: none;
 }
 
 .tagline {
-position: relative;
-z-index: 1;
-max-width: 820px;
-margin: 12px auto 40px;
-color: #111;
-font-size: clamp(27px, 4vw, 43px);
-line-height: 1.28;
-font-weight: 500;
-letter-spacing: .02em;
-text-shadow: 0 3px 4px rgba(0, 0, 0, .22);
+  position: relative;
+  z-index: 1;
+  max-width: 820px;
+  margin: 12px auto 40px;
+  color: #111;
+  font-size: clamp(27px, 4vw, 43px);
+  line-height: 1.28;
+  font-weight: 500;
+  letter-spacing: .02em;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .22);
 }
 
 .shit-inline {
-display: inline-block;
-color: var(--soft-white);
-font-style: normal;
-font-weight: 900;
-letter-spacing: -1px;
--webkit-text-stroke: 2px #161616;
-text-shadow: 3px 4px 0 rgba(0, 0, 0, .24), 0 3px 4px rgba(0, 0, 0, .28);
-transform: rotate(-3deg);
+  display: inline-block;
+  color: var(--soft-white);
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: -1px;
+  -webkit-text-stroke: 2px #161616;
+  text-shadow: 3px 4px 0 rgba(0, 0, 0, .24), 0 3px 4px rgba(0, 0, 0, .28);
+  transform: rotate(-3deg);
 }
 
 .tagline .shit-inline {
-all: unset;
+  all: unset;
 }
 
 .social-actions {
-position: relative;
-z-index: 1;
-display: grid;
-grid-template-columns: repeat(4, minmax(0, 1fr));
-gap: 18px;
-width: 100%;
-max-width: 520px;
-margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
 }
 
 .social-pill,
 .btn,
 .wallet-cta,
 .top-wallet-link {
--webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .social-pill {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 20px;
-min-height: 104px;
-padding: 14px 24px;
-color: var(--ink);
-text-decoration: none;
-background: rgba(255, 255, 255, .94);
-border: 2px solid rgba(255, 255, 255, .86);
-border-radius: 999px;
-box-shadow: 0 15px 20px rgba(0, 0, 0, .20), inset 0 -3px 0 rgba(0, 0, 0, .08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 104px;
+  padding: 14px 24px;
+  color: var(--ink);
+  text-decoration: none;
+  background: rgba(255, 255, 255, .94);
+  border: 2px solid rgba(255, 255, 255, .86);
+  border-radius: 999px;
+  box-shadow: 0 15px 20px rgba(0, 0, 0, .20), inset 0 -3px 0 rgba(0, 0, 0, .08);
 }
 
 .social-pill strong {
-font-size: clamp(24px, 3vw, 35px);
-font-weight: 900;
+  font-size: clamp(24px, 3vw, 35px);
+  font-weight: 900;
 }
 
 .social-icon {
-display: grid;
-place-items: center;
-width: 76px;
-height: 76px;
-border-radius: 50%;
-color: #fff;
-font-size: 45px;
-font-weight: 800;
-flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 45px;
+  font-weight: 800;
+  flex: 0 0 auto;
 }
 
 .x-icon,
 .round-x {
-background: #111;
+  background: #111;
 }
 
 .tg-icon {
-background: linear-gradient(135deg, #36c6ff, #198bd8);
-font-size: 38px;
+  background: linear-gradient(135deg, #36c6ff, #198bd8);
+  font-size: 38px;
 }
 
 .image-icon {
-background: transparent;
+  background: transparent;
 }
 
 .image-icon img {
-width: 100%;
-height: 100%;
-display: block;
-object-fit: contain;
-border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
 .x-image-icon img {
-background: #111;
-border-radius: 50%;
+  background: #111;
+  border-radius: 50%;
 }
 
 .icon-only-actions {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 18px;
-width: 100%;
-max-width: 520px;
-margin: 0 auto;
-flex-wrap: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  flex-wrap: nowrap;
 }
 
 .icon-only-actions .social-pill {
-width: 76px;
-height: 76px;
-min-height: 76px;
-padding: 0;
-border-radius: 50%;
-background: transparent;
-border: 0;
-box-shadow: none;
-flex: 0 0 auto;
+  width: 76px;
+  height: 76px;
+  min-height: 76px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  flex: 0 0 auto;
 }
 
 .icon-only-actions .social-icon {
-width: 76px;
-height: 76px;
-font-size: 44px;
-box-shadow: 0 12px 16px rgba(0, 0, 0, .18);
-overflow: hidden;
+  width: 76px;
+  height: 76px;
+  font-size: 44px;
+  box-shadow: 0 12px 16px rgba(0, 0, 0, .18);
+  overflow: hidden;
 }
 
 .icon-only-actions .tg-icon {
-font-size: 46px;
+  font-size: 46px;
 }
 
 .airdrop-stack {
-display: grid;
-gap: 22px;
-margin-top: 10px;
+  display: grid;
+  margin-top: 10px;
 }
 
 .glass-card {
-position: relative;
-padding: 26px 32px 28px;
-background: var(--card);
-border: 2px solid var(--border-light);
-border-radius: 24px;
-box-shadow: 0 18px 25px rgba(0, 0, 0, .20), inset 0 1px 0 rgba(255, 255, 255, .68);
-backdrop-filter: blur(8px);
-overflow: hidden;
+  position: relative;
+  padding: 26px 32px 28px;
+  background: var(--card);
+  border: 2px solid var(--border-light);
+  border-radius: 24px;
+  box-shadow: 0 18px 25px rgba(0, 0, 0, .20), inset 0 1px 0 rgba(255, 255, 255, .68);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
 }
 
 .glass-card::before {
-content: "";
-position: absolute;
-inset: 1px;
-border-radius: 22px;
-pointer-events: none;
-border: 1px solid rgba(255, 255, 255, .35);
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 22px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .35);
 }
 
 .card-title-row {
-position: relative;
-z-index: 1;
-display: flex;
-align-items: center;
-gap: 28px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .card-avatar,
 .round-x {
-display: grid;
-place-items: center;
-width: 116px;
-height: 116px;
-flex: 0 0 auto;
-border-radius: 50%;
-border: 4px solid #fff;
-box-shadow: 0 10px 15px rgba(0, 0, 0, .16);
+  display: grid;
+  place-items: center;
+  width: 116px;
+  height: 116px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, .16);
 }
 
 .card-avatar {
-object-fit: cover;
-background: #fcb609;
-padding: 0;
-mix-blend-mode: normal;
-overflow: hidden;
+  object-fit: cover;
+  background: #fcb609;
+  padding: 0;
+  mix-blend-mode: normal;
+  overflow: hidden;
 }
 
 .round-x {
-color: #fff;
-font-size: 70px;
-font-weight: 500;
-background: #111;
-overflow: hidden;
+  color: #fff;
+  font-size: 70px;
+  font-weight: 500;
+  background: #111;
+  overflow: hidden;
 }
 
 .round-x img {
-display: block;
-width: 100%;
-height: 100%;
-object-fit: contain;
-border-radius: 50%;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
 }
 
 h2 {
-margin: 0 0 8px;
-font-size: clamp(24px, 3vw, 32px);
-line-height: 1.02;
-font-weight: 900;
-letter-spacing: -1px;
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -1px;
 }
 
 .card-title-row p {
-margin: 0;
-color: var(--ink);
-font-size: clamp(20px, 3vw, 28px);
-line-height: 1.22;
-font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(20px, 3vw, 28px);
+  line-height: 1.22;
+  font-weight: 600;
 }
 
 .ref-link-box {
-position: relative;
-z-index: 1;
-display: grid;
-grid-template-columns: 1fr;
-align-items: center;
-gap: 12px;
-min-height: 76px;
-margin: 24px 0 22px;
-padding: 8px 26px;
-background: rgba(255, 220, 45, .55);
-border: 2px dashed rgba(17, 17, 17, .58);
-border-radius: 22px;
+  position: relative;
+  z-index: 1;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  min-height: 76px;
+  margin: 24px 0 22px;
+  padding: 8px 26px;
 }
 
 .ref-link-box input,
 .ref-link-box textarea {
-width: 100%;
-border: 0;
-outline: 0;
-resize: none;
-background: transparent;
-font-size: clamp(19px, 3vw, 28px);
-color: #111;
-overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
-line-height: 1.25;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: #111;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ref-link-box textarea {
-height: 42px;
-min-height: 42px;
+  height: 42px;
+  min-height: 42px;
 }
 
 .icon-copy {
-width: 52px;
-height: 52px;
-display: grid;
-place-items: center;
-border: 0;
-background: transparent;
-color: var(--ink);
-font-size: 44px;
-font-weight: 900;
-cursor: pointer;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 44px;
+  font-weight: 900;
+  cursor: pointer;
 }
 
 .icon-copy.hidden-copy-button,
 .icon-copy.hidden {
-display: none !important;
+  display: none !important;
 }
 
 .copy-ref-proxy::before,
 .copy-ref-proxy::after {
-content: none !important;
+  content: none !important;
 }
 
 .two-actions,
 .mission-actions {
-position: relative;
-z-index: 1;
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 26px;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
 }
 
 .btn {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-min-height: 78px;
-border: 2px solid rgba(255, 255, 255, .74);
-border-radius: 999px;
-padding: 16px 22px;
-font-size: clamp(22px, 3vw, 32px);
-font-weight: 900;
-text-decoration: none;
-cursor: pointer;
-box-shadow: 0 10px 16px rgba(0, 0, 0, .22), inset 0 -3px 0 rgba(0, 0, 0, .08);
-transition: transform .12s ease, opacity .12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78px;
+  border: 2px solid rgba(255, 255, 255, .74);
+  border-radius: 999px;
+  padding: 16px 22px;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 10px 16px rgba(0, 0, 0, .22), inset 0 -3px 0 rgba(0, 0, 0, .08);
+  transition: transform .12s ease, opacity .12s ease;
 }
 
 .btn:hover,
 .social-pill:hover,
 .wallet-cta:hover {
-transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .btn:active,
 .social-pill:active,
 .wallet-cta:active {
-transform: translateY(2px);
+  transform: translateY(2px);
 }
 
 .btn:disabled {
-opacity: .55;
-cursor: not-allowed;
+  opacity: .55;
+  cursor: not-allowed;
 }
 
 .btn.dark {
-color: #fff;
-background: #111;
+  color: #fff;
+  background: #111;
 }
 
 .btn.light,
 .btn.gold {
-color: #111;
-background: rgba(255, 255, 255, .94);
+  color: #111;
+  background: rgba(255, 255, 255, .94);
 }
 
 .task-card {
-padding-bottom: 22px;
-}
-
-.wallet-status-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 14px;
-margin-top: 20px;
-}
-
-.status-pill {
-min-width: 0;
-padding: 14px 16px;
-border: 1px solid rgba(255, 255, 255, .58);
-border-radius: 18px;
-background: rgba(255, 255, 255, .24);
+  padding-bottom: 22px;
 }
 
 .status-pill span {
-display: block;
-color: rgba(17, 17, 17, .62);
-font-size: 15px;
-font-weight: 900;
-letter-spacing: .04em;
+  display: block;
+  color: rgba(17, 17, 17, .62);
+  font-weight: 900;
+  letter-spacing: .04em;
 }
 
 .status-pill strong {
-display: block;
-margin-top: 4px;
-font-size: 22px;
-overflow-wrap: anywhere;
+  display: block;
+  margin-top: 4px;
+  font-size: 22px;
+  overflow-wrap: anywhere;
 }
 
 .message {
-min-height: 22px;
-margin: 14px 0 0;
-font-size: 17px;
-line-height: 1.35;
-font-weight: 700;
-overflow-wrap: anywhere;
+  min-height: 22px;
+  margin: 14px 0 0;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .message.ok {
-color: #0f6b10;
+  color: #0f6b10;
 }
 
 .message.err {
-color: #b00020;
+  color: #b00020;
 }
 
 .small-message {
-margin-top: 12px;
+  margin-top: 12px;
 }
 
 .hidden {
-display: none !important;
-}
-
-.mission-list {
-margin-top: 14px;
+  display: none !important;
 }
 
 .mission-summary {
-display: none;
+  display: none;
 }
 
 .mission-card {
-color: var(--ink);
-background: rgba(255, 255, 255, .22);
-border: 1px solid rgba(255, 255, 255, .55);
-border-radius: 20px;
-padding: 16px;
+  background: rgba(255, 255, 255, .22);
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 20px;
+  padding: 16px;
 }
 
 .mission-card.empty h3,
 .mission-card h3 {
-margin: 0 0 8px;
-font-size: 24px;
-line-height: 1.05;
+  margin: 0 0 8px;
+  font-size: 24px;
+  line-height: 1.05;
 }
 
 .mission-card p {
-margin: 0 0 12px;
-color: rgba(17, 17, 17, .75);
-font-size: 16px;
-line-height: 1.35;
+  margin: 0 0 12px;
 }
 
 .mission-head {
-display: flex;
-justify-content: space-between;
-gap: 12px;
-align-items: flex-start;
-margin-bottom: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .reward {
-margin-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .mission-status {
-flex: 0 0 auto;
-padding: 7px 12px;
-border-radius: 999px;
-color: #111;
-background: rgba(255, 255, 255, .86);
-border: 1px solid rgba(17, 17, 17, .12);
-font-weight: 900;
-font-size: 14px;
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #111;
+  background: rgba(255, 255, 255, .86);
+  border: 1px solid rgba(17, 17, 17, .12);
 }
 
 .mission-status.done {
-background: #9eff9e;
-}
-
-.mission-link {
-display: block;
-margin: 10px 0 16px;
-color: #111;
-font-size: 14px;
-font-weight: 700;
-overflow-wrap: anywhere;
+  background: #9eff9e;
 }
 
 .mission-actions .btn {
-min-height: 72px;
-margin: 0;
-font-size: clamp(20px, 3vw, 29px);
+  min-height: 72px;
+  margin: 0;
+  font-size: clamp(20px, 3vw, 29px);
 }
 
 .wallet-cta {
-width: 100%;
-min-height: 120px;
-margin: 26px 0 0;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 24px;
-border: 3px solid rgba(255, 255, 255, .76);
-border-radius: 999px;
-background: #111;
-color: #fff;
-box-shadow: 0 18px 24px rgba(0, 0, 0, .28), inset 0 -4px 0 rgba(255, 255, 255, .08);
-font-size: clamp(36px, 6vw, 57px);
-font-weight: 900;
-letter-spacing: -2px;
-cursor: pointer;
+  width: 100%;
+  min-height: 120px;
+  margin: 26px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  border: 3px solid rgba(255, 255, 255, .76);
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 18px 24px rgba(0, 0, 0, .28), inset 0 -4px 0 rgba(255, 255, 255, .08);
+  font-size: clamp(36px, 6vw, 57px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  cursor: pointer;
 }
 
 .wallet-cta span {
-display: grid;
-place-items: center;
-width: 76px;
-height: 76px;
-border-radius: 50%;
-color: #111;
-font-size: 54px;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  color: #111;
+  font-size: 54px;
 }
 
 .overview-card {
-margin-top: 0;
+  margin-top: 0;
 }
 
 .overview-title-row {
-margin-bottom: 22px;
+  margin-bottom: 22px;
 }
 
 .overview-copy {
-position: relative;
-z-index: 1;
-display: grid;
-gap: 12px;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
 }
 
 .overview-copy p {
-margin: 0;
-color: #111;
-font-size: clamp(18px, 2.4vw, 24px);
-line-height: 1.32;
-font-weight: 600;
+  margin: 0;
+  color: #111;
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.32;
+  font-weight: 600;
 }
 
 .footer-note {
-padding: 26px 10px 0;
-text-align: center;
-color: rgba(17, 17, 17, .62);
-font-size: 15px;
-font-weight: 700;
+  padding: 26px 10px 0;
+  text-align: center;
+  color: rgba(17, 17, 17, .62);
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .custom-alert {
-position: fixed;
-inset: 0;
-z-index: 99999;
-display: grid;
-place-items: center;
-padding: 24px;
-background: rgba(0, 0, 0, .55);
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, .55);
 }
 
 .custom-alert.hidden {
-display: none !important;
+  display: none !important;
 }
 
 .custom-alert-box {
-width: min(92vw, 520px);
-padding: 30px 32px 28px;
-border-radius: 24px;
-background: #111;
-color: #fff;
-box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
-text-align: left;
+  width: min(92vw, 520px);
+  padding: 30px 32px 28px;
+  border-radius: 24px;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+  text-align: left;
 }
 
 .custom-alert-box h3 {
-margin: 0 0 16px;
-font-size: 34px;
-line-height: 1.1;
-color: #fff;
+  margin: 0 0 16px;
+  font-size: 34px;
+  line-height: 1.1;
+  color: #fff;
 }
 
 .custom-alert-box p {
-margin: 0 0 26px;
-font-size: 24px;
-line-height: 1.3;
-color: #fff;
+  margin: 0 0 26px;
+  font-size: 24px;
+  line-height: 1.3;
+  color: #fff;
 }
 
 .custom-alert-box button {
-display: block;
-margin-left: auto;
-min-width: 110px;
-min-height: 52px;
-border: 0;
-border-radius: 999px;
-background: #fcb609;
-color: #111;
-font-size: 22px;
-font-weight: 900;
-cursor: pointer;
-box-shadow: 0 8px 14px rgba(0, 0, 0, .25);
+  display: block;
+  margin-left: auto;
+  min-width: 110px;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: #fcb609;
+  color: #111;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, .25);
 }
 
 .custom-alert-box button:active {
-transform: translateY(2px);
+  transform: translateY(2px);
 }
-
-@media (max-width: 760px) {
-.page-shell {
-padding: 18px 18px 36px;
-}
-
-.hero-top {
-min-height: 88px;
-gap: 8px;
-}
-
-.brand-mark {
-gap: 8px;
-font-size: 42px;
--webkit-text-stroke: 0;
-text-shadow: none;
-}
-
-.brand-mark img {
-width: 82px;
-height: 64px;
-}
-
-.brand-mark img:first-child {
-width: 82px;
-height: 82px;
-}
-
-.brand-word-text {
-font-size: clamp(42px, 10vw, 60px);
-color: #fffdf4;
--webkit-text-stroke: 1px #111;
-text-shadow:
-0 3px 0 rgba(0, 0, 0, .25),
-4px 6px 7px rgba(0, 0, 0, .18);
-transform: rotate(-3deg) translateY(8px);
-}
-
-.top-wallet-link {
-min-width: 118px;
-min-height: 46px;
-padding: 12px 10px 7px;
-font-size: 15px;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-line-height: 1;
-}
-
-.hero-card {
-min-height: 420px;
-padding-top: 28px;
-}
-
-.ghost-character {
-right: -78px;
-top: 18px;
-width: 360px;
-}
-
-.shit-title {
-font-size: clamp(88px, 21vw, 138px);
-color: #fffdf4;
--webkit-text-stroke: 1.6px #111;
-text-shadow:
-0 4px 0 rgba(0, 0, 0, .28),
-5px 7px 8px rgba(0, 0, 0, .18);
-}
-
-.tagline {
-margin: 24px 0 30px;
-}
-
-.social-actions {
-gap: 14px;
-}
-
-.social-pill {
-min-height: 74px;
-gap: 10px;
-padding: 10px 12px;
-}
-
-.social-icon {
-width: 52px;
-height: 52px;
-font-size: 34px;
-}
-
-.tg-icon {
-font-size: 28px;
-}
-
-.icon-only-actions {
-flex-direction: row;
-gap: 14px;
-}
-
-.icon-only-actions .social-pill,
-.icon-only-actions .social-icon {
-width: 66px;
-height: 66px;
-min-height: 66px;
-}
-
-.icon-only-actions .social-icon {
-font-size: 38px;
-}
-
-.icon-only-actions .tg-icon {
-font-size: 34px;
-}
-
-.glass-card {
-padding: 18px 16px 20px;
-border-radius: 20px;
-}
-
-.card-title-row {
-gap: 16px;
-}
-
-.card-avatar,
-.round-x {
-width: 84px;
-height: 84px;
-}
-
-.round-x {
-font-size: 52px;
-}
-
-h2 {
-font-size: 26px;
-letter-spacing: -1px;
-}
-
-.ref-link-box {
-grid-template-columns: 1fr;
-min-height: 62px;
-margin: 18px 0;
-padding-left: 14px;
-padding-right: 14px;
-border-radius: 17px;
-}
-
-.ref-link-box textarea {
-height: 42px;
-min-height: 42px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-font-size: clamp(19px, 5vw, 30px);
-}
-
-.icon-copy {
-width: 40px;
-height: 40px;
-font-size: 34px;
-}
-
-.two-actions,
-.mission-actions,
-.wallet-status-grid {
-grid-template-columns: 1fr;
-gap: 12px;
-}
-
-.btn {
-min-height: 64px;
-}
-
-.mission-head {
-display: block;
-}
-
-.mission-status {
-display: inline-flex;
-margin-top: 8px;
-}
-
-.wallet-cta {
-min-height: 86px;
-gap: 12px;
-letter-spacing: -1px;
-}
-
-.wallet-cta span {
-width: 52px;
-height: 52px;
-font-size: 36px;
-}
-
-.custom-alert-box {
-padding: 26px 24px 24px;
-border-radius: 22px;
-}
-
-.custom-alert-box h3 {
-font-size: 30px;
-}
-
-.custom-alert-box p {
-font-size: 21px;
-}
-
-.custom-alert-box button {
-min-height: 50px;
-font-size: 20px;
-}
-}
-
-@media (max-width: 430px) {
-.page-shell {
-padding-left: 8px;
-padding-right: 8px;
-}
-
-.hero-top {
-gap: 6px;
-}
-
-.brand-mark {
-gap: 6px;
-font-size: 38px;
-letter-spacing: -3px;
-}
-
-.brand-mark img {
-width: 68px;
-height: 54px;
-}
-
-.brand-mark img:first-child {
-width: 64px;
-height: 64px;
-}
-
-.brand-word-text {
-font-size: 40px;
--webkit-text-stroke: .9px #111;
-transform: rotate(-3deg) translateY(7px);
-}
-
-.top-wallet-link {
-min-width: 106px;
-min-height: 42px;
-padding: 11px 8px 6px;
-font-size: 13px;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-line-height: 1;
-}
-
-.social-actions {
-grid-template-columns: repeat(4, minmax(0, 1fr));
-gap: 10px;
-}
-
-.icon-only-actions {
-display: flex;
-flex-direction: row;
-gap: 10px;
-}
-
-.icon-only-actions .social-pill,
-.icon-only-actions .social-icon {
-width: 58px;
-height: 58px;
-min-height: 58px;
-}
-
-.icon-only-actions .social-icon {
-font-size: 33px;
-}
-
-.shit-title {
-font-size: 96px;
--webkit-text-stroke: 1.5px #111;
-}
-
-.tagline {
-font-size: 24px;
-line-height: 1.24;
-margin-top: 8px;
-}
-
-.card-title-row p {
-font-size: 18px;
-}
-
-.card-avatar,
-.round-x {
-width: 72px;
-height: 72px;
-}
-
-h2 {
-font-size: 22px;
-}
-
-.custom-alert {
-padding: 18px;
-}
-
-.custom-alert-box {
-width: min(94vw, 390px);
-padding: 24px 20px 22px;
-}
-
-.custom-alert-box h3 {
-font-size: 28px;
-}
-
-.custom-alert-box p {
-font-size: 19px;
-}
-
-.custom-alert-box button {
-min-width: 96px;
-min-height: 48px;
-font-size: 19px;
-}
-}
-
 
 .brand-word-text {
   transform: translateY(16px);
@@ -1113,7 +737,6 @@ font-size: 19px;
 .hero-tagline {
   display: block;
   max-width: 930px;
-  margin: 20px auto 34px;
   line-height: 1.18;
 }
 
@@ -1129,7 +752,6 @@ font-size: 19px;
 .hero-copy {
   display: block;
   font-size: clamp(34px, 4.6vw, 52px);
-  font-weight: 800;
   line-height: 1.18;
 }
 
@@ -1138,67 +760,17 @@ font-size: 19px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 18px;
   width: 100%;
-  max-width: 640px;
-  min-height: 125px;
-  margin: 0 auto;
   flex-wrap: nowrap;
-}
-
-.arc-icons .social-pill,
-.arc-icons .social-icon {
-  width: 78px;
-  height: 78px;
-  min-height: 78px;
 }
 
 .arc-icons .arc-item {
   transition: transform .16s ease, opacity .16s ease;
 }
 
-.arc-icons .arc-1 {
-  transform: translateY(24px);
-}
-
-.arc-icons .arc-2 {
-  transform: translateY(8px);
-}
-
-.arc-icons .arc-3 {
-  transform: translateY(-12px);
-}
-
-.arc-icons .arc-4 {
-  transform: translateY(8px);
-}
-
-.arc-icons .arc-5 {
-  transform: translateY(24px);
-}
-
-.arc-icons .arc-item:hover {
-  transform: translateY(-16px) scale(1.04);
-}
-
-.arc-icons .arc-1:hover,
-.arc-icons .arc-5:hover {
-  transform: translateY(12px) scale(1.04);
-}
-
-.arc-icons .arc-2:hover,
-.arc-icons .arc-4:hover {
-  transform: translateY(-2px) scale(1.04);
-}
-
 .tokenomics-card,
 .overview-card {
   margin-top: 0;
-}
-
-.tokenomics-title-row,
-.overview-title-row {
-  margin-bottom: 22px;
 }
 
 .aligned-card-copy {
@@ -1219,120 +791,6 @@ font-size: 19px;
 
 .aligned-card-copy strong {
   font-weight: 900;
-}
-
-@media (max-width: 760px) {
-  .brand-word-text {
-    transform: translateY(8px);
-  }
-
-  .hero-tagline {
-    margin: 18px auto 26px;
-    line-height: 1.15;
-  }
-
-  .hero-oh {
-    font-size: clamp(38px, 10.5vw, 56px);
-    margin-bottom: 6px;
-  }
-
-  .hero-copy {
-    font-size: clamp(27px, 7.4vw, 39px);
-    line-height: 1.18;
-  }
-
-  .social-actions.icon-only-actions.arc-icons {
-    gap: 10px;
-    max-width: 390px;
-    min-height: 100px;
-  }
-
-  .arc-icons .social-pill,
-  .arc-icons .social-icon {
-    width: 62px;
-    height: 62px;
-    min-height: 62px;
-  }
-
-  .arc-icons .arc-1 {
-    transform: translateY(18px);
-  }
-
-  .arc-icons .arc-2 {
-    transform: translateY(6px);
-  }
-
-  .arc-icons .arc-3 {
-    transform: translateY(-8px);
-  }
-
-  .arc-icons .arc-4 {
-    transform: translateY(6px);
-  }
-
-  .arc-icons .arc-5 {
-    transform: translateY(18px);
-  }
-
-  .aligned-card-copy {
-    padding-left: 100px;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 430px) {
-  .brand-word-text {
-    transform: translateY(7px);
-  }
-
-  .hero-oh {
-    font-size: clamp(36px, 11vw, 46px);
-  }
-
-  .hero-copy {
-    font-size: clamp(25px, 7.5vw, 33px);
-  }
-
-  .social-actions.icon-only-actions.arc-icons {
-    gap: 6px;
-    max-width: 340px;
-    min-height: 94px;
-  }
-
-  .arc-icons .social-pill,
-  .arc-icons .social-icon {
-    width: 56px;
-    height: 56px;
-    min-height: 56px;
-  }
-
-  .arc-icons .arc-1 {
-    transform: translateY(16px);
-  }
-
-  .arc-icons .arc-2 {
-    transform: translateY(5px);
-  }
-
-  .arc-icons .arc-3 {
-    transform: translateY(-7px);
-  }
-
-  .arc-icons .arc-4 {
-    transform: translateY(5px);
-  }
-
-  .arc-icons .arc-5 {
-    transform: translateY(16px);
-  }
-
-  .aligned-card-copy {
-    padding-left: 0;
-  }
-
-  .aligned-card-copy p {
-    font-size: 18px;
-  }
 }
 
 .referral-card > .center-card-title-row,
@@ -1366,7 +824,6 @@ font-size: 19px;
 
 .social-actions.icon-only-actions.arc-icons {
   max-width: 690px;
-  min-height: 150px;
   margin: 4px auto 26px;
   gap: 20px;
 }
@@ -1376,26 +833,6 @@ font-size: 19px;
   width: 80px;
   height: 80px;
   min-height: 80px;
-}
-
-.arc-icons .arc-1 {
-  transform: translateY(46px);
-}
-
-.arc-icons .arc-2 {
-  transform: translateY(14px);
-}
-
-.arc-icons .arc-3 {
-  transform: translateY(-34px);
-}
-
-.arc-icons .arc-4 {
-  transform: translateY(14px);
-}
-
-.arc-icons .arc-5 {
-  transform: translateY(46px);
 }
 
 .arc-icons .arc-item:hover {
@@ -1426,114 +863,6 @@ font-size: 19px;
   box-sizing: border-box !important;
 }
 
-@media (max-width: 760px) {
-  .social-actions.icon-only-actions.arc-icons {
-    max-width: 390px;
-    min-height: 116px;
-    margin: 2px auto 22px;
-    gap: 8px;
-  }
-
-  .arc-icons .social-pill,
-  .arc-icons .social-icon {
-    width: 62px;
-    height: 62px;
-    min-height: 62px;
-  }
-
-  .arc-icons .arc-1 {
-    transform: translateY(30px);
-  }
-
-  .arc-icons .arc-2 {
-    transform: translateY(9px);
-  }
-
-  .arc-icons .arc-3 {
-    transform: translateY(-24px);
-  }
-
-  .arc-icons .arc-4 {
-    transform: translateY(9px);
-  }
-
-  .arc-icons .arc-5 {
-    transform: translateY(30px);
-  }
-
-  .hero-tagline {
-    margin: 18px auto 18px;
-  }
-
-  .referral-card > .center-card-title-row,
-  .tokenomics-card > .center-card-title-row,
-  .overview-card > .center-card-title-row {
-    justify-content: center;
-    text-align: center;
-  }
-
-  .referral-card h2,
-  .task-card h2,
-  .tokenomics-card h2,
-  .overview-card h2 {
-    font-size: 30px;
-  }
-
-  .referral-card .card-title-row p,
-  .task-card .card-title-row p,
-  .tokenomics-card .card-title-row p,
-  .overview-card .card-title-row p {
-    font-size: 21px;
-  }
-
-  .tokenomics-card > .aligned-card-copy,
-  .overview-card > .aligned-card-copy {
-    padding-left: 18px !important;
-    padding-right: 10px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .social-actions.icon-only-actions.arc-icons {
-    max-width: 350px;
-    min-height: 110px;
-    gap: 6px;
-  }
-
-  .arc-icons .social-pill,
-  .arc-icons .social-icon {
-    width: 58px;
-    height: 58px;
-    min-height: 58px;
-  }
-
-  .arc-icons .arc-1 {
-    transform: translateY(29px);
-  }
-
-  .arc-icons .arc-2 {
-    transform: translateY(8px);
-  }
-
-  .arc-icons .arc-3 {
-    transform: translateY(-24px);
-  }
-
-  .arc-icons .arc-4 {
-    transform: translateY(8px);
-  }
-
-  .arc-icons .arc-5 {
-    transform: translateY(29px);
-  }
-
-  .tokenomics-card > .aligned-card-copy,
-  .overview-card > .aligned-card-copy {
-    padding-left: 18px !important;
-    padding-right: 10px !important;
-  }
-}
-
 .tokenomics-card > .center-card-title-row,
 .overview-card > .center-card-title-row {
   justify-content: center !important;
@@ -1562,68 +891,12 @@ font-size: 19px;
   font-size: clamp(18px, 2.4vw, 24px) !important;
   line-height: 1.32 !important;
   font-weight: 600 !important;
-  text-align: center !important;
-}
-
-.tokenomics-card > .aligned-card-copy,
-.overview-card > .aligned-card-copy {
-  margin-top: 10px !important;
 }
 
 .tokenomics-card > .aligned-card-copy p,
 .overview-card > .aligned-card-copy p {
-  margin: 0 !important;
   font-size: clamp(18px, 2.4vw, 24px) !important;
-  line-height: 1.32 !important;
   font-weight: 600 !important;
-}
-
-@media (max-width: 760px) {
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    font-size: 32px !important;
-  }
-
-  .tokenomics-card .aligned-section-content p,
-  .overview-card .aligned-section-content p {
-    font-size: 18px !important;
-    line-height: 1.32 !important;
-  }
-
-  .tokenomics-card > .aligned-card-copy,
-  .overview-card > .aligned-card-copy {
-    padding-left: 18px !important;
-    padding-right: 10px !important;
-    margin-left: 0 !important;
-    margin-top: 10px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  .tokenomics-card > .aligned-card-copy p,
-  .overview-card > .aligned-card-copy p {
-    font-size: 18px !important;
-    text-align: left !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    font-size: 30px !important;
-  }
-
-  .tokenomics-card .aligned-section-content p,
-  .overview-card .aligned-section-content p {
-    font-size: 18px !important;
-  }
-
-  .tokenomics-card > .aligned-card-copy,
-  .overview-card > .aligned-card-copy {
-    padding-left: 18px !important;
-    padding-right: 10px !important;
-  }
 }
 
 .tokenomics-card .aligned-section-content p,
@@ -1634,56 +907,9 @@ font-size: 19px;
   box-sizing: border-box !important;
 }
 
-@media (max-width: 760px) {
-  .tokenomics-card .aligned-section-content p,
-  .overview-card .aligned-section-content p {
-    text-align: left !important;
-    padding-left: 18px !important;
-    padding-right: 10px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .tokenomics-card .aligned-section-content p,
-  .overview-card .aligned-section-content p {
-    text-align: left !important;
-    padding-left: 18px !important;
-    padding-right: 10px !important;
-  }
-}
-
-.referral-card .card-title-row,
-.referral-card > .center-card-title-row {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-.referral-card .card-title-row > div,
-.referral-card > .center-card-title-row > div {
-  width: 100% !important;
-}
-
-.referral-card h2 {
-  width: 100% !important;
-  text-align: center !important;
-}
-
-.referral-card .card-title-row p,
-.referral-card > .center-card-title-row p {
-  text-align: left !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-
 .tokenomics-card .aligned-section-content p,
 .overview-card .aligned-section-content p {
   display: none !important;
-}
-
-.tokenomics-title-row,
-.overview-title-row {
-  margin-bottom: 10px !important;
 }
 
 .tokenomics-card > .aligned-card-copy,
@@ -1763,34 +989,6 @@ strong {
   padding-bottom: 12px !important;
 }
 
-.top-wallet-link {
-  padding-top: 17px !important;
-  padding-bottom: 8px !important;
-}
-
-.ref-link-box {
-  display: flex !important;
-  align-items: center !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  line-height: 1 !important;
-  transform: translateY(4px);
-  font-weight: 400 !important;
-}
-
-.referral-card .card-title-row,
-.referral-card > .center-card-title-row {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-.referral-card .card-title-row > div,
-.referral-card > .center-card-title-row > div {
-  width: 100% !important;
-}
-
 .referral-card h2 {
   text-align: center !important;
   width: 100% !important;
@@ -1798,17 +996,7 @@ strong {
 
 .referral-card .card-title-row p,
 .referral-card > .center-card-title-row p {
-  text-align: left !important;
-  padding-left: 28px !important;
-  padding-right: 0 !important;
   font-weight: 400 !important;
-}
-
-.referral-card .ref-link-box,
-.referral-card .two-actions,
-.referral-card #refMessage {
-  margin-left: 28px !important;
-  width: calc(100% - 28px) !important;
 }
 
 .task-title-row {
@@ -1847,26 +1035,9 @@ strong {
   font-weight: 400 !important;
 }
 
-.mission-head {
-  display: block !important;
-  text-align: center !important;
-}
-
-.mission-head > div {
-  text-align: center !important;
-}
-
 .mission-head h3,
 .mission-head .reward {
   text-align: center !important;
-  font-weight: 400 !important;
-}
-
-.mission-status {
-  display: inline-flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  margin: 12px auto 0 !important;
   font-weight: 400 !important;
 }
 
@@ -1901,10 +1072,6 @@ strong {
   text-align: center !important;
 }
 
-.overview-card > .aligned-card-copy p {
-  font-weight: 400 !important;
-}
-
 .hero-copy {
   font-weight: 400 !important;
 }
@@ -1931,127 +1098,6 @@ strong {
 
 .arc-icons .arc-5 {
   transform: translateY(46px) !important;
-}
-
-@media (max-width: 760px) {
-  .btn,
-  .top-wallet-link,
-  .wallet-cta,
-  .mission-actions .btn,
-  .two-actions .btn,
-  .copy-ref-proxy,
-  #claimReferralBtn,
-  #copyRefBtnMobile,
-  .open-task-btn,
-  .verify-task-btn {
-    padding-top: 17px !important;
-    padding-bottom: 9px !important;
-  }
-
-  .top-wallet-link {
-    padding-top: 13px !important;
-    padding-bottom: 6px !important;
-  }
-
-  .referral-card .card-title-row p,
-  .referral-card > .center-card-title-row p {
-    padding-left: 18px !important;
-  }
-
-  .referral-card .ref-link-box,
-  .referral-card .two-actions,
-  .referral-card #refMessage {
-    margin-left: 18px !important;
-    width: calc(100% - 18px) !important;
-  }
-
-  .x-task-intro {
-    grid-template-columns: 56px 1fr;
-    gap: 14px;
-    margin-bottom: 16px;
-  }
-
-  .small-round-x {
-    width: 54px !important;
-    height: 54px !important;
-  }
-
-  .x-task-intro p {
-    font-size: 21px !important;
-  }
-
-  .tokenomics-center-copy {
-    padding-left: 18px !important;
-    padding-right: 18px !important;
-  }
-
-  .tokenomics-center-copy .token-number {
-    font-size: 28px !important;
-  }
-
-  .social-actions.icon-only-actions.arc-icons {
-    min-height: 128px !important;
-  }
-
-  .arc-icons .arc-1 {
-    transform: translateY(42px) !important;
-  }
-
-  .arc-icons .arc-2 {
-    transform: translateY(20px) !important;
-  }
-
-  .arc-icons .arc-3 {
-    transform: translateY(-30px) !important;
-  }
-
-  .arc-icons .arc-4 {
-    transform: translateY(20px) !important;
-  }
-
-  .arc-icons .arc-5 {
-    transform: translateY(42px) !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-task-intro {
-    grid-template-columns: 50px 1fr;
-    gap: 12px;
-  }
-
-  .small-round-x {
-    width: 48px !important;
-    height: 48px !important;
-  }
-
-  .x-task-intro p {
-    font-size: 18px !important;
-  }
-
-  .tokenomics-center-copy .token-number {
-    font-size: 25px !important;
-  }
-
-  .arc-icons .arc-1 {
-    transform: translateY(40px) !important;
-  }
-
-  .arc-icons .arc-2 {
-    transform: translateY(19px) !important;
-  }
-
-  .arc-icons .arc-3 {
-    transform: translateY(-30px) !important;
-  }
-
-  .arc-icons .arc-4 {
-    transform: translateY(19px) !important;
-  }
-
-  .arc-icons .arc-5 {
-    transform: translateY(40px) !important;
-  }
 }
 
 .hero-copy,
@@ -2108,7 +1154,6 @@ strong {
 
 .ref-link-box input,
 .ref-link-box textarea {
-  line-height: 1 !important;
   transform: translateY(3px) !important;
 }
 
@@ -2130,10 +1175,6 @@ strong {
 .tokenomics-card .aligned-section-content h2,
 .overview-card .aligned-section-content h2 {
   width: 100% !important;
-  text-align: center !important;
-  font-size: clamp(30px, 4vw, 42px) !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
   margin: 0 0 12px !important;
 }
 
@@ -2161,7 +1202,6 @@ strong {
   padding-right: 0 !important;
   width: 100% !important;
   max-width: 100% !important;
-  gap: 14px !important;
   box-sizing: border-box !important;
 }
 
@@ -2179,8 +1219,6 @@ strong {
   justify-items: center !important;
   gap: 0 !important;
   text-align: center !important;
-  font-size: clamp(25px, 4vw, 40px) !important;
-  line-height: 1.05 !important;
 }
 
 .tokenomics-card > .tokenomics-center-copy .token-number span {
@@ -2191,11 +1229,6 @@ strong {
 .overview-card > .aligned-card-copy p {
   text-align: left !important;
   font-weight: 400 !important;
-}
-
-.mission-head {
-  display: block !important;
-  text-align: center !important;
 }
 
 .mission-head > div,
@@ -2210,52 +1243,6 @@ strong {
   align-items: center !important;
   margin: 12px auto 0 !important;
   font-weight: 400 !important;
-}
-
-@media (max-width: 760px) {
-  .referral-card h2,
-  .task-card h2,
-  .tokenomics-card h2,
-  .overview-card h2,
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    font-size: 30px !important;
-  }
-
-  .btn,
-  .top-wallet-link,
-  .wallet-cta,
-  .mission-actions .btn,
-  .two-actions .btn,
-  .copy-ref-proxy,
-  #claimReferralBtn,
-  #copyRefBtnMobile,
-  .open-task-btn,
-  .verify-task-btn {
-    padding-top: 17px !important;
-    padding-bottom: 9px !important;
-  }
-
-  .top-wallet-link {
-    padding-top: 13px !important;
-    padding-bottom: 6px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    gap: 14px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    font-size: 28px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    font-size: 25px !important;
-  }
 }
 
 .pepe-divider {
@@ -2286,34 +1273,6 @@ strong {
   margin-bottom: 0 !important;
 }
 
-@media (max-width: 760px) {
-  .pepe-divider {
-    height: 20px;
-    margin-top: 24px;
-    margin-bottom: 24px;
-    background-size: 481px 100%;
-  }
-
-  .hero-card + .pepe-divider {
-    margin-top: 18px;
-    margin-bottom: 24px;
-  }
-}
-
-@media (max-width: 430px) {
-  .pepe-divider {
-    height: 20px;
-    margin-top: 22px;
-    margin-bottom: 22px;
-    background-size: 481px 100%;
-  }
-
-  .hero-card + .pepe-divider {
-    margin-top: 16px;
-    margin-bottom: 22px;
-  }
-}
-
 .referral-card,
 .task-card,
 .tokenomics-card,
@@ -2331,17 +1290,6 @@ strong {
   content: none !important;
 }
 
-@media (max-width: 760px) {
-  .referral-card,
-  .task-card,
-  .tokenomics-card,
-  .overview-card {
-    border-radius: 0 30px 0 30px !important;
-  }
-}
-
-
-/* spacing update */
 .referral-card,
 .task-card,
 .tokenomics-card,
@@ -2357,7 +1305,6 @@ strong {
 .tokenomics-card .aligned-section-content h2,
 .overview-card .aligned-section-content h2 {
   margin-top: 0 !important;
-  margin-bottom: 28px !important;
 }
 
 .referral-card > .center-card-title-row,
@@ -2375,112 +1322,6 @@ strong {
   margin-top: 0 !important;
 }
 
-.tokenomics-card {
-  padding-top: 56px !important;
-  padding-bottom: 56px !important;
-}
-
-.tokenomics-card > .tokenomics-title-row {
-  margin-bottom: 46px !important;
-}
-
-.tokenomics-card > .tokenomics-center-copy {
-  gap: 24px !important;
-}
-
-.tokenomics-card > .tokenomics-center-copy .token-number {
-  margin-top: 2px !important;
-  margin-bottom: 18px !important;
-}
-
-.tokenomics-card > .tokenomics-center-copy p:last-child {
-  margin-top: 8px !important;
-}
-
-@media (max-width: 760px) {
-  .referral-card,
-  .task-card,
-  .tokenomics-card,
-  .overview-card {
-    padding-top: 36px !important;
-    padding-bottom: 36px !important;
-  }
-
-  .referral-card h2,
-  .task-card h2,
-  .tokenomics-card h2,
-  .overview-card h2,
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    margin-bottom: 22px !important;
-  }
-
-  .referral-card > .center-card-title-row,
-  .task-card > .task-title-row,
-  .tokenomics-card > .tokenomics-title-row,
-  .overview-card > .overview-title-row {
-    margin-bottom: 22px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 46px !important;
-    padding-bottom: 46px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 36px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy {
-    gap: 20px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    margin-bottom: 14px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card,
-  .task-card,
-  .tokenomics-card,
-  .overview-card {
-    padding-top: 32px !important;
-    padding-bottom: 32px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 42px !important;
-    padding-bottom: 42px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 34px !important;
-  }
-}
-
-
-/* tokenomics final order spacing */
-.tokenomics-card > .tokenomics-center-copy p:nth-last-child(2) {
-  margin-top: 34px !important;
-}
-
-.tokenomics-card > .tokenomics-center-copy p:last-child {
-  margin-top: 18px !important;
-}
-
-@media (max-width: 760px) {
-  .tokenomics-card > .tokenomics-center-copy p:nth-last-child(2) {
-    margin-top: 28px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy p:last-child {
-    margin-top: 14px !important;
-  }
-}
-
-
-/* title spacing fix 3 */
 .referral-card,
 .task-card,
 .overview-card {
@@ -2503,20 +1344,6 @@ strong {
   margin-bottom: 38px !important;
 }
 
-.referral-card > .center-card-title-row,
-.task-card > .task-title-row,
-.overview-card > .overview-title-row {
-  margin-bottom: 34px !important;
-}
-
-.tokenomics-card > .tokenomics-title-row {
-  margin-bottom: 58px !important;
-}
-
-.tokenomics-card > .tokenomics-center-copy {
-  gap: 28px !important;
-}
-
 .tokenomics-card > .tokenomics-center-copy .token-number {
   margin-top: 6px !important;
   margin-bottom: 28px !important;
@@ -2528,128 +1355,6 @@ strong {
 
 .tokenomics-card > .tokenomics-center-copy p:last-child {
   margin-top: 22px !important;
-}
-
-@media (max-width: 760px) {
-  .referral-card,
-  .task-card,
-  .overview-card {
-    padding-top: 52px !important;
-    padding-bottom: 48px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 62px !important;
-    padding-bottom: 58px !important;
-  }
-
-  .referral-card h2,
-  .task-card h2,
-  .overview-card h2,
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    margin-bottom: 30px !important;
-  }
-
-  .referral-card > .center-card-title-row,
-  .task-card > .task-title-row,
-  .overview-card > .overview-title-row {
-    margin-bottom: 28px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 46px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy {
-    gap: 24px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    margin-bottom: 22px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy p:nth-last-child(2) {
-    margin-top: 34px !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy p:last-child {
-    margin-top: 18px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card,
-  .task-card,
-  .overview-card {
-    padding-top: 46px !important;
-    padding-bottom: 42px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 56px !important;
-    padding-bottom: 52px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 42px !important;
-  }
-}
-
-
-/* mobile edge and section spacing fix 4 */
-@media (max-width: 760px) {
-  .page-shell {
-    padding-left: 24px !important;
-    padding-right: 24px !important;
-    padding-bottom: 48px !important;
-  }
-
-  .pepe-divider {
-    margin-top: 38px !important;
-    margin-bottom: 38px !important;
-  }
-
-  .hero-card + .pepe-divider {
-    margin-top: 30px !important;
-    margin-bottom: 40px !important;
-  }
-
-  .airdrop-stack > .glass-card {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .page-shell {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-    padding-bottom: 46px !important;
-  }
-
-  .pepe-divider {
-    margin-top: 36px !important;
-    margin-bottom: 36px !important;
-  }
-
-  .hero-card + .pepe-divider {
-    margin-top: 28px !important;
-    margin-bottom: 38px !important;
-  }
-
-  .referral-card,
-  .task-card,
-  .overview-card {
-    padding-top: 52px !important;
-    padding-bottom: 48px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 62px !important;
-    padding-bottom: 58px !important;
-  }
 }
 
 .hero-dogs-wrap {
@@ -2666,7 +1371,6 @@ strong {
 .hero-dogs-image {
   display: block;
   width: min(86vw, 760px);
-  max-width: 100%;
   height: auto;
   border: 0;
   border-radius: 0;
@@ -2682,28 +1386,6 @@ strong {
   margin-top: 0 !important;
 }
 
-@media (max-width: 760px) {
-  .hero-dogs-wrap {
-    margin: 8px auto 14px;
-  }
-
-  .hero-dogs-image {
-    width: min(94vw, 560px);
-  }
-}
-
-@media (max-width: 430px) {
-  .hero-dogs-wrap {
-    margin: 6px auto 12px;
-  }
-
-  .hero-dogs-image {
-    width: 100%;
-    max-width: 390px;
-  }
-}
-
-/* section font size update */
 .referral-card h2,
 .task-card h2,
 .tokenomics-card h2,
@@ -2761,91 +1443,6 @@ strong {
   margin-bottom: 42px !important;
 }
 
-@media (max-width: 760px) {
-  .referral-card h2,
-  .task-card h2,
-  .tokenomics-card h2,
-  .overview-card h2,
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    font-size: clamp(38px, 10.4vw, 54px) !important;
-    margin-bottom: 36px !important;
-  }
-
-  .referral-card .card-title-row p,
-  .referral-card > .center-card-title-row p,
-  .task-card .card-title-row p,
-  .x-task-intro p,
-  .tokenomics-center-copy p,
-  .tokenomics-card > .tokenomics-center-copy p,
-  .overview-card > .aligned-card-copy p,
-  .overview-copy p,
-  .mission-card p,
-  .reward,
-  .mission-link,
-  .message,
-  .small-message {
-    font-size: clamp(23px, 6.2vw, 32px) !important;
-    line-height: 1.35 !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-size: clamp(22px, 5.8vw, 30px) !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    font-size: clamp(35px, 9.2vw, 48px) !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy {
-    gap: 28px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 54px !important;
-  }
-
-  .referral-card > .center-card-title-row,
-  .task-card > .task-title-row,
-  .overview-card > .overview-title-row {
-    margin-bottom: 34px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card h2,
-  .task-card h2,
-  .tokenomics-card h2,
-  .overview-card h2,
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    font-size: clamp(36px, 10.2vw, 48px) !important;
-    margin-bottom: 32px !important;
-  }
-
-  .referral-card .card-title-row p,
-  .referral-card > .center-card-title-row p,
-  .task-card .card-title-row p,
-  .x-task-intro p,
-  .tokenomics-center-copy p,
-  .tokenomics-card > .tokenomics-center-copy p,
-  .overview-card > .aligned-card-copy p,
-  .overview-copy p,
-  .mission-card p,
-  .reward,
-  .mission-link,
-  .message,
-  .small-message {
-    font-size: clamp(22px, 6.4vw, 28px) !important;
-  }
-
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    font-size: clamp(32px, 9vw, 42px) !important;
-  }
-}
-
-/* remove main card borders, keep referral link box */
 .referral-card,
 .task-card,
 .tokenomics-card,
@@ -2898,256 +1495,14 @@ strong {
   margin-right: 0 !important;
 }
 
-@media (max-width: 760px) {
-  .referral-card,
-  .task-card,
-  .tokenomics-card,
-  .overview-card,
-  .glass-card.referral-card,
-  .glass-card.task-card,
-  .glass-card.tokenomics-card,
-  .glass-card.overview-card {
-    background: #fcb609 !important;
-    border: 0 !important;
-    outline: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-
-  .ref-link-box {
-    background: rgba(255, 220, 45, .55) !important;
-    border: 2px dashed rgba(17, 17, 17, .58) !important;
-    border-radius: 22px !important;
-  }
-
-  .mission-card,
-  .status-pill {
-    background: #fcb609 !important;
-    border: 0 !important;
-    outline: 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-}
-
-/* wallet and X account one-line status */
-.wallet-status-grid {
-  grid-template-columns: 1fr !important;
-  gap: 18px !important;
-  margin-top: 32px !important;
-}
-
 .status-pill {
-  display: flex !important;
-  align-items: baseline !important;
-  justify-content: flex-start !important;
-  gap: 10px !important;
   min-width: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.status-pill span,
-.status-pill strong {
-  display: inline !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.32 !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-  margin: 0 !important;
-}
-
-.status-pill span::after {
-  content: ":";
 }
 
 .status-pill strong {
   min-width: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
 }
 
-@media (max-width: 760px) {
-  .wallet-status-grid {
-    grid-template-columns: 1fr !important;
-    gap: 18px !important;
-    margin-top: 30px !important;
-  }
-
-  .status-pill {
-    display: flex !important;
-    align-items: baseline !important;
-    justify-content: flex-start !important;
-    gap: 9px !important;
-  }
-
-  .status-pill span,
-  .status-pill strong {
-    font-size: clamp(23px, 6.2vw, 32px) !important;
-    line-height: 1.35 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .wallet-status-grid {
-    gap: 16px !important;
-  }
-
-  .status-pill span,
-  .status-pill strong {
-    font-size: clamp(22px, 6.4vw, 28px) !important;
-  }
-}
-
-/* mobile X icon and balanced section title spacing */
-@media (max-width: 760px) {
-  .x-task-intro {
-    grid-template-columns: 78px 1fr !important;
-    gap: 18px !important;
-    align-items: center !important;
-  }
-
-  .small-round-x {
-    width: 76px !important;
-    height: 76px !important;
-    min-width: 76px !important;
-    min-height: 76px !important;
-    border-width: 4px !important;
-  }
-
-  .task-title-row .round-x,
-  .task-card .round-x {
-    width: 76px !important;
-    height: 76px !important;
-    min-width: 76px !important;
-    min-height: 76px !important;
-  }
-
-  .referral-card,
-  .task-card,
-  .overview-card {
-    padding-top: 64px !important;
-    padding-bottom: 64px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 72px !important;
-    padding-bottom: 72px !important;
-  }
-
-  .referral-card > .center-card-title-row,
-  .task-card > .task-title-row,
-  .overview-card > .overview-title-row {
-    margin-bottom: 46px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 58px !important;
-  }
-
-  .referral-card h2,
-  .task-card h2,
-  .overview-card h2,
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2,
-  .overview-card .aligned-section-content h2 {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-task-intro {
-    grid-template-columns: 72px 1fr !important;
-    gap: 16px !important;
-  }
-
-  .small-round-x {
-    width: 70px !important;
-    height: 70px !important;
-    min-width: 70px !important;
-    min-height: 70px !important;
-  }
-
-  .task-title-row .round-x,
-  .task-card .round-x {
-    width: 70px !important;
-    height: 70px !important;
-    min-width: 70px !important;
-    min-height: 70px !important;
-  }
-
-  .referral-card,
-  .task-card,
-  .overview-card {
-    padding-top: 60px !important;
-    padding-bottom: 60px !important;
-  }
-
-  .tokenomics-card {
-    padding-top: 68px !important;
-    padding-bottom: 68px !important;
-  }
-
-  .referral-card > .center-card-title-row,
-  .task-card > .task-title-row,
-  .overview-card > .overview-title-row {
-    margin-bottom: 44px !important;
-  }
-
-  .tokenomics-card > .tokenomics-title-row {
-    margin-bottom: 54px !important;
-  }
-}
-
-/* referral title balanced spacing fix */
-@media (max-width: 760px) {
-  .referral-card {
-    padding-top: 76px !important;
-    padding-bottom: 70px !important;
-  }
-
-  .referral-card > .center-card-title-row {
-    margin-bottom: 58px !important;
-  }
-
-  .referral-card h2 {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .referral-card .card-title-row p,
-  .referral-card > .center-card-title-row p {
-    margin-top: 0 !important;
-  }
-
-  .referral-card .ref-link-box {
-    margin-top: 42px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card {
-    padding-top: 72px !important;
-    padding-bottom: 66px !important;
-  }
-
-  .referral-card > .center-card-title-row {
-    margin-bottom: 54px !important;
-  }
-
-  .referral-card .ref-link-box {
-    margin-top: 40px !important;
-  }
-}
-
-/* stronger referral title-to-text spacing fix */
 .referral-card h2 {
   margin-top: 0 !important;
   margin-bottom: 42px !important;
@@ -3167,157 +1522,8 @@ strong {
   margin-top: 0 !important;
 }
 
-@media (max-width: 760px) {
-  .referral-card {
-    padding-top: 78px !important;
-    padding-bottom: 72px !important;
-  }
-
-  .referral-card h2 {
-    margin-top: 0 !important;
-    margin-bottom: 42px !important;
-  }
-
-  .referral-card > .center-card-title-row {
-    margin-bottom: 52px !important;
-  }
-
-  .referral-card .card-title-row p,
-  .referral-card > .center-card-title-row p {
-    line-height: 1.4 !important;
-  }
-
-  .referral-card .ref-link-box {
-    margin-top: 0 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card {
-    padding-top: 76px !important;
-    padding-bottom: 70px !important;
-  }
-
-  .referral-card h2 {
-    margin-bottom: 40px !important;
-  }
-
-  .referral-card > .center-card-title-row {
-    margin-bottom: 50px !important;
-  }
-}
-
-/* referral title vertical balance fix */
-@media (max-width: 760px) {
-  .referral-card {
-    padding-top: 60px !important;
-    padding-bottom: 72px !important;
-  }
-
-  .referral-card > .center-card-title-row {
-    margin-bottom: 52px !important;
-  }
-
-  .referral-card h2 {
-    margin-top: 0 !important;
-    margin-bottom: 40px !important;
-    transform: translateY(-18px) !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card {
-    padding-top: 58px !important;
-    padding-bottom: 70px !important;
-  }
-
-  .referral-card > .center-card-title-row {
-    margin-bottom: 50px !important;
-  }
-
-  .referral-card h2 {
-    margin-bottom: 38px !important;
-    transform: translateY(-16px) !important;
-  }
-}
-
-/* X task clean layout update */
-.wallet-status-grid {
-  grid-template-columns: 1fr !important;
-  gap: 16px !important;
-  margin-top: 32px !important;
-}
-
-.status-pill {
-  display: flex !important;
-  align-items: baseline !important;
-  gap: 10px !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.status-pill span,
-.status-pill strong {
-  display: inline !important;
-  margin: 0 !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
-.status-pill span::after {
-  content: ":";
-}
-
-.status-pill strong {
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-.mission-head {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  justify-items: center !important;
-  gap: 10px !important;
-  text-align: center !important;
-  margin-bottom: 22px !important;
-}
-
-.mission-head > div {
-  display: grid !important;
-  gap: 10px !important;
-  justify-items: center !important;
-  text-align: center !important;
-}
-
-.mission-head h3 {
-  margin: 0 !important;
-  text-align: center !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.25 !important;
-  font-weight: 400 !important;
-}
-
-.mission-head .reward {
-  margin: 0 !important;
-  text-align: center !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.25 !important;
-  font-weight: 400 !important;
-}
-
 .mission-status,
 .mission-status.done {
-  display: block !important;
   margin: 0 auto !important;
   padding: 0 !important;
   background: transparent !important;
@@ -3344,10 +1550,6 @@ strong {
   font-weight: 400;
 }
 
-.mission-head .reward {
-  display: none !important;
-}
-
 .mission-card p {
   color: rgba(17, 17, 17, .72) !important;
   font-size: clamp(23px, 3.1vw, 34px) !important;
@@ -3360,72 +1562,15 @@ strong {
   text-align: left !important;
 }
 
-@media (max-width: 760px) {
-  .status-pill span,
-  .status-pill strong,
-  .mission-head h3,
-  .mission-status::before {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-
-  .mission-head {
-    gap: 8px !important;
-    margin-bottom: 20px !important;
-  }
-
-  .mission-card p {
-    font-size: clamp(22px, 5.8vw, 29px) !important;
-    line-height: 1.36 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .status-pill span,
-  .status-pill strong,
-  .mission-head h3,
-  .mission-status::before {
-    font-size: clamp(24px, 6.2vw, 28px) !important;
-  }
-
-  .mission-card p {
-    font-size: clamp(21px, 5.7vw, 26px) !important;
-  }
-}
-
-/* X task layout fix 2 */
 .wallet-status-grid {
   grid-template-columns: 1fr !important;
   gap: 18px !important;
-  margin-top: 32px !important;
 }
 
 .status-pill {
-  display: flex !important;
   align-items: baseline !important;
   justify-content: flex-start !important;
   gap: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.status-pill span,
-.status-pill strong {
-  display: inline !important;
-  margin: 0 !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-}
-
-.status-pill span::after {
-  content: ":";
 }
 
 .status-pill strong {
@@ -3434,31 +1579,17 @@ strong {
   text-overflow: ellipsis !important;
 }
 
-#xStatus,
-#walletStatus {
-  margin-left: 0 !important;
-}
-
-#xMessage,
-#taskMessage {
-  display: none !important;
-}
-
 .mission-card {
   color: #111 !important;
 }
 
 .mission-head {
-  display: grid !important;
   grid-template-columns: 1fr !important;
   justify-items: center !important;
   gap: 8px !important;
-  text-align: center !important;
-  margin-bottom: 28px !important;
 }
 
 .mission-head > div {
-  display: grid !important;
   gap: 8px !important;
   justify-items: center !important;
   text-align: center !important;
@@ -3471,108 +1602,6 @@ strong {
   font-size: clamp(26px, 3.5vw, 38px) !important;
   line-height: 1.25 !important;
   font-weight: 400 !important;
-}
-
-.mission-head .reward {
-  display: block !important;
-  margin: 0 !important;
-  text-align: center !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.25 !important;
-  font-weight: 400 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-}
-
-.mission-status,
-.mission-status.done {
-  display: none !important;
-}
-
-.mission-card p {
-  display: none !important;
-}
-
-/* Put the instruction with the URL line and make it clear */
-.mission-link {
-  display: block !important;
-  margin: 26px 0 18px !important;
-  color: #111 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  font-size: clamp(24px, 3.3vw, 36px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-  text-align: left !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-}
-
-.mission-link::before {
-  content: "Follow @GXFCLJ, like, repost, and comment. ";
-  color: #111 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  font-weight: 400 !important;
-  text-decoration: none !important;
-}
-
-@media (max-width: 760px) {
-  .status-pill span,
-  .status-pill strong,
-  .mission-head h3,
-  .mission-head .reward {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-
-  .mission-head {
-    gap: 8px !important;
-    margin-bottom: 24px !important;
-  }
-
-  .mission-link {
-    font-size: clamp(22px, 5.8vw, 29px) !important;
-    line-height: 1.36 !important;
-    margin-top: 24px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .status-pill span,
-  .status-pill strong,
-  .mission-head h3,
-  .mission-head .reward {
-    font-size: clamp(24px, 6.2vw, 28px) !important;
-  }
-
-  .mission-link {
-    font-size: clamp(21px, 5.7vw, 26px) !important;
-  }
-}
-
-/* final X task cleanup */
-.wallet-status-grid {
-  display: block !important;
-  margin-top: 32px !important;
-}
-
-.status-pill {
-  display: block !important;
-  padding: 0 !important;
-  margin: 0 0 20px !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.status-pill:first-child {
-  display: none !important;
 }
 
 .status-pill span,
@@ -3588,10 +1617,6 @@ strong {
   white-space: normal !important;
 }
 
-.status-pill span::after {
-  content: ":";
-}
-
 .status-pill strong {
   margin-left: 0 !important;
 }
@@ -3607,40 +1632,12 @@ strong {
   display: none !important;
 }
 
-.mission-head h3 {
-  display: none !important;
-}
-
 .mission-head {
-  display: block !important;
   margin: 0 0 22px !important;
-  text-align: center !important;
 }
 
 .mission-head > div {
   display: block !important;
-}
-
-.mission-head .reward {
-  display: block !important;
-  margin: 0 auto !important;
-  text-align: center !important;
-  color: #111 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.25 !important;
-  font-weight: 400 !important;
-}
-
-.mission-status,
-.mission-status.done {
-  display: none !important;
-}
-
-.mission-card p {
-  display: none !important;
 }
 
 .mission-link {
@@ -3691,35 +1688,6 @@ strong {
   margin-top: 18px !important;
 }
 
-@media (max-width: 760px) {
-  .status-pill span,
-  .status-pill strong,
-  .mission-head .reward {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-
-  .mission-link::before,
-  .mission-link[href]::after {
-    font-size: clamp(22px, 5.8vw, 29px) !important;
-    line-height: 1.36 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .status-pill span,
-  .status-pill strong,
-  .mission-head .reward {
-    font-size: clamp(24px, 6.2vw, 28px) !important;
-  }
-
-  .mission-link::before,
-  .mission-link[href]::after {
-    font-size: clamp(21px, 5.7vw, 26px) !important;
-  }
-}
-
-/* final X task section correction */
 .x-task-intro p,
 .task-title-row p,
 .task-card .card-title-row p {
@@ -3739,142 +1707,6 @@ strong {
   text-transform: none !important;
 }
 
-.status-pill:first-child {
-  display: none !important;
-}
-
-.status-pill {
-  display: block !important;
-  text-align: center !important;
-  width: 100% !important;
-  margin: 0 auto 10px !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
-.status-pill span {
-  font-size: 0 !important;
-  line-height: 0 !important;
-}
-
-.status-pill span::after {
-  content: "X:";
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-}
-
-.status-pill strong,
-#xStatus {
-  display: inline !important;
-  margin-left: 0 !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-  white-space: normal !important;
-  text-align: center !important;
-}
-
-.wallet-status-grid {
-  display: block !important;
-  text-align: center !important;
-  margin-top: 28px !important;
-  margin-bottom: 30px !important;
-}
-
-.mission-head {
-  margin-top: 0 !important;
-  margin-bottom: 10px !important;
-}
-
-.mission-head h3 {
-  display: none !important;
-}
-
-.mission-head .reward {
-  display: block !important;
-  margin: 0 auto !important;
-  text-align: center !important;
-  color: #111 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.22 !important;
-  font-weight: 400 !important;
-}
-
-.mission-status,
-.mission-status.done,
-#xMessage,
-#taskMessage {
-  display: none !important;
-}
-
-.mission-card p {
-  display: none !important;
-}
-
-/* Hide the tweet URL entirely */
-.mission-link,
-.mission-link[href],
-.mission-link[href]::before,
-.mission-link[href]::after {
-  display: none !important;
-  content: none !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-decoration: none !important;
-}
-
-@media (max-width: 760px) {
-  .task-card .task-title-row p,
-  .x-task-intro p {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-
-  .status-pill span::after,
-  .status-pill strong,
-  #xStatus,
-  .mission-head .reward {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-
-  .wallet-status-grid {
-    margin-top: 24px !important;
-    margin-bottom: 24px !important;
-  }
-
-  .mission-head {
-    margin-top: -10px !important;
-    margin-bottom: 8px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .task-card .task-title-row p,
-  .x-task-intro p,
-  .status-pill span::after,
-  .status-pill strong,
-  #xStatus,
-  .mission-head .reward {
-    font-size: clamp(24px, 6.2vw, 28px) !important;
-  }
-
-  .mission-head {
-    margin-top: -14px !important;
-  }
-}
-
-/* X task final order: X, Reward, always-visible green note */
 .x-always-note {
   display: block !important;
   color: #078225 !important;
@@ -3888,78 +1720,6 @@ strong {
   margin: 22px 0 34px !important;
 }
 
-.wallet-status-grid {
-  display: block !important;
-  text-align: center !important;
-  margin-top: 28px !important;
-  margin-bottom: 10px !important;
-}
-
-.status-pill:first-child {
-  display: none !important;
-}
-
-.status-pill {
-  display: block !important;
-  text-align: center !important;
-  width: 100% !important;
-  margin: 0 auto 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.status-pill span {
-  font-size: 0 !important;
-  line-height: 0 !important;
-}
-
-.status-pill span::after {
-  content: "X:";
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-}
-
-.status-pill strong,
-#xStatus {
-  display: inline !important;
-  margin-left: 0 !important;
-  color: #111 !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.3 !important;
-  font-weight: 400 !important;
-  white-space: normal !important;
-  text-align: center !important;
-}
-
-.mission-head {
-  display: block !important;
-  margin-top: 10px !important;
-  margin-bottom: 8px !important;
-  text-align: center !important;
-}
-
-.mission-head h3 {
-  display: none !important;
-}
-
-.mission-head .reward {
-  display: block !important;
-  margin: 0 auto !important;
-  text-align: center !important;
-  color: #111 !important;
-  opacity: 1 !important;
-  filter: none !important;
-  text-shadow: none !important;
-  font-size: clamp(26px, 3.5vw, 38px) !important;
-  line-height: 1.22 !important;
-  font-weight: 400 !important;
-}
-
 .mission-status,
 .mission-status.done,
 #xMessage,
@@ -3967,64 +1727,6 @@ strong {
   display: none !important;
 }
 
-.mission-card p {
-  display: none !important;
-}
-
-.mission-link,
-.mission-link[href],
-.mission-link[href]::before,
-.mission-link[href]::after {
-  display: none !important;
-  content: none !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-decoration: none !important;
-}
-
-@media (max-width: 760px) {
-  .x-always-note {
-    font-size: clamp(22px, 5.8vw, 29px) !important;
-    line-height: 1.36 !important;
-    margin: 22px 0 32px !important;
-  }
-
-  .status-pill span::after,
-  .status-pill strong,
-  #xStatus,
-  .mission-head .reward {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-
-  .wallet-status-grid {
-    margin-top: 24px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .mission-head {
-    margin-top: 8px !important;
-    margin-bottom: 8px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-always-note {
-    font-size: clamp(21px, 5.7vw, 26px) !important;
-    margin-top: 20px !important;
-  }
-
-  .status-pill span::after,
-  .status-pill strong,
-  #xStatus,
-  .mission-head .reward {
-    font-size: clamp(24px, 6.2vw, 28px) !important;
-  }
-}
-
-/* X task final 6: hide green note, move reward directly under X */
 .x-always-note,
 #xMessage,
 #taskMessage {
@@ -4035,7 +1737,6 @@ strong {
   display: block !important;
   text-align: center !important;
   margin-top: 28px !important;
-  margin-bottom: 6px !important;
 }
 
 .status-pill:first-child {
@@ -4081,9 +1782,6 @@ strong {
 
 .mission-head {
   display: block !important;
-  margin-top: 8px !important;
-  margin-bottom: 24px !important;
-  text-align: center !important;
 }
 
 .mission-head h3 {
@@ -4091,9 +1789,6 @@ strong {
 }
 
 .mission-head .reward {
-  display: block !important;
-  margin: 0 auto !important;
-  text-align: center !important;
   color: #111 !important;
   opacity: 1 !important;
   filter: none !important;
@@ -4125,47 +1820,6 @@ strong {
   text-decoration: none !important;
 }
 
-@media (max-width: 760px) {
-  .wallet-status-grid {
-    margin-top: 24px !important;
-    margin-bottom: 4px !important;
-  }
-
-  .mission-head {
-    margin-top: 6px !important;
-    margin-bottom: 22px !important;
-  }
-
-  .status-pill span::after,
-  .status-pill strong,
-  #xStatus,
-  .mission-head .reward {
-    font-size: clamp(25px, 6.4vw, 33px) !important;
-    line-height: 1.28 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .wallet-status-grid {
-    margin-bottom: 2px !important;
-  }
-
-  .mission-head {
-    margin-top: 4px !important;
-    margin-bottom: 20px !important;
-  }
-
-  .status-pill span::after,
-  .status-pill strong,
-  #xStatus,
-  .mission-head .reward {
-    font-size: clamp(24px, 6.2vw, 28px) !important;
-  }
-}
-
-
-
-/* 20260624 user changes: show hero image, show X note, place reward below X note, lower action buttons */
 .hero-main-image {
   position: relative !important;
   z-index: 1 !important;
@@ -4227,51 +1881,6 @@ strong {
   margin-top: 34px !important;
 }
 
-@media (max-width: 760px) {
-  .hero-main-image {
-    width: min(72vw, 300px) !important;
-    margin: 0 auto 10px !important;
-  }
-
-  .x-task-message,
-  #message.message {
-    margin: 14px auto 8px !important;
-    font-size: clamp(20px, 5.6vw, 28px) !important;
-    line-height: 1.35 !important;
-  }
-
-  .mission-head {
-    margin-top: 0 !important;
-    margin-bottom: 30px !important;
-  }
-
-  .two-actions,
-  .mission-actions {
-    margin-top: 30px !important;
-  }
-
-  .referral-card .ref-link-box {
-    margin-bottom: 28px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .hero-main-image {
-    width: min(78vw, 260px) !important;
-  }
-
-  .x-task-message,
-  #message.message {
-    font-size: clamp(19px, 5.6vw, 25px) !important;
-  }
-
-  .two-actions,
-  .mission-actions {
-    margin-top: 28px !important;
-  }
-}
-
-/* 20260624 mobile first-page right-side overflow fix */
 html,
 body {
   width: 100% !important;
@@ -4320,93 +1929,10 @@ body {
   object-fit: contain !important;
 }
 
-@media (max-width: 760px) {
-  .page-shell {
-    width: 100% !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-
-  .hero-card {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .hero-tagline {
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-  }
-
-  .hero-oh {
-    font-size: clamp(46px, 12vw, 64px) !important;
-    line-height: 1.02 !important;
-  }
-
-  .hero-copy {
-    font-size: clamp(25px, 7vw, 34px) !important;
-    line-height: 1.18 !important;
-  }
-
-  .hero-dogs-image {
-    width: min(88vw, 520px) !important;
-  }
-
-  .social-actions.icon-only-actions.arc-icons {
-    width: calc(100vw - 28px) !important;
-    max-width: calc(100vw - 28px) !important;
-    gap: 6px !important;
-    overflow: visible !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .page-shell {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-  }
-
-  .hero-card {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .hero-tagline {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-
-  .hero-oh {
-    font-size: clamp(44px, 12.5vw, 56px) !important;
-    line-height: 1.02 !important;
-  }
-
-  .hero-copy {
-    font-size: clamp(22px, 6.7vw, 29px) !important;
-    line-height: 1.2 !important;
-  }
-
-  .hero-dogs-image {
-    width: min(84vw, 340px) !important;
-  }
-
-  .social-actions.icon-only-actions.arc-icons {
-    width: calc(100vw - 18px) !important;
-    max-width: calc(100vw - 18px) !important;
-    gap: 4px !important;
-  }
-
-  .arc-icons .social-pill,
-  .arc-icons .social-icon {
-    width: 52px !important;
-    height: 52px !important;
-    min-height: 52px !important;
-  }
-}
-
-/* Final X task order: X status -> Reward -> green note -> buttons */
 #message.message {
   display: none !important;
 }
+
 .mission-card .x-task-message {
   display: block !important;
   order: 2 !important;
@@ -4419,13 +1945,28 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
 .mission-card .mission-head {
   order: 1 !important;
 }
+
 .mission-card .mission-actions {
   order: 3 !important;
 }
+
 .mission-card {
   display: flex !important;
   flex-direction: column !important;
+}
+
+/* keep hidden normal X task status messages, but show real errors */
+#message.message.err {
+  display: block !important;
+  min-height: auto !important;
+  margin: 18px auto 10px !important;
+  color: #b00020 !important;
+  text-align: center !important;
+  font-size: clamp(20px, 3vw, 28px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
 }
