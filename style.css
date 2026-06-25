@@ -1785,3 +1785,170 @@ h6 {
     padding: 28px 6px 18px !important;
   }
 }
+
+/* 20260625 final tweak 4 */
+
+/* 手机版顶部三个图标距离再近一点，电脑版不动 */
+@media (max-width: 760px) {
+  .three-social-icons,
+  .social-actions.three-social-icons,
+  .icon-only-actions.three-social-icons {
+    width: min(100%, 250px) !important;
+    max-width: 250px !important;
+    justify-content: space-between !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .three-social-icons,
+  .social-actions.three-social-icons,
+  .icon-only-actions.three-social-icons {
+    width: min(100%, 238px) !important;
+    max-width: 238px !important;
+  }
+}
+
+/* 所有板块标题整体往上靠近白色分割线 */
+.airdrop-stack > .glass-card,
+.airdrop-stack > .referral-card,
+.airdrop-stack > .task-card,
+.airdrop-stack > .tokenomics-card,
+.airdrop-stack > .overview-card {
+  padding-top: 24px !important;
+}
+
+.airdrop-stack > .glass-card > .card-title-row,
+.airdrop-stack > .glass-card > .center-card-title-row,
+.airdrop-stack > .glass-card > .task-title-row,
+.airdrop-stack > .glass-card > .tokenomics-title-row,
+.airdrop-stack > .glass-card > .overview-title-row,
+.airdrop-stack > .referral-card > .center-card-title-row,
+.airdrop-stack > .task-card > .task-title-row,
+.airdrop-stack > .tokenomics-card > .tokenomics-title-row,
+.airdrop-stack > .overview-card > .overview-title-row {
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
+}
+
+.airdrop-stack h2,
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  margin-top: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+/* 推荐链接框虚线加密一点，避免太稀疏 */
+.ref-link-box {
+  border: 0 !important;
+  padding: 10px 28px !important;
+  background:
+    linear-gradient(#fffdf4, #fffdf4) padding-box,
+    repeating-linear-gradient(
+      90deg,
+      rgba(17, 17, 17, .55) 0 10px,
+      transparent 10px 17px
+    ) border-box !important;
+  border: 4px solid transparent !important;
+  border-radius: 22px !important;
+}
+
+.ref-link-box::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 22px !important;
+  pointer-events: none !important;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(17, 17, 17, .55) 0 10px,
+      transparent 10px 17px
+    ) left top / 4px 100% no-repeat,
+    repeating-linear-gradient(
+      180deg,
+      rgba(17, 17, 17, .55) 0 10px,
+      transparent 10px 17px
+    ) right top / 4px 100% no-repeat;
+}
+
+/* 底部版权文字上下居中 */
+.footer-note {
+  min-height: 100px !important;
+  padding: 24px 16px 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.footer-note::before {
+  top: 0 !important;
+}
+
+/* 手机版同步调整标题上方距离和底部居中 */
+@media (max-width: 760px) {
+  .airdrop-stack > .glass-card,
+  .airdrop-stack > .referral-card,
+  .airdrop-stack > .task-card,
+  .airdrop-stack > .tokenomics-card,
+  .airdrop-stack > .overview-card {
+    padding-top: 22px !important;
+  }
+
+  .airdrop-stack > .glass-card > .card-title-row,
+  .airdrop-stack > .glass-card > .center-card-title-row,
+  .airdrop-stack > .glass-card > .task-title-row,
+  .airdrop-stack > .glass-card > .tokenomics-title-row,
+  .airdrop-stack > .glass-card > .overview-title-row,
+  .airdrop-stack > .referral-card > .center-card-title-row,
+  .airdrop-stack > .task-card > .task-title-row,
+  .airdrop-stack > .tokenomics-card > .tokenomics-title-row,
+  .airdrop-stack > .overview-card > .overview-title-row {
+    margin-bottom: 22px !important;
+  }
+
+  .airdrop-stack h2,
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-bottom: 16px !important;
+  }
+
+  .ref-link-box {
+    border-width: 3px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .ref-link-box::before {
+    background:
+      repeating-linear-gradient(
+        180deg,
+        rgba(17, 17, 17, .55) 0 9px,
+        transparent 9px 15px
+      ) left top / 3px 100% no-repeat,
+      repeating-linear-gradient(
+        180deg,
+        rgba(17, 17, 17, .55) 0 9px,
+        transparent 9px 15px
+      ) right top / 3px 100% no-repeat;
+  }
+
+  .footer-note {
+    min-height: 78px !important;
+    padding: 20px 8px 20px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .footer-note {
+    min-height: 72px !important;
+    padding: 18px 6px 18px !important;
+  }
+}
