@@ -277,8 +277,8 @@ button:disabled {
   position: relative;
   z-index: 2;
   display: grid;
-  width: min(100%, 690px);
-  max-width: 690px;
+  width: min(100% - 36px, 620px);
+  max-width: 620px;
   margin: 8px auto 54px;
   gap: 20px;
 }
@@ -1106,8 +1106,8 @@ h6 {
   }
 
   .exchange-list {
-    width: min(100% - 44px, 430px);
-    max-width: 430px;
+    width: min(100% - 60px, 460px);
+    max-width: 460px;
     margin: 2px auto 38px;
     gap: 14px;
   }
@@ -1360,8 +1360,8 @@ h6 {
   }
 
   .exchange-list {
-    width: min(100% - 34px, 390px);
-    max-width: 390px;
+    width: min(100% - 54px, 420px);
+    max-width: 420px;
     margin-bottom: 34px;
     gap: 12px;
   }
