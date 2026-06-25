@@ -1,6 +1,4 @@
 const BSC_CHAIN_ID_HEX = "0x38";
-const BSC_CHAIN_ID_DEC = 56;
-
 const BSC_RPC_URLS = [
   "https://bsc-dataseed.binance.org",
   "https://bsc-dataseed1.defibit.io",
@@ -51,32 +49,17 @@ let currentTweetId =
 
 const connectBtn = document.getElementById("connectBtn");
 
-const connectXBtn =
-  document.getElementById("connectXBtn") ||
-  document.getElementById("xConnectBtn");
-
-const refreshMissionsBtn =
-  document.getElementById("refreshMissionsBtn") ||
-  document.getElementById("refreshTasksBtn");
-
-const missionList =
-  document.getElementById("missionList") ||
-  document.getElementById("tasksList");
+const missionList = document.getElementById("missionList");
 
 const message = document.getElementById("message");
 const walletText = document.getElementById("walletText");
 
-const xStatusText =
-  document.getElementById("xStatusText") ||
-  document.getElementById("xAccountText");
+const xStatusText = document.getElementById("xStatusText");
 
 const refLinkInput = document.getElementById("refLink");
 const copyRefBtn = document.getElementById("copyRefBtn");
 const claimReferralBtn = document.getElementById("claimReferralBtn");
 const refMessage = document.getElementById("refMessage");
-
-const menuBtn = document.getElementById("menuBtn");
-const navMenu = document.getElementById("navMenu");
 
 const COMING_SOON_TEXT = "$SHIT is still in the airdrop phase. Trading has not launched yet.";
 let isShowingComingSoonAlert = false;
@@ -128,19 +111,17 @@ function bindComingSoonLinks() {
 }
 
 function showMessage(text, type) {
-  const activeMessage = document.getElementById("message") || message;
+  if (!message) return;
 
-  if (!activeMessage) return;
-
-  activeMessage.innerText = text || "";
-  activeMessage.classList.remove("ok", "err");
+  message.innerText = text || "";
+  message.classList.remove("ok", "err");
 
   if (type === "ok") {
-    activeMessage.classList.add("ok");
+    message.classList.add("ok");
   }
 
   if (type === "err") {
-    activeMessage.classList.add("err");
+    message.classList.add("err");
   }
 }
 
@@ -385,16 +366,6 @@ function updateWalletUI() {
       : "Not connected";
   }
 
-  if (connectXBtn) {
-    connectXBtn.innerText = connectedX ? "reconnect X" : "connect X";
-    connectXBtn.disabled = !activeWallet;
-  }
-
-  if (refreshMissionsBtn) {
-    refreshMissionsBtn.innerText = activeWallet ? "Wallet Connected" : "Connect Wallet";
-    refreshMissionsBtn.disabled = Boolean(activeWallet);
-  }
-
   updateReferralUI();
 }
 
@@ -471,11 +442,6 @@ async function connectWallet() {
     if (connectBtn) {
       connectBtn.disabled = true;
       connectBtn.innerText = "connecting...";
-    }
-
-    if (refreshMissionsBtn) {
-      refreshMissionsBtn.disabled = true;
-      refreshMissionsBtn.innerText = "connecting...";
     }
 
     showMessage("Connecting wallet...");
@@ -651,29 +617,11 @@ async function claimReferralAirdrop() {
   }
 }
 
-function connectX() {
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (!activeWallet) {
-    showMessage("Please connect wallet first.", "err");
-    return;
-  }
-
-  localStorage.setItem("pending_x_wallet", activeWallet);
-
-  window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
-}
-
 async function loadTasks(runPendingActions = true) {
   if (isLoadingTasks) return;
 
   try {
     isLoadingTasks = true;
-
-    if (refreshMissionsBtn) {
-      refreshMissionsBtn.disabled = true;
-      refreshMissionsBtn.innerText = "loading...";
-    }
 
     const activeWallet = userAddress || localStorage.getItem("wallet_address") || "";
     const params = new URLSearchParams();
@@ -753,7 +701,7 @@ async function loadTasks(runPendingActions = true) {
         }
       }
     } else if (activeWallet && !currentXConnected) {
-      showMessage("Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.", "ok");
+      showMessage("", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
@@ -765,10 +713,6 @@ async function loadTasks(runPendingActions = true) {
 
     const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
-    if (refreshMissionsBtn) {
-      refreshMissionsBtn.innerText = activeWallet ? "Wallet Connected" : "Connect Wallet";
-      refreshMissionsBtn.disabled = Boolean(activeWallet);
-    }
   }
 }
 
@@ -812,22 +756,6 @@ function getLatestTaskProgress() {
   return latestTask ? getProgressForTask(latestTask) : null;
 }
 
-function getTaskStatus(progress) {
-  if (!progress) return "Not completed";
-  if (progress.claimed) return "Claimed";
-  if (progress.claimable || progress.verified) return "Ready";
-  if (
-    progress.followed ||
-    progress.liked ||
-    progress.reposted ||
-    progress.commented
-  ) {
-    return "Checking";
-  }
-
-  return "Not completed";
-}
-
 function renderMissions() {
   if (!missionList) return;
 
@@ -838,7 +766,6 @@ function renderMissions() {
       <div class="mission-card empty">
         <h3>Connect your wallet to load the latest official X mission.</h3>
         <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
-        <p class="message x-task-message">Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.</p>
       </div>
     `;
     return;
@@ -851,7 +778,6 @@ function renderMissions() {
       <div class="mission-card empty">
         <h3>No active mission yet.</h3>
         <p>Please refresh later.</p>
-        <p id="message" class="message x-task-message"></p>
       </div>
     `;
     return;
@@ -863,8 +789,6 @@ function renderMissions() {
   const claimed = Boolean(progress && progress.claimed);
   const claimable = Boolean(progress && progress.claimable);
   const verified = Boolean(progress && progress.verified);
-  const statusText = getTaskStatus(progress);
-
   const noNewMissionForThisTask =
     noNewMissionLocked &&
     noNewMissionTaskId &&
@@ -901,10 +825,13 @@ function renderMissions() {
           <h3>${escapeHtml(latestTask.title || "")}</h3>
           <p class="reward">Reward: ${escapeHtml(latestTask.reward_amount || "1")} drop</p>
         </div>
-        <span class="mission-status ${claimed ? "done" : "ready"}">${statusText}</span>
       </div>
 
       <p class="message x-task-message">Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.</p>
+
+      <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
+        ${tweetUrl}
+      </a>
 
       <div class="mission-actions">
         <button class="btn full light open-task-btn" type="button" data-tweet-id="${tweetId}" ${openDisabled ? "disabled" : ""}>
@@ -1423,9 +1350,6 @@ if (connectBtn) {
   connectBtn.addEventListener("click", connectWallet);
 }
 
-if (connectXBtn) {
-  connectXBtn.addEventListener("click", connectX);
-}
 
 if (copyRefBtn) {
   copyRefBtn.addEventListener("click", async () => {
@@ -1442,32 +1366,6 @@ if (copyRefBtn) {
 
 if (claimReferralBtn) {
   claimReferralBtn.addEventListener("click", claimReferralAirdrop);
-}
-
-if (refreshMissionsBtn) {
-  refreshMissionsBtn.addEventListener("click", () => {
-    const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-    if (activeWallet) {
-      showMessage("Wallet already connected.", "ok");
-      updateWalletUI();
-      return;
-    }
-
-    connectWallet();
-  });
-}
-
-if (menuBtn && navMenu) {
-  menuBtn.addEventListener("click", () => {
-    navMenu.classList.toggle("show");
-  });
-
-  navMenu.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("show");
-    });
-  });
 }
 
 window.addEventListener("focus", () => {
