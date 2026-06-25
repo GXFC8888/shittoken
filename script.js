@@ -44,20 +44,17 @@ let isVerifying = false;
 let noNewMissionLocked = false;
 let noNewMissionTaskId = null;
 
-let currentTweetId =
-  localStorage.getItem("current_official_tweet_id") || null;
+let currentTweetId = localStorage.getItem("current_official_tweet_id") || null;
 
 const connectBtn = document.getElementById("connectBtn");
-
 const missionList = document.getElementById("missionList");
-
 const message = document.getElementById("message");
 const walletText = document.getElementById("walletText");
-
 const xStatusText = document.getElementById("xStatusText");
 
 const refLinkInput = document.getElementById("refLink");
 const copyRefBtn = document.getElementById("copyRefBtn");
+const copyRefBtnMobile = document.getElementById("copyRefBtnMobile");
 const claimReferralBtn = document.getElementById("claimReferralBtn");
 const refMessage = document.getElementById("refMessage");
 
@@ -185,6 +182,13 @@ function setCurrentTweetId(tweetId) {
 
   currentTweetId = String(tweetId);
   localStorage.setItem("current_official_tweet_id", currentTweetId);
+}
+
+function clearPendingXState() {
+  localStorage.removeItem("pending_official_x");
+  localStorage.removeItem("pending_official_verify");
+  localStorage.removeItem("pending_verify_task_id");
+  localStorage.removeItem("pending_open_tweet_id");
 }
 
 function getLatestTask() {
@@ -400,7 +404,6 @@ function resetWalletUI() {
 
   updateWalletUI();
   renderMissions();
-
   showMessage("");
 }
 
@@ -533,6 +536,19 @@ function listenWalletChange() {
       window.location.reload();
     }
   });
+}
+
+async function copyReferralLink() {
+  const link = refLinkInput
+    ? refLinkInput.value
+    : getReferralLink(userAddress || localStorage.getItem("wallet_address"));
+
+  try {
+    await navigator.clipboard.writeText(link);
+    showRefMessage("Referral link copied.", "ok");
+  } catch (error) {
+    showRefMessage("Copy failed. Please copy the link manually.", "err");
+  }
 }
 
 async function claimReferralAirdrop() {
@@ -677,6 +693,12 @@ async function loadTasks(runPendingActions = true) {
     updateWalletUI();
     renderMissions();
 
+    const latestProgress = getLatestTaskProgress();
+
+    if (latestProgress && latestProgress.claimed) {
+      clearPendingXState();
+    }
+
     if (activeWallet && currentXConnected) {
       showMessage("X account connected. Complete the latest mission, then claim.", "ok");
 
@@ -738,10 +760,7 @@ function getProgressByTweetId(tweetId) {
 function getProgressForTask(task) {
   if (!task) return null;
 
-  return (
-    getProgressByTaskId(task.id) ||
-    getProgressByTweetId(task.tweet_id)
-  );
+  return getProgressByTaskId(task.id) || getProgressByTweetId(task.tweet_id);
 }
 
 function getLatestTaskProgress() {
@@ -883,6 +902,7 @@ function openTaskX(tweetId) {
 
   if (latestProgress && latestProgress.claimed) {
     showMessage("Latest mission already claimed.", "ok");
+    clearPendingXState();
     return;
   }
 
@@ -970,9 +990,7 @@ function shouldLockClaimButton(data) {
     return true;
   }
 
-  const text = String(
-    data && (data.message || data.error || data.detail || "")
-  ).toLowerCase();
+  const text = String(data && (data.message || data.error || data.detail || "")).toLowerCase();
 
   return (
     text.includes("already claimed") ||
@@ -983,9 +1001,7 @@ function shouldLockClaimButton(data) {
 }
 
 function needsXAuthorization(data) {
-  const text = String(
-    data && (data.message || data.error || data.detail || "")
-  ).toLowerCase();
+  const text = String(data && (data.message || data.error || data.detail || "")).toLowerCase();
 
   return (
     text.includes("connect x") ||
@@ -1132,8 +1148,6 @@ async function verifyAndClaim(task) {
     return;
   }
 
-  const progress = getProgressForTask(task);
-
   try {
     isVerifying = true;
     renderMissions();
@@ -1181,21 +1195,24 @@ async function verifyAndClaim(task) {
           "ok"
         );
 
+        clearPendingXState();
         await loadTasks(false);
         return;
       }
 
       const targetTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
       const targetTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
+      const latestProgressNow = getProgressForTask(task);
 
       if (
-        progress &&
-        progress.claimed &&
+        latestProgressNow &&
+        latestProgressNow.claimed &&
         Number(targetTaskId) === Number(taskId)
       ) {
         noNewMissionLocked = true;
         noNewMissionTaskId = Number(taskId);
 
+        clearPendingXState();
         showMessage("No new mission yet. Please try again later.", "ok");
 
         renderMissions();
@@ -1222,15 +1239,17 @@ async function verifyAndClaim(task) {
 
     const verifiedTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
     const verifiedTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
+    const latestProgressNow = getProgressForTask(task);
 
     if (
-      progress &&
-      progress.claimed &&
+      latestProgressNow &&
+      latestProgressNow.claimed &&
       Number(verifiedTaskId) === Number(taskId)
     ) {
       noNewMissionLocked = true;
       noNewMissionTaskId = Number(taskId);
 
+      clearPendingXState();
       showMessage("No new mission yet. Please try again later.", "ok");
 
       renderMissions();
@@ -1239,11 +1258,7 @@ async function verifyAndClaim(task) {
 
     showMessage("Mission verified. Getting claim signature...", "ok");
 
-    const signatureData = await getClaimSignature(
-      activeWallet,
-      verifiedTweetId
-    );
-
+    const signatureData = await getClaimSignature(activeWallet, verifiedTweetId);
     const txHash = await claimOnChain(signatureData, activeWallet);
 
     showMessage("On-chain claim confirmed. Recording claim...", "ok");
@@ -1253,6 +1268,8 @@ async function verifyAndClaim(task) {
       signatureData.taskId || verifiedTaskId,
       txHash
     );
+
+    clearPendingXState();
 
     showMessage("Claim successful. Tokens sent to your wallet.", "ok");
 
@@ -1267,6 +1284,7 @@ async function verifyAndClaim(task) {
       shouldLockClaimButton(responseData) ||
       String(readableError).toLowerCase().includes("already claimed")
     ) {
+      clearPendingXState();
       showMessage("Latest mission already claimed.", "ok");
       await loadTasks(false);
     } else {
@@ -1281,6 +1299,12 @@ async function verifyAndClaim(task) {
 function handleReturnFromX() {
   const pendingX = localStorage.getItem("pending_official_x");
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
+  const latestProgress = getLatestTaskProgress();
+
+  if (latestProgress && latestProgress.claimed) {
+    clearPendingXState();
+    return;
+  }
 
   if (pendingX && activeWallet) {
     showMessage("Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.", "ok");
@@ -1343,18 +1367,12 @@ if (connectBtn) {
   connectBtn.addEventListener("click", connectWallet);
 }
 
-
 if (copyRefBtn) {
-  copyRefBtn.addEventListener("click", async () => {
-    const link = refLinkInput ? refLinkInput.value : getReferralLink(userAddress || localStorage.getItem("wallet_address"));
+  copyRefBtn.addEventListener("click", copyReferralLink);
+}
 
-    try {
-      await navigator.clipboard.writeText(link);
-      showRefMessage("Referral link copied.", "ok");
-    } catch (error) {
-      showRefMessage("Copy failed. Please copy the link manually.", "err");
-    }
-  });
+if (copyRefBtnMobile) {
+  copyRefBtnMobile.addEventListener("click", copyReferralLink);
 }
 
 if (claimReferralBtn) {
