@@ -1970,3 +1970,223 @@ body {
   line-height: 1.32 !important;
   font-weight: 400 !important;
 }
+
+/* mobile layout fix */
+@media (max-width: 760px) {
+  .page-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    overflow-x: hidden !important;
+  }
+
+  .hero-top {
+    min-height: 82px !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .brand-mark {
+    max-width: calc(100% - 118px) !important;
+    gap: 6px !important;
+    overflow: visible !important;
+  }
+
+  .brand-mark img {
+    width: 66px !important;
+    height: 66px !important;
+    flex: 0 0 66px !important;
+    object-fit: contain !important;
+  }
+
+  .brand-word-text {
+    font-size: 42px !important;
+    line-height: .85 !important;
+    transform: translateY(5px) !important;
+    white-space: nowrap !important;
+  }
+
+  .top-wallet-link {
+    min-width: 104px !important;
+    min-height: 42px !important;
+    padding: 11px 8px 6px !important;
+    font-size: 13px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .hero-card {
+    min-height: auto !important;
+    padding: 22px 0 28px !important;
+    overflow: hidden !important;
+  }
+
+  .hero-tagline {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 16px auto 10px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-oh {
+    font-size: clamp(42px, 12vw, 58px) !important;
+    line-height: 1 !important;
+    display: block !important;
+    white-space: normal !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(25px, 7vw, 34px) !important;
+    line-height: 1.22 !important;
+    display: block !important;
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-main-image {
+    width: min(72vw, 300px) !important;
+    max-width: 300px !important;
+    height: auto !important;
+    margin: 10px auto 18px !important;
+    display: block !important;
+    object-fit: contain !important;
+  }
+
+  .social-actions.icon-only-actions.arc-icons {
+    width: 100% !important;
+    max-width: 360px !important;
+    min-height: 92px !important;
+    margin: 4px auto 18px !important;
+    gap: 6px !important;
+    overflow: visible !important;
+    justify-content: center !important;
+  }
+
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 54px !important;
+    height: 54px !important;
+    min-height: 54px !important;
+  }
+
+  .arc-icons .arc-1 {
+    transform: translateY(18px) !important;
+  }
+
+  .arc-icons .arc-2 {
+    transform: translateY(7px) !important;
+  }
+
+  .arc-icons .arc-3 {
+    transform: translateY(-12px) !important;
+  }
+
+  .arc-icons .arc-4 {
+    transform: translateY(7px) !important;
+  }
+
+  .arc-icons .arc-5 {
+    transform: translateY(18px) !important;
+  }
+
+  .pepe-divider {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .hero-card + .pepe-divider {
+    margin-top: 18px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2 {
+    font-size: clamp(38px, 10vw, 52px) !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+  }
+
+  .referral-card .card-title-row p,
+  .task-card .card-title-row p,
+  .overview-card p,
+  .tokenomics-card p {
+    font-size: clamp(22px, 6vw, 30px) !important;
+    line-height: 1.35 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .page-shell {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .brand-mark img {
+    width: 58px !important;
+    height: 58px !important;
+    flex-basis: 58px !important;
+  }
+
+  .brand-word-text {
+    font-size: 36px !important;
+  }
+
+  .top-wallet-link {
+    min-width: 96px !important;
+    font-size: 12px !important;
+  }
+
+  .hero-oh {
+    font-size: clamp(40px, 11vw, 50px) !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(23px, 6.5vw, 29px) !important;
+  }
+
+  .hero-main-image {
+    width: min(72vw, 250px) !important;
+    max-width: 250px !important;
+  }
+
+  .social-actions.icon-only-actions.arc-icons {
+    max-width: 320px !important;
+    min-height: 82px !important;
+    gap: 5px !important;
+  }
+
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2 {
+    font-size: clamp(34px, 9.5vw, 44px) !important;
+  }
+
+  .referral-card .card-title-row p,
+  .task-card .card-title-row p,
+  .overview-card p,
+  .tokenomics-card p {
+    font-size: clamp(21px, 5.8vw, 27px) !important;
+  }
+}
