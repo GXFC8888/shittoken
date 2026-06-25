@@ -2234,3 +2234,128 @@ body {
     font-size: clamp(24px, 6.6vw, 30px) !important;
   }
 }
+
+/* 20260625 content update: larger hero image, three centered social icons, full-width thick divider, white ref box, split About section */
+.hero-main-image {
+  width: min(100vw, 920px) !important;
+  max-width: 100% !important;
+  margin: 8px auto 12px !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+.three-social-icons {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: min(100%, 620px) !important;
+  max-width: 620px !important;
+  min-height: 150px !important;
+  margin: 10px auto 30px !important;
+  gap: 42px !important;
+}
+
+.three-social-icons .social-pill,
+.three-social-icons .social-icon {
+  width: 118px !important;
+  height: 118px !important;
+  min-height: 118px !important;
+}
+
+.three-social-icons .arc-item,
+.three-social-icons .arc-1,
+.three-social-icons .arc-2,
+.three-social-icons .arc-3 {
+  transform: none !important;
+}
+
+.three-social-icons .arc-item:hover,
+.three-social-icons .arc-1:hover,
+.three-social-icons .arc-2:hover,
+.three-social-icons .arc-3:hover {
+  transform: translateY(-6px) scale(1.04) !important;
+}
+
+.pepe-divider {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 34px !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 720px 100% !important;
+  background-position: left center !important;
+}
+
+.ref-link-box {
+  background: #fffdf4 !important;
+}
+
+.overview-card-two {
+  padding-top: 66px !important;
+  padding-bottom: 58px !important;
+}
+
+@media (max-width: 760px) {
+  .hero-main-image {
+    width: min(100vw, 720px) !important;
+    max-width: 100% !important;
+    margin: 8px auto 14px !important;
+  }
+
+  .three-social-icons {
+    width: 100% !important;
+    max-width: 340px !important;
+    min-height: 98px !important;
+    margin: 8px auto 24px !important;
+    gap: 24px !important;
+    justify-content: space-between !important;
+  }
+
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 76px !important;
+    height: 76px !important;
+    min-height: 76px !important;
+  }
+
+  .three-social-icons .arc-item,
+  .three-social-icons .arc-1,
+  .three-social-icons .arc-2,
+  .three-social-icons .arc-3 {
+    transform: none !important;
+  }
+
+  .pepe-divider {
+    height: 30px !important;
+    background-size: 640px 100% !important;
+    margin-top: 28px !important;
+    margin-bottom: 28px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-main-image {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .three-social-icons {
+    max-width: 300px !important;
+    min-height: 88px !important;
+    gap: 18px !important;
+  }
+
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 66px !important;
+    height: 66px !important;
+    min-height: 66px !important;
+  }
+
+  .pepe-divider {
+    height: 28px !important;
+    background-size: 560px 100% !important;
+  }
+}
