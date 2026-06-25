@@ -1359,3 +1359,104 @@ h6 {
     font-size: clamp(15px, 4vw, 18px);
   }
 }
+
+.ref-link-box {
+  background: #fffdf4 !important;
+  border: 4px dashed rgba(17, 17, 17, .55) !important;
+  border-radius: 22px !important;
+  padding: 10px 28px !important;
+  box-shadow: none !important;
+}
+
+.ref-link-box::before {
+  content: none !important;
+  display: none !important;
+}
+
+.footer-note {
+  min-height: 72px !important;
+  padding: 14px 16px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.footer-note::before {
+  top: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card,
+  .overview-card-two,
+  .glass-card {
+    padding-top: 8px !important;
+    padding-bottom: 48px !important;
+  }
+
+  .card-title-row,
+  .center-card-title-row,
+  .task-title-row,
+  .tokenomics-title-row,
+  .overview-title-row {
+    margin-top: 0 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .referral-intro {
+    margin-bottom: 14px !important;
+  }
+
+  .footer-note {
+    min-height: 58px !important;
+    padding: 10px 8px 10px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card,
+  .overview-card-two,
+  .glass-card {
+    padding-top: 6px !important;
+    padding-bottom: 44px !important;
+  }
+
+  .card-title-row,
+  .center-card-title-row,
+  .task-title-row,
+  .tokenomics-title-row,
+  .overview-title-row {
+    margin-bottom: 10px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-bottom: 8px !important;
+  }
+
+  .footer-note {
+    min-height: 54px !important;
+    padding: 8px 6px 8px !important;
+  }
+}
