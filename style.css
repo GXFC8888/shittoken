@@ -1477,3 +1477,311 @@ h6 {
     top: 42px !important;
   }
 }
+
+/* 20260625 final tweak 2 */
+
+/* Oh yeah 标题再放大 */
+.hero-oh {
+  font-size: clamp(62px, 8.6vw, 96px) !important;
+  margin-bottom: 42px !important;
+}
+
+/* 首页三个图标放到文字下方后，距离稍微近一点 */
+.three-social-icons,
+.social-actions.three-social-icons,
+.icon-only-actions.three-social-icons {
+  width: min(100%, 520px) !important;
+  max-width: 520px !important;
+  min-height: 120px !important;
+  margin-top: 20px !important;
+  margin-bottom: 26px !important;
+  gap: 0 !important;
+  justify-content: space-between !important;
+}
+
+/* 三个顶部图标尺寸 */
+.social-pill,
+.social-icon,
+.three-social-icons .social-pill,
+.three-social-icons .social-icon {
+  width: 96px !important;
+  height: 96px !important;
+  min-height: 96px !important;
+}
+
+/* 人物图片往下接一点 */
+.hero-main-image {
+  margin-top: 12px !important;
+  margin-bottom: 34px !important;
+}
+
+/* 所有板块标题离上面白线近一点 */
+.glass-card,
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card,
+.overview-card-two {
+  padding-top: 50px !important;
+  padding-bottom: 64px !important;
+}
+
+/* 所有标题和下面内容距离稍微近一点 */
+.card-title-row,
+.center-card-title-row,
+.task-title-row,
+.tokenomics-title-row,
+.overview-title-row {
+  margin-bottom: 28px !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  margin-bottom: 24px !important;
+}
+
+/* 推荐区标题和正文不要太远 */
+.referral-card h2 {
+  margin-bottom: 28px !important;
+}
+
+/* X Task 图标和文字整体居中 */
+.x-task-intro {
+  display: grid !important;
+  grid-template-columns: 96px auto !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 28px !important;
+  width: 100% !important;
+  margin: 0 auto 24px !important;
+}
+
+.small-round-x {
+  width: 96px !important;
+  height: 96px !important;
+  min-width: 96px !important;
+  min-height: 96px !important;
+  border-width: 5px !important;
+}
+
+.x-task-intro p {
+  text-align: left !important;
+  margin: 0 !important;
+}
+
+/* 推荐链接框虚线变大、变稀疏 */
+.ref-link-box {
+  border: 0 !important;
+  padding: 10px 28px !important;
+  background:
+    linear-gradient(#fffdf4, #fffdf4) padding-box,
+    repeating-linear-gradient(
+      90deg,
+      rgba(17, 17, 17, .55) 0 14px,
+      transparent 14px 26px
+    ) border-box !important;
+  border: 4px solid transparent !important;
+  border-radius: 22px !important;
+}
+
+/* 左右竖边也做成更大的虚线感 */
+.ref-link-box::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 22px !important;
+  pointer-events: none !important;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(17, 17, 17, .55) 0 14px,
+      transparent 14px 26px
+    ) left top / 4px 100% no-repeat,
+    repeating-linear-gradient(
+      180deg,
+      rgba(17, 17, 17, .55) 0 14px,
+      transparent 14px 26px
+    ) right top / 4px 100% no-repeat;
+}
+
+/* Tokenomics 标题保持大一点 */
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2 {
+  font-size: clamp(56px, 7.4vw, 92px) !important;
+}
+
+/* Token Supply / Airdrop Supply 英文放大，数字往上 */
+.tokenomics-center-copy,
+.tokenomics-card > .tokenomics-center-copy {
+  gap: 8px !important;
+}
+
+.tokenomics-center-copy > p:nth-child(1),
+.tokenomics-center-copy > p:nth-child(3),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+  font-size: clamp(34px, 4.8vw, 56px) !important;
+  line-height: 1.1 !important;
+  margin: 0 auto 2px !important;
+}
+
+.tokenomics-center-copy .token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  margin-top: -8px !important;
+  margin-bottom: 28px !important;
+}
+
+/* 最下面版权区域上下空隙改成约一半 */
+.footer-note {
+  min-height: 95px !important;
+  padding: 36px 16px 26px !important;
+}
+
+.footer-note::before {
+  top: 0 !important;
+}
+
+/* mobile */
+@media (max-width: 760px) {
+  .hero-oh {
+    font-size: clamp(50px, 14vw, 72px) !important;
+    margin-bottom: 34px !important;
+  }
+
+  .three-social-icons,
+  .social-actions.three-social-icons,
+  .icon-only-actions.three-social-icons {
+    width: min(100%, 300px) !important;
+    max-width: 300px !important;
+    min-height: 86px !important;
+    margin-top: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .social-pill,
+  .social-icon,
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 62px !important;
+    height: 62px !important;
+    min-height: 62px !important;
+  }
+
+  .hero-main-image {
+    margin-top: 8px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .glass-card,
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card,
+  .overview-card-two {
+    padding-top: 42px !important;
+    padding-bottom: 54px !important;
+  }
+
+  .card-title-row,
+  .center-card-title-row,
+  .task-title-row,
+  .tokenomics-title-row,
+  .overview-title-row {
+    margin-bottom: 24px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-bottom: 20px !important;
+  }
+
+  .x-task-intro {
+    grid-template-columns: 68px auto !important;
+    gap: 18px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .small-round-x {
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    border-width: 4px !important;
+  }
+
+  .ref-link-box {
+    border-width: 3px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .tokenomics-card h2,
+  .tokenomics-card .aligned-section-content h2 {
+    font-size: clamp(46px, 11vw, 64px) !important;
+  }
+
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    font-size: clamp(26px, 7vw, 36px) !important;
+  }
+
+  .tokenomics-center-copy .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    margin-top: -4px !important;
+    margin-bottom: 22px !important;
+  }
+
+  .footer-note {
+    min-height: 76px !important;
+    padding: 30px 8px 20px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-oh {
+    font-size: clamp(48px, 13vw, 64px) !important;
+  }
+
+  .three-social-icons,
+  .social-actions.three-social-icons,
+  .icon-only-actions.three-social-icons {
+    width: min(100%, 278px) !important;
+    max-width: 278px !important;
+  }
+
+  .social-pill,
+  .social-icon,
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 58px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+  }
+
+  .x-task-intro {
+    grid-template-columns: 62px auto !important;
+    gap: 14px !important;
+  }
+
+  .small-round-x {
+    width: 62px !important;
+    height: 62px !important;
+    min-width: 62px !important;
+    min-height: 62px !important;
+  }
+
+  .footer-note {
+    min-height: 70px !important;
+    padding: 28px 6px 18px !important;
+  }
+}
