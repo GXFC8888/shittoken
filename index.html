@@ -14,7 +14,6 @@
       font-style: normal;
       font-display: block;
     }
-
     html,
     body,
     body *,
@@ -46,31 +45,25 @@
         <img src="shit-logo-original-color-bold.png" alt="SHIT character" />
         <span class="brand-word-text">SHIT</span>
       </a>
-
       <button id="connectBtn" class="top-wallet-link" type="button">Link wallet</button>
     </header>
-
     <section class="hero-card">
       <p class="tagline hero-tagline">
         <span class="hero-oh">Oh yeah!</span>
         <span class="hero-copy">The craziest memecoin airdrop experiment in existence is starting! Claim $shit for free and have fun!!!</span>
       </p>
-
       <img class="hero-main-image" src="shit-dog-walker.jpeg" alt="SHIT character walking dogs" />
-
       <div class="social-actions icon-only-actions arc-icons three-social-icons">
         <a class="social-pill coming-soon-link arc-item arc-1" href="#" aria-label="CoinGecko">
           <span class="social-icon image-icon">
             <img src="coingecko.svg" alt="CoinGecko" />
           </span>
         </a>
-
         <a class="social-pill arc-item arc-2" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="X">
           <span class="social-icon image-icon x-image-icon">
             <img src="x.svg" alt="X" />
           </span>
         </a>
-
         <a class="social-pill coming-soon-link arc-item arc-3" href="#" aria-label="CoinMarketCap">
           <span class="social-icon image-icon">
             <img src="coinmarketcap.png" alt="CoinMarketCap" />
@@ -78,9 +71,7 @@
         </a>
       </div>
     </section>
-
     <div class="pepe-divider"></div>
-
     <section class="airdrop-stack" id="airdrop">
       <article class="glass-card referral-card">
         <div class="card-title-row center-card-title-row">
@@ -97,36 +88,29 @@
             </div>
           </div>
         </div>
-
         <div class="ref-link-box">
           <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
           <button id="copyRefBtn" class="icon-copy hidden-copy-button" type="button" aria-label="Copy referral link"></button>
         </div>
-
         <div class="two-actions">
           <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">Copy Link</button>
           <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
         </div>
-
         <p id="refMessage" class="message small-message"></p>
       </article>
-
       <div class="pepe-divider"></div>
-
       <article class="glass-card task-card">
         <div class="card-title-row center-card-title-row task-title-row">
           <div>
             <h2>Airdrop2: X Task</h2>
           </div>
         </div>
-
         <div class="x-task-intro">
           <div class="round-x small-round-x">
             <img src="x.svg" alt="X" />
           </div>
           <p>Complete X tasks<br />and claim<br />rewards.</p>
         </div>
-
         <div class="wallet-status-grid">
           <div class="status-pill">
             <span>Wallet</span>
@@ -137,9 +121,7 @@
             <strong id="xStatusText">Not connected</strong>
           </div>
         </div>
-
         <p id="message" class="message hidden"></p>
-
         <div id="missionList" class="mission-list compact-missions">
           <div class="mission-card empty">
             <h3>Connect your wallet to load the latest official X mission.</h3>
@@ -147,16 +129,13 @@
           </div>
         </div>
       </article>
-
       <div class="pepe-divider"></div>
-
       <article class="glass-card tokenomics-card" id="tokenomics">
         <div class="card-title-row tokenomics-title-row aligned-section-row center-card-title-row">
           <div class="aligned-section-content">
             <h2>Tokenomics</h2>
           </div>
         </div>
-
         <div class="tokenomics-copy aligned-card-copy tokenomics-center-copy">
           <p>Token Supply:</p>
           <p class="token-number">
@@ -172,16 +151,13 @@
           <p>No Taxes, No Bullshit. It’s that simple.</p>
         </div>
       </article>
-
       <div class="pepe-divider"></div>
-
       <article class="glass-card overview-card" id="project-overview">
         <div class="card-title-row overview-title-row aligned-section-row center-card-title-row">
           <div class="aligned-section-content">
             <h2>About SHIT</h2>
           </div>
         </div>
-
         <div class="overview-copy aligned-card-copy">
           <p>Pure community chaos. Free claim. No whale games.</p>
           <p>$SHIT is a wild memecoin airdrop experiment, launched organically by crypto lovers from communities all around the world.</p>
@@ -189,16 +165,13 @@
           <p>99% of the total $SHIT supply will be airdropped to the community.</p>
         </div>
       </article>
-
       <div class="pepe-divider"></div>
-
       <article class="glass-card overview-card overview-card-two" id="project-overview-2">
         <div class="card-title-row overview-title-row aligned-section-row center-card-title-row">
           <div class="aligned-section-content">
             <h2>About SHIT2</h2>
           </div>
         </div>
-
         <div class="overview-copy aligned-card-copy">
           <p>All you have to do is invite others to claim for free.</p>
           <p>The more you refer, the more you claim.</p>
@@ -207,12 +180,10 @@
         </div>
       </article>
     </section>
-
     <footer class="footer-note">
       © 2026 by Shit. All rights reserved!
     </footer>
   </main>
-
   <div id="customAlert" class="custom-alert hidden">
     <div class="custom-alert-box">
       <h3>Notice</h3>
@@ -220,7 +191,6 @@
       <button id="customAlertOk" type="button">OK</button>
     </div>
   </div>
-
   <script>
     document.addEventListener("click", (event) => {
       const proxy = event.target.closest(".copy-ref-proxy");
