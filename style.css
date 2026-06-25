@@ -1526,38 +1526,3 @@ h6 {
   }
 }
 
-.tokenomics-title-row {
-  margin-bottom: 18px !important;
-}
-
-.tokenomics-card h2,
-.tokenomics-card .aligned-section-content h2 {
-  margin-bottom: 18px !important;
-}
-
-.tokenomics-card .tokenomics-center-copy {
-  margin-top: 0 !important;
-}
-
-@media (max-width: 760px) {
-  .tokenomics-title-row {
-    margin-bottom: 14px !important;
-  }
-
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    margin-bottom: 14px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .tokenomics-title-row {
-    margin-bottom: 12px !important;
-  }
-
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    margin-bottom: 12px !important;
-  }
-}
-
