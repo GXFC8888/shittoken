@@ -1660,3 +1660,31 @@ h6 {
     margin-bottom: 36px !important;
   }
 }
+
+.referral-card h2 {
+  margin-bottom: 46px !important;
+}
+
+.referral-card .center-card-title-row {
+  margin-bottom: 42px !important;
+}
+
+@media (max-width: 760px) {
+  .referral-card h2 {
+    margin-bottom: 38px !important;
+  }
+
+  .referral-card .center-card-title-row {
+    margin-bottom: 34px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .referral-card h2 {
+    margin-bottom: 34px !important;
+  }
+
+  .referral-card .center-card-title-row {
+    margin-bottom: 30px !important;
+  }
+}
