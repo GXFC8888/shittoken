@@ -1,1389 +1,2799 @@
-const BSC_CHAIN_ID_HEX = "0x38";
-const BSC_RPC_URLS = [
-  "https://bsc-dataseed.binance.org",
-  "https://bsc-dataseed1.defibit.io",
-  "https://bsc-dataseed1.ninicoin.io",
-  "https://bsc.publicnode.com",
-  "https://rpc.ankr.com/bsc"
-];
-
-const OFFICIAL_X_USERNAME = "GXFCLJ";
-const OFFICIAL_X_WEB_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
-const OFFICIAL_X_APP_URL = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
-
-const REFERRAL_AIRDROP_CONTRACT = "0x45B5004bbeF9575ebEC3C84b493Ae0D4daF53403";
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-const REFERRAL_AIRDROP_ABI = [
-  "function claim(address referrer) payable",
-  "function claimFee() view returns (uint256)",
-  "function claimed(address user) view returns (bool)"
-];
-
-const TWITTER_TASK_CLAIM_ABI = [
-  "function claim(bytes32 tweetHash, uint256 deadline, bytes signature) payable",
-  "function claimFee() view returns (uint256)",
-  "function claimAmount() view returns (uint256)",
-  "function signer() view returns (address)",
-  "function isClaimed(address user, bytes32 tweetHash) view returns (bool)"
-];
-
-let provider = null;
-let signer = null;
-let userAddress = null;
-
-let currentTasks = [];
-let currentProgress = [];
-let currentXConnected = false;
-let currentXUsername = null;
-
-let isConnectingWallet = false;
-let isLoadingTasks = false;
-let isVerifying = false;
-
-let noNewMissionLocked = false;
-let noNewMissionTaskId = null;
-
-let currentTweetId =
-  localStorage.getItem("current_official_tweet_id") || null;
-
-const connectBtn = document.getElementById("connectBtn");
-
-const missionList = document.getElementById("missionList");
-
-const message = document.getElementById("message");
-const walletText = document.getElementById("walletText");
-
-const xStatusText = document.getElementById("xStatusText");
-
-const refLinkInput = document.getElementById("refLink");
-const copyRefBtn = document.getElementById("copyRefBtn");
-const claimReferralBtn = document.getElementById("claimReferralBtn");
-const refMessage = document.getElementById("refMessage");
-
-const COMING_SOON_TEXT = "$SHIT is still in the airdrop phase. Trading has not launched yet.";
-let isShowingComingSoonAlert = false;
-
-function showCustomAlert(text) {
-  const alertBox = document.getElementById("customAlert");
-  const alertText = document.getElementById("customAlertText");
-  const alertOk = document.getElementById("customAlertOk");
-
-  if (!alertBox || !alertText || !alertOk) {
-    showMessage(text, "ok");
-    isShowingComingSoonAlert = false;
-    return;
-  }
-
-  alertText.innerText = text;
-  alertBox.classList.remove("hidden");
-
-  alertOk.onclick = () => {
-    alertBox.classList.add("hidden");
-    isShowingComingSoonAlert = false;
-  };
-
-  alertBox.onclick = (event) => {
-    if (event.target === alertBox) {
-      alertBox.classList.add("hidden");
-      isShowingComingSoonAlert = false;
-    }
-  };
+@font-face {
+  font-family: "GentyRegular";
+  src: url("/webFonts/GentyRegular/font.woff2") format("woff2"),
+  url("/webFonts/GentyRegular/font.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
 }
 
-function bindComingSoonLinks() {
-  document.querySelectorAll(".coming-soon-link").forEach((link) => {
-    if (link.dataset.boundComingSoon === "true") return;
-
-    link.dataset.boundComingSoon = "true";
-
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (isShowingComingSoonAlert) return;
-
-      isShowingComingSoonAlert = true;
-      showMessage(COMING_SOON_TEXT, "ok");
-      showCustomAlert(COMING_SOON_TEXT);
-    });
-  });
+* {
+  box-sizing: border-box;
+  font-family: "GentyRegular", Arial, sans-serif !important;
 }
 
-function showMessage(text, type) {
-  if (!message) return;
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: "GentyRegular", Arial, sans-serif !important;
+}
 
-  message.innerText = text || "";
-  message.classList.remove("ok", "err");
+:root {
+  --yellow: #fcb609;
+  --yellow-deep: #eaa000;
+  --gold: #fcb609;
+  --ink: #111111;
+  --soft-white: #fffdf4;
+  --muted: rgba(17, 17, 17, .68);
+  --card: rgba(255, 214, 35, .38);
+  --border-light: rgba(255, 255, 255, .75);
+  --shadow: rgba(0, 0, 0, .24);
+}
 
-  if (type === "ok") {
-    message.classList.add("ok");
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: #fcb609;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: none;
+}
+
+body::after {
+  content: none;
+}
+
+.page-shell {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  padding: 24px 42px 46px;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 120px;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--soft-white);
+  text-decoration: none;
+  font-size: clamp(48px, 8vw, 82px);
+  font-weight: 900;
+  font-style: normal;
+  letter-spacing: 0;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+  transform: none;
+  min-width: 0;
+}
+
+.brand-mark img {
+  width: 112px;
+  height: 112px;
+  object-fit: contain;
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+.brand-mark img:first-child,
+.card-avatar,
+.ghost-character {
+  filter: none;
+}
+
+.brand-word-text {
+  display: inline-block;
+  color: #fffdf4;
+  font-size: clamp(58px, 7vw, 98px);
+  font-weight: normal;
+  line-height: .78;
+  letter-spacing: 0;
+  -webkit-text-stroke: 1.5px #111;
+  paint-order: stroke fill;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, .25),
+5px 7px 8px rgba(0, 0, 0, .18);
+  flex: 0 0 auto;
+}
+
+.brand-word-img {
+  display: none;
+}
+
+.top-wallet-link {
+  flex: 0 0 auto;
+  min-width: 190px;
+  min-height: 58px;
+  padding: 15px 32px 9px;
+  border: 2px solid rgba(255, 255, 255, .92);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  color: var(--soft-white);
+  font-size: clamp(18px, 2.2vw, 25px);
+  font-weight: 900;
+  letter-spacing: .02em;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18), 0 6px 12px rgba(0, 0, 0, .10);
+  transition: transform .12s ease, background .12s ease, opacity .12s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.top-wallet-link:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, .16);
+}
+
+.top-wallet-link:active {
+  transform: translateY(2px);
+}
+
+.top-wallet-link:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hero-card {
+  position: relative;
+  min-height: 490px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 40px 10px 22px;
+  border-top: 1px solid rgba(0, 0, 0, .08);
+  box-shadow: inset 0 14px 14px -22px rgba(0, 0, 0, .55);
+}
+
+.ghost-character {
+  position: absolute;
+  right: -30px;
+  top: -12px;
+  width: min(60vw, 520px);
+  opacity: .10;
+  mix-blend-mode: normal;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.shit-title {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 0 auto;
+  color: #fffdf4;
+  font-size: clamp(105px, 14vw, 190px);
+  font-weight: normal;
+  line-height: .78;
+  letter-spacing: 0;
+  -webkit-text-stroke: 2px #111;
+  paint-order: stroke fill;
+  text-shadow: 0 5px 0 rgba(0, 0, 0, .28),
+6px 8px 8px rgba(0, 0, 0, .18);
+  transform: rotate(-4deg);
+}
+
+.shit-title-img {
+  display: none;
+}
+
+.tagline {
+  position: relative;
+  z-index: 1;
+  max-width: 820px;
+  margin: 12px auto 40px;
+  color: #111;
+  font-size: clamp(27px, 4vw, 43px);
+  line-height: 1.28;
+  font-weight: 500;
+  letter-spacing: .02em;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .22);
+}
+
+.shit-inline {
+  display: inline-block;
+  color: var(--soft-white);
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: -1px;
+  -webkit-text-stroke: 2px #161616;
+  text-shadow: 3px 4px 0 rgba(0, 0, 0, .24), 0 3px 4px rgba(0, 0, 0, .28);
+  transform: rotate(-3deg);
+}
+
+.tagline .shit-inline {
+  all: unset;
+}
+
+.social-actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.social-pill,
+.btn,
+.wallet-cta,
+.top-wallet-link {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.social-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-height: 104px;
+  padding: 14px 24px;
+  color: var(--ink);
+  text-decoration: none;
+  background: rgba(255, 255, 255, .94);
+  border: 2px solid rgba(255, 255, 255, .86);
+  border-radius: 999px;
+  box-shadow: 0 15px 20px rgba(0, 0, 0, .20), inset 0 -3px 0 rgba(0, 0, 0, .08);
+}
+
+.social-pill strong {
+  font-size: clamp(24px, 3vw, 35px);
+  font-weight: 900;
+}
+
+.social-icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 45px;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.x-icon,
+.round-x {
+  background: #111;
+}
+
+.tg-icon {
+  background: linear-gradient(135deg, #36c6ff, #198bd8);
+  font-size: 38px;
+}
+
+.image-icon {
+  background: transparent;
+}
+
+.image-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.x-image-icon img {
+  background: #111;
+  border-radius: 50%;
+}
+
+.icon-only-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  flex-wrap: nowrap;
+}
+
+.icon-only-actions .social-pill {
+  width: 76px;
+  height: 76px;
+  min-height: 76px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  flex: 0 0 auto;
+}
+
+.icon-only-actions .social-icon {
+  width: 76px;
+  height: 76px;
+  font-size: 44px;
+  box-shadow: 0 12px 16px rgba(0, 0, 0, .18);
+  overflow: hidden;
+}
+
+.icon-only-actions .tg-icon {
+  font-size: 46px;
+}
+
+.airdrop-stack {
+  display: grid;
+  margin-top: 10px;
+}
+
+.glass-card {
+  position: relative;
+  padding: 26px 32px 28px;
+  background: var(--card);
+  border: 2px solid var(--border-light);
+  border-radius: 24px;
+  box-shadow: 0 18px 25px rgba(0, 0, 0, .20), inset 0 1px 0 rgba(255, 255, 255, .68);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 22px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .35);
+}
+
+.card-title-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.card-avatar,
+.round-x {
+  display: grid;
+  place-items: center;
+  width: 116px;
+  height: 116px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, .16);
+}
+
+.card-avatar {
+  object-fit: cover;
+  background: #fcb609;
+  padding: 0;
+  mix-blend-mode: normal;
+  overflow: hidden;
+}
+
+.round-x {
+  color: #fff;
+  font-size: 70px;
+  font-weight: 500;
+  background: #111;
+  overflow: hidden;
+}
+
+.round-x img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.card-title-row p {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(20px, 3vw, 28px);
+  line-height: 1.22;
+  font-weight: 600;
+}
+
+.ref-link-box {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  min-height: 76px;
+  margin: 24px 0 22px;
+  padding: 8px 26px;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: #111;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ref-link-box textarea {
+  height: 42px;
+  min-height: 42px;
+}
+
+.icon-copy {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 44px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.icon-copy.hidden-copy-button,
+.icon-copy.hidden {
+  display: none !important;
+}
+
+.copy-ref-proxy::before,
+.copy-ref-proxy::after {
+  content: none !important;
+}
+
+.two-actions,
+.mission-actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 78px;
+  border: 2px solid rgba(255, 255, 255, .74);
+  border-radius: 999px;
+  padding: 16px 22px;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 10px 16px rgba(0, 0, 0, .22), inset 0 -3px 0 rgba(0, 0, 0, .08);
+  transition: transform .12s ease, opacity .12s ease;
+}
+
+.btn:hover,
+.social-pill:hover,
+.wallet-cta:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active,
+.social-pill:active,
+.wallet-cta:active {
+  transform: translateY(2px);
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.btn.dark {
+  color: #fff;
+  background: #111;
+}
+
+.btn.light,
+.btn.gold {
+  color: #111;
+  background: rgba(255, 255, 255, .94);
+}
+
+.task-card {
+  padding-bottom: 22px;
+}
+
+.status-pill span {
+  display: block;
+  color: rgba(17, 17, 17, .62);
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.status-pill strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+
+.message {
+  min-height: 22px;
+  margin: 14px 0 0;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.message.ok {
+  color: #0f6b10;
+}
+
+.message.err {
+  color: #b00020;
+}
+
+.small-message {
+  margin-top: 12px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.mission-summary {
+  display: none;
+}
+
+.mission-card {
+  background: rgba(255, 255, 255, .22);
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.mission-card.empty h3,
+.mission-card h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+  line-height: 1.05;
+}
+
+.mission-card p {
+  margin: 0 0 12px;
+}
+
+.mission-head {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.reward {
+  margin-bottom: 0 !important;
+}
+
+.mission-status {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #111;
+  background: rgba(255, 255, 255, .86);
+  border: 1px solid rgba(17, 17, 17, .12);
+}
+
+.mission-status.done {
+  background: #9eff9e;
+}
+
+.mission-actions .btn {
+  min-height: 72px;
+  margin: 0;
+  font-size: clamp(20px, 3vw, 29px);
+}
+
+.wallet-cta {
+  width: 100%;
+  min-height: 120px;
+  margin: 26px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  border: 3px solid rgba(255, 255, 255, .76);
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 18px 24px rgba(0, 0, 0, .28), inset 0 -4px 0 rgba(255, 255, 255, .08);
+  font-size: clamp(36px, 6vw, 57px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  cursor: pointer;
+}
+
+.wallet-cta span {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  color: #111;
+  font-size: 54px;
+}
+
+.overview-card {
+  margin-top: 0;
+}
+
+.overview-title-row {
+  margin-bottom: 22px;
+}
+
+.overview-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+}
+
+.overview-copy p {
+  margin: 0;
+  color: #111;
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.32;
+  font-weight: 600;
+}
+
+.footer-note {
+  padding: 26px 10px 0;
+  text-align: center;
+  color: rgba(17, 17, 17, .62);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.custom-alert {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, .55);
+}
+
+.custom-alert.hidden {
+  display: none !important;
+}
+
+.custom-alert-box {
+  width: min(92vw, 520px);
+  padding: 30px 32px 28px;
+  border-radius: 24px;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+  text-align: left;
+}
+
+.custom-alert-box h3 {
+  margin: 0 0 16px;
+  font-size: 34px;
+  line-height: 1.1;
+  color: #fff;
+}
+
+.custom-alert-box p {
+  margin: 0 0 26px;
+  font-size: 24px;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.custom-alert-box button {
+  display: block;
+  margin-left: auto;
+  min-width: 110px;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: #fcb609;
+  color: #111;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 14px rgba(0, 0, 0, .25);
+}
+
+.custom-alert-box button:active {
+  transform: translateY(2px);
+}
+
+.brand-word-text {
+  transform: translateY(16px);
+}
+
+.hero-tagline {
+  display: block;
+  max-width: 930px;
+  line-height: 1.18;
+}
+
+.hero-oh {
+  display: block;
+  font-size: clamp(48px, 6.8vw, 76px);
+  font-weight: 900;
+  line-height: .98;
+  margin-bottom: 8px;
+  letter-spacing: .01em;
+}
+
+.hero-copy {
+  display: block;
+  font-size: clamp(34px, 4.6vw, 52px);
+  line-height: 1.18;
+}
+
+.social-actions.icon-only-actions.arc-icons {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.arc-icons .arc-item {
+  transition: transform .16s ease, opacity .16s ease;
+}
+
+.tokenomics-card,
+.overview-card {
+  margin-top: 0;
+}
+
+.aligned-card-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  padding-left: 144px;
+}
+
+.aligned-card-copy p {
+  margin: 0;
+  color: #111;
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.32;
+  font-weight: 600;
+}
+
+.aligned-card-copy strong {
+  font-weight: 900;
+}
+
+.referral-card > .center-card-title-row,
+.tokenomics-card > .center-card-title-row,
+.overview-card > .center-card-title-row {
+  justify-content: center;
+  text-align: center;
+  gap: 0;
+}
+
+.referral-card > .center-card-title-row > div,
+.tokenomics-card > .center-card-title-row > div,
+.overview-card > .center-card-title-row > div {
+  width: 100%;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2 {
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1;
+}
+
+.referral-card .card-title-row p,
+.task-card .card-title-row p,
+.tokenomics-card .card-title-row p,
+.overview-card .card-title-row p {
+  font-size: clamp(22px, 3.2vw, 31px);
+}
+
+.social-actions.icon-only-actions.arc-icons {
+  max-width: 690px;
+  margin: 4px auto 26px;
+  gap: 20px;
+}
+
+.arc-icons .social-pill,
+.arc-icons .social-icon {
+  width: 80px;
+  height: 80px;
+  min-height: 80px;
+}
+
+.arc-icons .arc-item:hover {
+  transform: translateY(-38px) scale(1.04);
+}
+
+.arc-icons .arc-1:hover,
+.arc-icons .arc-5:hover {
+  transform: translateY(36px) scale(1.04);
+}
+
+.arc-icons .arc-2:hover,
+.arc-icons .arc-4:hover {
+  transform: translateY(4px) scale(1.04);
+}
+
+.hero-tagline {
+  margin: 18px auto 18px;
+}
+
+.tokenomics-card > .aligned-card-copy,
+.overview-card > .aligned-card-copy {
+  padding-left: 18px !important;
+  padding-right: 10px !important;
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.tokenomics-card > .center-card-title-row,
+.overview-card > .center-card-title-row {
+  justify-content: center !important;
+  text-align: center !important;
+  margin-bottom: 8px !important;
+}
+
+.tokenomics-card .aligned-section-content,
+.overview-card .aligned-section-content {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  font-size: clamp(34px, 4.8vw, 54px) !important;
+  line-height: 1.02 !important;
+  margin: 0 0 8px !important;
+  text-align: center !important;
+}
+
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p {
+  margin: 0 !important;
+  color: #111 !important;
+  font-size: clamp(18px, 2.4vw, 24px) !important;
+  line-height: 1.32 !important;
+  font-weight: 600 !important;
+}
+
+.tokenomics-card > .aligned-card-copy p,
+.overview-card > .aligned-card-copy p {
+  font-size: clamp(18px, 2.4vw, 24px) !important;
+  font-weight: 600 !important;
+}
+
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p {
+  text-align: left !important;
+  padding-left: 18px !important;
+  padding-right: 10px !important;
+  box-sizing: border-box !important;
+}
+
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p {
+  display: none !important;
+}
+
+.tokenomics-card > .aligned-card-copy,
+.overview-card > .aligned-card-copy {
+  margin-top: 0 !important;
+  gap: 12px !important;
+}
+
+.tokenomics-card > .aligned-card-copy p,
+.overview-card > .aligned-card-copy p {
+  margin: 0 !important;
+  line-height: 1.32 !important;
+  text-align: left !important;
+}
+
+body,
+p,
+span,
+div,
+input,
+textarea,
+select,
+a,
+button,
+.message,
+.status-pill span,
+.status-pill strong,
+.mission-card p,
+.mission-link,
+.reward,
+.aligned-card-copy p,
+.card-title-row p,
+.overview-copy p,
+.ref-link-box input,
+.ref-link-box textarea {
+  font-weight: 400 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.hero-oh,
+.brand-word-text,
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.mission-card h3,
+.custom-alert-box h3 {
+  font-weight: 900 !important;
+}
+
+strong {
+  font-weight: 400 !important;
+}
+
+.btn,
+.top-wallet-link,
+.wallet-cta,
+.mission-actions .btn,
+.two-actions .btn,
+.copy-ref-proxy,
+#claimReferralBtn,
+#copyRefBtnMobile,
+.open-task-btn,
+.verify-task-btn,
+.custom-alert-box button {
+  font-weight: 400 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding-top: 20px !important;
+  padding-bottom: 12px !important;
+}
+
+.referral-card h2 {
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  font-weight: 400 !important;
+}
+
+.task-title-row {
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 0 !important;
+  margin-bottom: 14px !important;
+}
+
+.task-title-row > div {
+  width: 100% !important;
+}
+
+.x-task-intro {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 18px;
+}
+
+.small-round-x {
+  width: 68px !important;
+  height: 68px !important;
+  border-width: 3px !important;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, .16) !important;
+}
+
+.x-task-intro p {
+  margin: 0 !important;
+  color: #111 !important;
+  font-size: clamp(22px, 3.2vw, 31px) !important;
+  line-height: 1.22 !important;
+  font-weight: 400 !important;
+}
+
+.mission-head h3,
+.mission-head .reward {
+  text-align: center !important;
+  font-weight: 400 !important;
+}
+
+.tokenomics-center-copy {
+  text-align: center !important;
+  display: grid !important;
+  gap: 12px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+}
+
+.tokenomics-center-copy p {
+  text-align: center !important;
+  margin: 0 !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+}
+
+.tokenomics-center-copy .token-number {
+  display: grid !important;
+  gap: 0 !important;
+  font-size: clamp(25px, 4vw, 44px) !important;
+  line-height: 1.05 !important;
+}
+
+.tokenomics-title-row,
+.overview-title-row {
+  margin-bottom: 12px !important;
+}
+
+.overview-card .aligned-section-content h2 {
+  text-align: center !important;
+}
+
+.hero-copy {
+  font-weight: 400 !important;
+}
+
+.social-actions.icon-only-actions.arc-icons {
+  min-height: 168px !important;
+}
+
+.arc-icons .arc-1 {
+  transform: translateY(46px) !important;
+}
+
+.arc-icons .arc-2 {
+  transform: translateY(20px) !important;
+}
+
+.arc-icons .arc-3 {
+  transform: translateY(-40px) !important;
+}
+
+.arc-icons .arc-4 {
+  transform: translateY(20px) !important;
+}
+
+.arc-icons .arc-5 {
+  transform: translateY(46px) !important;
+}
+
+.hero-copy,
+.card-title-row p,
+.referral-card .card-title-row p,
+.task-card .card-title-row p,
+.x-task-intro p,
+.tokenomics-card .aligned-section-content p,
+.overview-card .aligned-section-content p,
+.tokenomics-card > .aligned-card-copy p,
+.overview-card > .aligned-card-copy p,
+.overview-copy p,
+.tokenomics-center-copy p,
+.mission-card p,
+.reward,
+.message,
+.small-message,
+.status-pill span,
+.status-pill strong,
+.mission-link,
+.ref-link-box input,
+.ref-link-box textarea {
+  font-weight: 400 !important;
+}
+
+.btn,
+.top-wallet-link,
+.wallet-cta,
+.mission-actions .btn,
+.two-actions .btn,
+.copy-ref-proxy,
+#claimReferralBtn,
+#copyRefBtnMobile,
+.open-task-btn,
+.verify-task-btn {
+  font-weight: 400 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding-top: 18px !important;
+  padding-bottom: 10px !important;
+}
+
+.top-wallet-link {
+  padding-top: 15px !important;
+  padding-bottom: 9px !important;
+}
+
+.ref-link-box {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  transform: translateY(3px) !important;
+}
+
+.referral-card .card-title-row,
+.referral-card > .center-card-title-row {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.referral-card .card-title-row > div,
+.referral-card > .center-card-title-row > div {
+  width: 100% !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  width: 100% !important;
+  margin: 0 0 12px !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  text-align: left !important;
+  padding-left: 18px !important;
+  padding-right: 0 !important;
+}
+
+.referral-card .ref-link-box,
+.referral-card .two-actions,
+.referral-card #refMessage {
+  margin-left: 18px !important;
+  width: calc(100% - 18px) !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy {
+  display: grid !important;
+  justify-items: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin: 12px auto 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy p {
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+  line-height: 1.28 !important;
+  font-weight: 400 !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 0 !important;
+  text-align: center !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number span {
+  display: block !important;
+  text-align: center !important;
+}
+
+.overview-card > .aligned-card-copy p {
+  text-align: left !important;
+  font-weight: 400 !important;
+}
+
+.mission-head > div,
+.mission-head h3,
+.mission-head .reward {
+  text-align: center !important;
+}
+
+.mission-status {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 12px auto 0 !important;
+  font-weight: 400 !important;
+}
+
+.pepe-divider {
+  width: 100vw;
+  height: 20px;
+  margin-left: calc(50% - 50vw);
+  margin-top: 28px;
+  margin-bottom: 28px;
+  background-image: url("pepe-divider.svg");
+  background-repeat: repeat-x;
+  background-size: 481px 100%;
+  background-position: center top;
+  transform: scale(1, -1);
+  pointer-events: none;
+}
+
+.hero-card + .pepe-divider {
+  margin-top: 22px;
+  margin-bottom: 28px;
+}
+
+.airdrop-stack {
+  gap: 0 !important;
+}
+
+.airdrop-stack > .glass-card {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card {
+  border: 2px solid rgb(255, 254, 248) !important;
+  border-radius: 0 30px 0 30px !important;
+  background: rgba(255, 214, 35, .5) !important;
+  box-shadow: 0 0 50px 20px rgba(255, 254, 248, .18) !important;
+}
+
+.referral-card::before,
+.task-card::before,
+.tokenomics-card::before,
+.overview-card::before {
+  content: none !important;
+}
+
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card {
+  padding-top: 44px !important;
+  padding-bottom: 44px !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  margin-top: 0 !important;
+}
+
+.referral-card > .center-card-title-row,
+.task-card > .task-title-row,
+.tokenomics-card > .tokenomics-title-row,
+.overview-card > .overview-title-row {
+  margin-bottom: 28px !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p,
+.x-task-intro,
+.overview-card > .aligned-card-copy,
+.tokenomics-card > .tokenomics-center-copy {
+  margin-top: 0 !important;
+}
+
+.referral-card,
+.task-card,
+.overview-card {
+  padding-top: 66px !important;
+  padding-bottom: 58px !important;
+}
+
+.tokenomics-card {
+  padding-top: 76px !important;
+  padding-bottom: 70px !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.overview-card h2,
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  margin-top: 0 !important;
+  margin-bottom: 38px !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  margin-top: 6px !important;
+  margin-bottom: 28px !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy p:nth-last-child(2) {
+  margin-top: 42px !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy p:last-child {
+  margin-top: 22px !important;
+}
+
+.hero-dogs-wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto 18px;
+  pointer-events: none;
+}
+
+.hero-dogs-image {
+  display: block;
+  width: min(86vw, 760px);
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.hero-card .hero-tagline {
+  margin-bottom: 8px !important;
+}
+
+.hero-card .arc-icons {
+  margin-top: 0 !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  font-size: clamp(42px, 5.6vw, 68px) !important;
+  line-height: 1.02 !important;
+  margin-bottom: 42px !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p,
+.task-card .card-title-row p,
+.x-task-intro p,
+.tokenomics-center-copy p,
+.tokenomics-card > .tokenomics-center-copy p,
+.overview-card > .aligned-card-copy p,
+.overview-copy p,
+.mission-card p,
+.reward,
+.mission-link,
+.message,
+.small-message {
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  font-size: clamp(24px, 3.4vw, 36px) !important;
+  line-height: 1.15 !important;
+  font-weight: 400 !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  font-size: clamp(42px, 6.2vw, 74px) !important;
+  line-height: 1.05 !important;
+}
+
+.tokenomics-card > .tokenomics-center-copy {
+  gap: 34px !important;
+}
+
+.tokenomics-card > .tokenomics-title-row {
+  margin-bottom: 70px !important;
+}
+
+.referral-card > .center-card-title-row,
+.task-card > .task-title-row,
+.overview-card > .overview-title-row {
+  margin-bottom: 42px !important;
+}
+
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card,
+.glass-card.referral-card,
+.glass-card.task-card,
+.glass-card.tokenomics-card,
+.glass-card.overview-card {
+  background: #fcb609 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.referral-card::before,
+.task-card::before,
+.tokenomics-card::before,
+.overview-card::before,
+.glass-card.referral-card::before,
+.glass-card.task-card::before,
+.glass-card.tokenomics-card::before,
+.glass-card.overview-card::before {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ref-link-box {
+  background: rgba(255, 220, 45, .55) !important;
+  border: 2px dashed rgba(17, 17, 17, .58) !important;
+  border-radius: 22px !important;
+  box-shadow: none !important;
+}
+
+.mission-card,
+.status-pill {
+  background: #fcb609 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.airdrop-stack > .glass-card {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.status-pill {
+  min-width: 0 !important;
+}
+
+.status-pill strong {
+  min-width: 0 !important;
+}
+
+.referral-card h2 {
+  margin-top: 0 !important;
+  margin-bottom: 42px !important;
+}
+
+.referral-card > .center-card-title-row {
+  margin-bottom: 48px !important;
+}
+
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p {
+  margin-top: 0 !important;
+  line-height: 1.38 !important;
+}
+
+.referral-card .ref-link-box {
+  margin-top: 0 !important;
+}
+
+.mission-status,
+.mission-status.done {
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+}
+
+.mission-status {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.mission-status::before {
+  content: "Reward: 1 drop";
+  display: block;
+  color: #111;
+  font-size: clamp(26px, 3.5vw, 38px);
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.mission-card p {
+  color: rgba(17, 17, 17, .72) !important;
+  font-size: clamp(23px, 3.1vw, 34px) !important;
+  line-height: 1.35 !important;
+  font-weight: 400 !important;
+}
+
+.mission-card p,
+.mission-card .mission-link {
+  text-align: left !important;
+}
+
+.wallet-status-grid {
+  grid-template-columns: 1fr !important;
+  gap: 18px !important;
+}
+
+.status-pill {
+  align-items: baseline !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+
+.status-pill strong {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.mission-card {
+  color: #111 !important;
+}
+
+.mission-head {
+  grid-template-columns: 1fr !important;
+  justify-items: center !important;
+  gap: 8px !important;
+}
+
+.mission-head > div {
+  gap: 8px !important;
+  justify-items: center !important;
+  text-align: center !important;
+}
+
+.mission-head h3 {
+  margin: 0 !important;
+  text-align: center !important;
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+}
+
+.status-pill span,
+.status-pill strong {
+  display: inline !important;
+  margin: 0 !important;
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.3 !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  white-space: normal !important;
+}
+
+.status-pill strong {
+  margin-left: 0 !important;
+}
+
+#xStatus,
+#walletStatus {
+  display: inline !important;
+  margin-left: 0 !important;
+}
+
+#xMessage,
+#taskMessage {
+  display: none !important;
+}
+
+.mission-head {
+  margin: 0 0 22px !important;
+}
+
+.mission-head > div {
+  display: block !important;
+}
+
+.mission-link {
+  display: block !important;
+  margin: 26px 0 18px !important;
+  color: #111 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  text-decoration: none !important;
+  font-size: clamp(24px, 3.3vw, 36px) !important;
+  line-height: 1.3 !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+.mission-link::before {
+  content: "Wallet connected. Connect X first, then complete the latest mission.";
+  display: block;
+  color: #078225 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  text-decoration: none !important;
+  font-size: clamp(24px, 3.3vw, 36px) !important;
+  line-height: 1.35 !important;
+  font-weight: 400 !important;
+  margin-bottom: 0 !important;
+}
+
+.mission-link[href] {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.mission-link[href]::after {
+  content: attr(href);
+  display: block;
+  color: #111 !important;
+  font-size: clamp(24px, 3.3vw, 36px) !important;
+  line-height: 1.3 !important;
+  font-weight: 400 !important;
+  text-decoration: underline !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  margin-top: 18px !important;
+}
+
+.x-task-intro p,
+.task-title-row p,
+.task-card .card-title-row p {
+  text-decoration: none !important;
+}
+
+.task-card .task-title-row p,
+.x-task-intro p {
+  color: #111 !important;
+  text-align: left !important;
+  font-weight: 400 !important;
+  text-shadow: none !important;
+}
+
+.task-card .task-title-row p::first-letter,
+.x-task-intro p::first-letter {
+  text-transform: none !important;
+}
+
+.x-always-note {
+  display: block !important;
+  color: #078225 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  text-align: left !important;
+  font-size: clamp(24px, 3.3vw, 36px) !important;
+  line-height: 1.35 !important;
+  font-weight: 400 !important;
+  margin: 22px 0 34px !important;
+}
+
+.mission-status,
+.mission-status.done,
+#xMessage,
+#taskMessage {
+  display: none !important;
+}
+
+.x-always-note,
+#xMessage,
+#taskMessage {
+  display: none !important;
+}
+
+.wallet-status-grid {
+  display: block !important;
+  text-align: center !important;
+  margin-top: 28px !important;
+}
+
+.status-pill:first-child {
+  display: none !important;
+}
+
+.status-pill {
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.status-pill span {
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.status-pill span::after {
+  content: "X:";
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+}
+
+.status-pill strong,
+#xStatus {
+  display: inline !important;
+  margin-left: 0 !important;
+  color: #111 !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+  white-space: normal !important;
+  text-align: center !important;
+}
+
+.mission-head {
+  display: block !important;
+}
+
+.mission-head h3 {
+  display: none !important;
+}
+
+.mission-head .reward {
+  color: #111 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: none !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.25 !important;
+  font-weight: 400 !important;
+}
+
+.mission-status,
+.mission-status.done {
+  display: none !important;
+}
+
+.mission-card p {
+  display: none !important;
+}
+
+.mission-link,
+.mission-link[href],
+.mission-link[href]::before,
+.mission-link[href]::after {
+  display: none !important;
+  content: none !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-decoration: none !important;
+}
+
+.hero-main-image {
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  width: min(58vw, 360px) !important;
+  height: auto !important;
+  margin: 2px auto 12px !important;
+  object-fit: contain !important;
+  filter: none !important;
+}
+
+.x-task-message,
+#message.message {
+  display: block !important;
+  min-height: auto !important;
+  margin: 16px auto 10px !important;
+  color: #0f6b10 !important;
+  font-size: clamp(21px, 3vw, 30px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.wallet-status-grid {
+  margin-bottom: 0 !important;
+}
+
+.mission-list {
+  margin-top: 0 !important;
+}
+
+.mission-card {
+  padding-top: 0 !important;
+}
+
+.mission-head {
+  margin-top: 0 !important;
+  margin-bottom: 32px !important;
+  text-align: center !important;
+}
+
+.mission-head .reward {
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.two-actions {
+  margin-top: 34px !important;
+}
+
+.referral-card .ref-link-box {
+  margin-bottom: 30px !important;
+}
+
+.mission-actions {
+  margin-top: 34px !important;
+}
+
+html,
+body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.page-shell,
+.hero-card,
+.hero-top,
+.hero-tagline,
+.hero-dogs-wrap,
+.social-actions.icon-only-actions.arc-icons {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.page-shell {
+  overflow-x: hidden !important;
+}
+
+.hero-card {
+  overflow: hidden !important;
+}
+
+.hero-tagline {
+  width: 100% !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  overflow-wrap: break-word !important;
+}
+
+.hero-oh,
+.hero-copy {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+}
+
+.hero-dogs-wrap {
+  overflow: hidden !important;
+}
+
+.hero-dogs-image {
+  max-width: 100% !important;
+  object-fit: contain !important;
+}
+
+#message.message {
+  display: none !important;
+}
+
+.mission-card .x-task-message {
+  display: block !important;
+  order: 2 !important;
+  margin: 18px auto 30px !important;
+  color: #0f6b10 !important;
+  text-align: center !important;
+  font-size: clamp(21px, 3vw, 30px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.mission-card .mission-head {
+  order: 1 !important;
+}
+
+.mission-card .mission-actions {
+  order: 3 !important;
+}
+
+.mission-card {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* keep hidden normal X task status messages, but show real errors */
+#message.message.err {
+  display: block !important;
+  min-height: auto !important;
+  margin: 18px auto 10px !important;
+  color: #b00020 !important;
+  text-align: center !important;
+  font-size: clamp(20px, 3vw, 28px) !important;
+  line-height: 1.32 !important;
+  font-weight: 400 !important;
+}
+
+/* mobile layout fix */
+@media (max-width: 760px) {
+  .page-shell {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    overflow-x: hidden !important;
   }
 
-  if (type === "err") {
-    message.classList.add("err");
+  .hero-top {
+    min-height: 82px !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .brand-mark {
+    max-width: calc(100% - 118px) !important;
+    gap: 6px !important;
+    overflow: visible !important;
+  }
+
+  .brand-mark img {
+    width: 66px !important;
+    height: 66px !important;
+    flex: 0 0 66px !important;
+    object-fit: contain !important;
+  }
+
+  .brand-word-text {
+    font-size: 42px !important;
+    line-height: .85 !important;
+    transform: translateY(5px) !important;
+    white-space: nowrap !important;
+  }
+
+  .top-wallet-link {
+    min-width: 104px !important;
+    min-height: 42px !important;
+    padding: 11px 8px 6px !important;
+    font-size: 13px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .hero-card {
+    min-height: auto !important;
+    padding: 22px 0 28px !important;
+    overflow: hidden !important;
+  }
+
+  .hero-tagline {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 16px auto 10px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-oh {
+    font-size: clamp(42px, 12vw, 58px) !important;
+    line-height: 1 !important;
+    display: block !important;
+    white-space: normal !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(25px, 7vw, 34px) !important;
+    line-height: 1.22 !important;
+    display: block !important;
+    max-width: 100% !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  .hero-main-image {
+    width: min(72vw, 300px) !important;
+    max-width: 300px !important;
+    height: auto !important;
+    margin: 10px auto 18px !important;
+    display: block !important;
+    object-fit: contain !important;
+  }
+
+  .social-actions.icon-only-actions.arc-icons {
+    width: 100% !important;
+    max-width: 360px !important;
+    min-height: 92px !important;
+    margin: 4px auto 18px !important;
+    gap: 6px !important;
+    overflow: visible !important;
+    justify-content: center !important;
+  }
+
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 54px !important;
+    height: 54px !important;
+    min-height: 54px !important;
+  }
+
+  .arc-icons .arc-1 {
+    transform: translateY(18px) !important;
+  }
+
+  .arc-icons .arc-2 {
+    transform: translateY(7px) !important;
+  }
+
+  .arc-icons .arc-3 {
+    transform: translateY(-12px) !important;
+  }
+
+  .arc-icons .arc-4 {
+    transform: translateY(7px) !important;
+  }
+
+  .arc-icons .arc-5 {
+    transform: translateY(18px) !important;
+  }
+
+  .pepe-divider {
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .hero-card + .pepe-divider {
+    margin-top: 18px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2 {
+    font-size: clamp(38px, 10vw, 52px) !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+  }
+
+  .referral-card .card-title-row p,
+  .task-card .card-title-row p,
+  .overview-card p,
+  .tokenomics-card p {
+    font-size: clamp(22px, 6vw, 30px) !important;
+    line-height: 1.35 !important;
   }
 }
 
-function showRefMessage(text, type) {
-  if (!refMessage) return;
-
-  refMessage.innerText = text || "";
-  refMessage.classList.remove("ok", "err");
-
-  if (type === "ok") {
-    refMessage.classList.add("ok");
+@media (max-width: 430px) {
+  .page-shell {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 
-  if (type === "err") {
-    refMessage.classList.add("err");
-  }
-}
-
-function getRefParam() {
-  const params = new URLSearchParams(window.location.search);
-  const value = params.get("ref") || params.get("r") || "";
-  return ethers.utils.isAddress(value) ? ethers.utils.getAddress(value) : ZERO_ADDRESS;
-}
-
-function getReferralLink(address) {
-  const cleanUrl = `${window.location.origin}${window.location.pathname}`;
-  return address ? `${cleanUrl}?ref=${address}` : `${cleanUrl}?ref=YOURID`;
-}
-
-function updateReferralUI() {
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (refLinkInput) {
-    refLinkInput.value = getReferralLink(activeWallet);
+  .brand-mark img {
+    width: 58px !important;
+    height: 58px !important;
+    flex-basis: 58px !important;
   }
 
-  if (claimReferralBtn) {
-    claimReferralBtn.disabled = !activeWallet;
-  }
-}
-
-function shortAddress(address) {
-  return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not connected";
-}
-
-function escapeHtml(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function normalizeWallet(address) {
-  return String(address || "").toLowerCase();
-}
-
-function setCurrentTweetId(tweetId) {
-  if (!tweetId) return;
-
-  currentTweetId = String(tweetId);
-  localStorage.setItem("current_official_tweet_id", currentTweetId);
-}
-
-function getLatestTask() {
-  if (!currentTasks.length) return null;
-
-  return [...currentTasks]
-    .filter((task) => task && task.active !== false)
-    .sort((a, b) => Number(a.id || 0) - Number(b.id || 0))
-    .at(-1) || null;
-}
-
-function getXTargetUrl(tweetId = null) {
-  const id =
-    tweetId ||
-    currentTweetId ||
-    (getLatestTask() ? String(getLatestTask().tweet_id) : null);
-
-  if (id) {
-    return `https://x.com/${OFFICIAL_X_USERNAME}/status/${id}`;
+  .brand-word-text {
+    font-size: 36px !important;
   }
 
-  return OFFICIAL_X_WEB_URL;
-}
-
-function getXTargetAppUrl(tweetId = null) {
-  const id =
-    tweetId ||
-    currentTweetId ||
-    (getLatestTask() ? String(getLatestTask().tweet_id) : null);
-
-  if (id) {
-    return `twitter://status?id=${id}`;
+  .top-wallet-link {
+    min-width: 96px !important;
+    font-size: 12px !important;
   }
 
-  return OFFICIAL_X_APP_URL;
-}
-
-function getReadableError(error) {
-  if (!error) return "Unknown error";
-
-  const rawMessage = [
-    error.data && error.data.message,
-    error.error && error.error.message,
-    error.responseData && error.responseData.message,
-    error.responseData && error.responseData.error,
-    error.responseData && error.responseData.detail,
-    error.reason,
-    error.message,
-    String(error)
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const lowerMessage = rawMessage.toLowerCase();
-
-  if (error.code === 4001 || lowerMessage.includes("user rejected")) {
-    return "User rejected the request.";
+  .hero-oh {
+    font-size: clamp(40px, 11vw, 50px) !important;
   }
 
-  if (error.code === -32002 || lowerMessage.includes("already pending")) {
-    return "Wallet request already pending. Please open your wallet.";
+  .hero-copy {
+    font-size: clamp(23px, 6.5vw, 29px) !important;
   }
 
-  if (lowerMessage.includes("insufficient funds")) {
-    return "Insufficient BNB for gas.";
+  .hero-main-image {
+    width: min(72vw, 250px) !important;
+    max-width: 250px !important;
   }
 
-  if (lowerMessage.includes("already claimed")) {
-    return "Already claimed.";
+  .social-actions.icon-only-actions.arc-icons {
+    max-width: 320px !important;
+    min-height: 82px !important;
+    gap: 5px !important;
   }
 
-  if (lowerMessage.includes("insufficient fee")) {
-    return "Insufficient BNB fee.";
+  .arc-icons .social-pill,
+  .arc-icons .social-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
   }
 
-  if (lowerMessage.includes("invalid signer")) {
-    return "Invalid claim signature.";
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2 {
+    font-size: clamp(34px, 9.5vw, 44px) !important;
   }
 
-  if (lowerMessage.includes("signature expired")) {
-    return "Claim signature expired. Please verify again.";
-  }
-
-  if (error.data && error.data.message) return error.data.message;
-  if (error.error && error.error.message) return error.error.message;
-  if (error.responseData && error.responseData.detail) return error.responseData.detail;
-  if (error.responseData && error.responseData.error) return error.responseData.error;
-  if (error.responseData && error.responseData.message) return error.responseData.message;
-  if (error.reason) return error.reason;
-  if (error.message) return error.message;
-
-  return String(error);
-}
-
-function getWalletProvider() {
-  if (window.okxwallet && window.okxwallet.ethereum) {
-    return window.okxwallet.ethereum;
-  }
-
-  if (window.ethereum) {
-    return window.ethereum;
-  }
-
-  return null;
-}
-
-async function switchToBSC() {
-  const walletProvider = getWalletProvider();
-
-  if (!walletProvider) {
-    throw new Error("No wallet provider found");
-  }
-
-  try {
-    await walletProvider.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: BSC_CHAIN_ID_HEX }]
-    });
-  } catch (error) {
-    if (error && error.code === 4902) {
-      await walletProvider.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: BSC_CHAIN_ID_HEX,
-            chainName: "BNB Smart Chain",
-            nativeCurrency: {
-              name: "BNB",
-              symbol: "BNB",
-              decimals: 18
-            },
-            rpcUrls: BSC_RPC_URLS,
-            blockExplorerUrls: ["https://bscscan.com"]
-          }
-        ]
-      });
-    } else {
-      throw error;
-    }
+  .referral-card .card-title-row p,
+  .task-card .card-title-row p,
+  .overview-card p,
+  .tokenomics-card p {
+    font-size: clamp(21px, 5.8vw, 27px) !important;
   }
 }
 
-function getXStorageKey(address) {
-  return `x_connected_${normalizeWallet(address)}`;
-}
-
-function setXConnected(address) {
-  if (!address) return;
-  localStorage.setItem(getXStorageKey(address), "true");
-}
-
-function clearXConnected(address) {
-  if (!address) return;
-  localStorage.removeItem(getXStorageKey(address));
-}
-
-function isXConnected() {
-  return Boolean(currentXConnected);
-}
-
-function updateWalletUI() {
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-  const connectedX = isXConnected();
-
-  if (connectBtn) {
-    connectBtn.innerText = activeWallet ? shortAddress(activeWallet) : "Link wallet";
-    connectBtn.disabled = false;
+/* mobile buttons vertical fix */
+@media (max-width: 760px) {
+  .two-actions,
+  .mission-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    width: 100% !important;
+    margin-top: 30px !important;
   }
 
-  if (walletText) {
-    walletText.innerText = activeWallet ? shortAddress(activeWallet) : "Not connected";
-  }
-
-  if (xStatusText) {
-    xStatusText.innerText = connectedX
-      ? currentXUsername
-        ? `Connected @${currentXUsername}`
-        : "Connected"
-      : "Not connected";
-  }
-
-  updateReferralUI();
-}
-
-function resetWalletUI() {
-  const oldWallet = userAddress || localStorage.getItem("wallet_address");
-
-  provider = null;
-  signer = null;
-  userAddress = null;
-
-  currentTasks = [];
-  currentProgress = [];
-  currentXConnected = false;
-  currentXUsername = null;
-  currentTweetId = null;
-  noNewMissionLocked = false;
-  noNewMissionTaskId = null;
-
-  localStorage.removeItem("wallet_connected");
-  localStorage.removeItem("wallet_address");
-  localStorage.removeItem("pending_official_verify");
-  localStorage.removeItem("pending_verify_task_id");
-  localStorage.removeItem("pending_official_x");
-  localStorage.removeItem("pending_open_tweet_id");
-  localStorage.removeItem("pending_x_wallet");
-  localStorage.removeItem("x_username");
-  localStorage.removeItem("current_official_tweet_id");
-
-  if (oldWallet) {
-    clearXConnected(oldWallet);
-  }
-
-  updateWalletUI();
-  renderMissions();
-
-  showMessage("");
-}
-
-async function setupWalletAfterConnected() {
-  const walletProvider = getWalletProvider();
-
-  if (!walletProvider) {
-    throw new Error("No wallet provider found");
-  }
-
-  provider = new ethers.providers.Web3Provider(walletProvider, "any");
-  signer = provider.getSigner();
-  userAddress = await signer.getAddress();
-
-  localStorage.setItem("wallet_connected", "true");
-  localStorage.setItem("wallet_address", userAddress);
-
-  updateWalletUI();
-
-  await loadTasks(false);
-}
-
-async function connectWallet() {
-  if (isConnectingWallet) return;
-
-  const walletProvider = getWalletProvider();
-
-  if (!walletProvider) {
-    showMessage(
-      "Please open this page in TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.",
-      "err"
-    );
-    return;
-  }
-
-  try {
-    isConnectingWallet = true;
-
-    if (connectBtn) {
-      connectBtn.disabled = true;
-      connectBtn.innerText = "connecting...";
-    }
-
-    showMessage("Connecting wallet...");
-
-    await switchToBSC();
-
-    provider = new ethers.providers.Web3Provider(walletProvider, "any");
-
-    await provider.send("eth_requestAccounts", []);
-
-    await setupWalletAfterConnected();
-
-    showMessage("Wallet connected.", "ok");
-  } catch (error) {
-    console.error(error);
-    showMessage("Wallet connection failed: " + getReadableError(error), "err");
-
-    if (connectBtn) {
-      connectBtn.innerText = "Link wallet";
-    }
-  } finally {
-    isConnectingWallet = false;
-
-    if (connectBtn) {
-      connectBtn.disabled = false;
-    }
-
-    updateWalletUI();
+  .two-actions .btn,
+  .mission-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 78px !important;
+    border-radius: 999px !important;
+    font-size: clamp(25px, 7vw, 34px) !important;
+    line-height: 1 !important;
   }
 }
 
-async function autoConnectWallet() {
-  const walletProvider = getWalletProvider();
+@media (max-width: 430px) {
+  .two-actions,
+  .mission-actions {
+    gap: 16px !important;
+    margin-top: 28px !important;
+  }
 
-  if (!walletProvider) return;
-  if (localStorage.getItem("wallet_connected") !== "true") return;
-
-  try {
-    const accounts = await walletProvider.request({
-      method: "eth_accounts"
-    });
-
-    if (!accounts || accounts.length === 0) {
-      resetWalletUI();
-      return;
-    }
-
-    await switchToBSC();
-    await setupWalletAfterConnected();
-  } catch (error) {
-    console.error(error);
+  .two-actions .btn,
+  .mission-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn {
+    min-height: 72px !important;
+    font-size: clamp(24px, 6.6vw, 30px) !important;
   }
 }
 
-function listenWalletChange() {
-  const walletProvider = getWalletProvider();
-
-  if (!walletProvider || !walletProvider.on) return;
-
-  walletProvider.on("accountsChanged", async (accounts) => {
-    if (accounts && accounts.length > 0) {
-      try {
-        currentTweetId = null;
-        noNewMissionLocked = false;
-        noNewMissionTaskId = null;
-
-        localStorage.removeItem("current_official_tweet_id");
-        localStorage.removeItem("pending_verify_task_id");
-        localStorage.removeItem("pending_open_tweet_id");
-
-        await setupWalletAfterConnected();
-
-        showMessage("Wallet account changed.", "ok");
-      } catch (error) {
-        console.error(error);
-        showMessage("Wallet account changed, please reconnect.", "err");
-      }
-    } else {
-      resetWalletUI();
-      showMessage("Wallet disconnected.", "err");
-    }
-  });
-
-  walletProvider.on("chainChanged", async () => {
-    try {
-      await setupWalletAfterConnected();
-    } catch (error) {
-      console.error(error);
-      window.location.reload();
-    }
-  });
+/* 20260625 content update: larger hero image, three centered social icons, full-width thick divider, white ref box, split About section */
+.hero-main-image {
+  width: min(100vw, 920px) !important;
+  max-width: 100% !important;
+  margin: 8px auto 12px !important;
+  display: block !important;
+  object-fit: contain !important;
 }
 
-async function claimReferralAirdrop() {
-  if (isVerifying) return;
+.three-social-icons {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: min(100%, 620px) !important;
+  max-width: 620px !important;
+  min-height: 150px !important;
+  margin: 10px auto 30px !important;
+  gap: 42px !important;
+}
 
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+.three-social-icons .social-pill,
+.three-social-icons .social-icon {
+  width: 118px !important;
+  height: 118px !important;
+  min-height: 118px !important;
+}
 
-  if (!activeWallet) {
-    showRefMessage("Please connect wallet first.", "err");
-    return;
+.three-social-icons .arc-item,
+.three-social-icons .arc-1,
+.three-social-icons .arc-2,
+.three-social-icons .arc-3 {
+  transform: none !important;
+}
+
+.three-social-icons .arc-item:hover,
+.three-social-icons .arc-1:hover,
+.three-social-icons .arc-2:hover,
+.three-social-icons .arc-3:hover {
+  transform: translateY(-6px) scale(1.04) !important;
+}
+
+.pepe-divider {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 34px !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 720px 100% !important;
+  background-position: left center !important;
+}
+
+.ref-link-box {
+  background: #fffdf4 !important;
+}
+
+.overview-card-two {
+  padding-top: 66px !important;
+  padding-bottom: 58px !important;
+}
+
+@media (max-width: 760px) {
+  .hero-main-image {
+    width: min(100vw, 720px) !important;
+    max-width: 100% !important;
+    margin: 8px auto 14px !important;
   }
 
-  try {
-    if (claimReferralBtn) {
-      claimReferralBtn.disabled = true;
-      claimReferralBtn.innerText = "claiming...";
-    }
+  .three-social-icons {
+    width: 100% !important;
+    max-width: 340px !important;
+    min-height: 98px !important;
+    margin: 8px auto 24px !important;
+    gap: 24px !important;
+    justify-content: space-between !important;
+  }
 
-    showRefMessage("Preparing referral airdrop claim...", "ok");
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 76px !important;
+    height: 76px !important;
+    min-height: 76px !important;
+  }
 
-    const walletProvider = getWalletProvider();
+  .three-social-icons .arc-item,
+  .three-social-icons .arc-1,
+  .three-social-icons .arc-2,
+  .three-social-icons .arc-3 {
+    transform: none !important;
+  }
 
-    if (!walletProvider) {
-      throw new Error("No wallet provider found");
-    }
-
-    await switchToBSC();
-
-    const web3Provider = new ethers.providers.Web3Provider(walletProvider, "any");
-    const web3Signer = web3Provider.getSigner();
-    const connectedAddress = await web3Signer.getAddress();
-
-    if (connectedAddress.toLowerCase() !== activeWallet.toLowerCase()) {
-      throw new Error("Connected wallet does not match current wallet");
-    }
-
-    const contract = new ethers.Contract(
-      REFERRAL_AIRDROP_CONTRACT,
-      REFERRAL_AIRDROP_ABI,
-      web3Signer
-    );
-
-    const alreadyClaimed = await contract.claimed(activeWallet);
-
-    if (alreadyClaimed) {
-      showRefMessage("This wallet has already claimed the referral airdrop.", "ok");
-      return;
-    }
-
-    let referrer = getRefParam();
-
-    if (referrer.toLowerCase() === activeWallet.toLowerCase()) {
-      referrer = ZERO_ADDRESS;
-    }
-
-    const claimFee = await contract.claimFee();
-
-    showRefMessage("Please confirm the referral airdrop transaction in your wallet.", "ok");
-
-    const tx = await contract.claim(referrer, {
-      value: claimFee
-    });
-
-    showRefMessage("Transaction submitted. Waiting for confirmation...", "ok");
-
-    await tx.wait();
-
-    showRefMessage("Referral airdrop claimed successfully.", "ok");
-  } catch (error) {
-    console.error(error);
-    showRefMessage("Referral claim failed: " + getReadableError(error), "err");
-  } finally {
-    if (claimReferralBtn) {
-      claimReferralBtn.innerText = "Claim Airdrop";
-    }
-
-    updateReferralUI();
+  .pepe-divider {
+    height: 30px !important;
+    background-size: 640px 100% !important;
+    margin-top: 28px !important;
+    margin-bottom: 28px !important;
   }
 }
 
-async function loadTasks(runPendingActions = true) {
-  if (isLoadingTasks) return;
+@media (max-width: 430px) {
+  .hero-main-image {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 
-  try {
-    isLoadingTasks = true;
+  .three-social-icons {
+    max-width: 300px !important;
+    min-height: 88px !important;
+    gap: 18px !important;
+  }
 
-    const activeWallet = userAddress || localStorage.getItem("wallet_address") || "";
-    const params = new URLSearchParams();
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 66px !important;
+    height: 66px !important;
+    min-height: 66px !important;
+  }
 
-    if (activeWallet) {
-      params.set("wallet", activeWallet);
-    }
-
-    params.set("_t", String(Date.now()));
-
-    const response = await fetch(`/api/tasks?${params.toString()}`, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-store"
-    });
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!data.success) {
-      throw new Error(data.detail || data.error || "Failed to load missions");
-    }
-
-    currentTasks = Array.isArray(data.tasks) ? data.tasks : [];
-    currentProgress = Array.isArray(data.progress) ? data.progress : [];
-    currentXConnected = Boolean(data.xConnected);
-    currentXUsername = data.xUsername || null;
-
-    const latestTask = getLatestTask();
-
-    if (latestTask && latestTask.tweet_id) {
-      setCurrentTweetId(latestTask.tweet_id);
-
-      if (
-        noNewMissionTaskId &&
-        Number(noNewMissionTaskId) !== Number(latestTask.id)
-      ) {
-        noNewMissionLocked = false;
-        noNewMissionTaskId = null;
-      }
-    }
-
-    if (activeWallet) {
-      if (currentXConnected) {
-        setXConnected(activeWallet);
-
-        if (currentXUsername) {
-          localStorage.setItem("x_username", currentXUsername);
-        }
-      } else {
-        clearXConnected(activeWallet);
-        localStorage.removeItem("x_username");
-        localStorage.removeItem("pending_official_verify");
-        localStorage.removeItem("pending_verify_task_id");
-      }
-    }
-
-    updateWalletUI();
-    renderMissions();
-
-    if (activeWallet && currentXConnected) {
-      showMessage("X account connected. Complete the latest mission, then claim.", "ok");
-
-      if (runPendingActions) {
-        const pendingVerifyTaskId = localStorage.getItem("pending_verify_task_id");
-
-        if (pendingVerifyTaskId) {
-          const pendingTask = getTaskById(pendingVerifyTaskId);
-          localStorage.removeItem("pending_verify_task_id");
-          localStorage.removeItem("pending_official_verify");
-
-          if (pendingTask && isLatestTask(pendingTask)) {
-            setTimeout(() => {
-              verifyAndClaim(pendingTask);
-            }, 600);
-            return;
-          }
-        }
-      }
-    } else if (activeWallet && !currentXConnected) {
-      showMessage("", "ok");
-    } else {
-      showMessage("Connect your wallet to load missions.", "err");
-    }
-  } catch (error) {
-    console.error(error);
-    showMessage("Load missions failed: " + getReadableError(error), "err");
-  } finally {
-    isLoadingTasks = false;
+  .pepe-divider {
+    height: 28px !important;
+    background-size: 560px 100% !important;
   }
 }
 
-function getTaskById(taskId) {
-  return currentTasks.find((item) => Number(item.id) === Number(taskId)) || null;
+
+/* 20260625 spacing and content update 2 */
+.hero-tagline {
+  margin-top: 38px !important;
+  margin-bottom: 38px !important;
 }
 
-function isLatestTask(task) {
-  const latestTask = getLatestTask();
-
-  if (!task || !latestTask) return false;
-
-  return Number(task.id) === Number(latestTask.id);
+.hero-oh {
+  margin-bottom: 22px !important;
 }
 
-function getProgressByTaskId(taskId) {
-  return (
-    currentProgress.find((item) => Number(item.task_id) === Number(taskId)) ||
-    null
-  );
+.hero-copy {
+  margin-top: 0 !important;
 }
 
-function getProgressByTweetId(tweetId) {
-  return (
-    currentProgress.find((item) => String(item.tweet_id) === String(tweetId)) ||
-    null
-  );
+.hero-main-image {
+  margin-top: 28px !important;
+  margin-bottom: 34px !important;
 }
 
-function getProgressForTask(task) {
-  if (!task) return null;
-
-  return (
-    getProgressByTaskId(task.id) ||
-    getProgressByTweetId(task.tweet_id)
-  );
+.three-social-icons {
+  width: min(100%, 720px) !important;
+  max-width: 720px !important;
+  justify-content: space-between !important;
+  gap: 72px !important;
+  margin-top: 18px !important;
+  margin-bottom: 42px !important;
 }
 
-function getLatestTaskProgress() {
-  const latestTask = getLatestTask();
-  return latestTask ? getProgressForTask(latestTask) : null;
+.three-social-icons .social-pill,
+.three-social-icons .social-icon {
+  width: 124px !important;
+  height: 124px !important;
+  min-height: 124px !important;
 }
 
-function renderMissions() {
-  if (!missionList) return;
-
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (!activeWallet) {
-    missionList.innerHTML = `
-      <div class="mission-card empty">
-        <h3>Connect your wallet to load the latest official X mission.</h3>
-        <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const latestTask = getLatestTask();
-
-  if (!latestTask) {
-    missionList.innerHTML = `
-      <div class="mission-card empty">
-        <h3>No active mission yet.</h3>
-        <p>Please refresh later.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const progress = getProgressForTask(latestTask);
-  const tweetId = String(latestTask.tweet_id);
-  const tweetUrl = `https://x.com/${OFFICIAL_X_USERNAME}/status/${tweetId}`;
-  const claimed = Boolean(progress && progress.claimed);
-  const claimable = Boolean(progress && progress.claimable);
-  const verified = Boolean(progress && progress.verified);
-  const noNewMissionForThisTask =
-    noNewMissionLocked &&
-    noNewMissionTaskId &&
-    Number(noNewMissionTaskId) === Number(latestTask.id);
-
-  const verifyDisabled = isVerifying || noNewMissionForThisTask;
-  const openDisabled = claimed || currentXConnected;
-
-  const openButtonText = claimed
-    ? "Completed"
-    : currentXConnected
-      ? "X Authorized"
-      : "Link X";
-
-  const verifyButtonText = isVerifying
-    ? "checking..."
-    : noNewMissionForThisTask
-      ? "No New Mission"
-      : claimed
-        ? "Check New Mission"
-        : claimable || verified
-          ? "Claim Reward"
-          : "Claim Reward";
-
-  missionList.innerHTML = `
-    <div class="mission-summary">
-      <span>Latest mission only</span>
-      <span>${currentXConnected ? `@${escapeHtml(currentXUsername || "connected")}` : "X not connected"}</span>
-    </div>
-
-    <div class="mission-card" data-task-id="${latestTask.id}" data-tweet-id="${tweetId}">
-      <div class="mission-head">
-        <div>
-          <h3>${escapeHtml(latestTask.title || "")}</h3>
-          <p class="reward">Reward: ${escapeHtml(latestTask.reward_amount || "1")} drop</p>
-        </div>
-      </div>
-
-      <p class="message x-task-message">Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.</p>
-
-      <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
-        ${tweetUrl}
-      </a>
-
-      <div class="mission-actions">
-        <button class="btn full light open-task-btn" type="button" data-tweet-id="${tweetId}" ${openDisabled ? "disabled" : ""}>
-          ${openButtonText}
-        </button>
-
-        <button class="btn full gold verify-task-btn" type="button" data-task-id="${latestTask.id}" ${verifyDisabled ? "disabled" : ""}>
-          ${verifyButtonText}
-        </button>
-      </div>
-    </div>
-  `;
-
-  const openButton = missionList.querySelector(".open-task-btn");
-  const verifyButton = missionList.querySelector(".verify-task-btn");
-
-  if (openButton) {
-    openButton.addEventListener("click", () => {
-      if (claimed) {
-        showMessage("Latest mission already claimed.", "ok");
-        return;
-      }
-
-      if (currentXConnected) {
-        showMessage("X already authorized. Complete the mission on X, then tap Claim Reward.", "ok");
-        return;
-      }
-
-      openTaskX(tweetId);
-    });
-  }
-
-  if (verifyButton) {
-    verifyButton.addEventListener("click", () => {
-      verifyAndClaim(latestTask);
-    });
-  }
+.pepe-divider {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 24px !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  margin-top: 46px !important;
+  margin-bottom: 46px !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 481px 24px !important;
+  background-position: left center !important;
+  transform: scale(1, -1) !important;
 }
 
-function openTaskX(tweetId) {
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (!activeWallet) {
-    showMessage("Please connect wallet first.", "err");
-    return;
-  }
-
-  const latestTask = getLatestTask();
-
-  if (latestTask && tweetId && String(tweetId) !== String(latestTask.tweet_id)) {
-    showMessage("Only the latest official post can be claimed.", "err");
-    return;
-  }
-
-  const latestProgress = getLatestTaskProgress();
-
-  if (latestProgress && latestProgress.claimed) {
-    showMessage("Latest mission already claimed.", "ok");
-    return;
-  }
-
-  localStorage.setItem("pending_official_x", "true");
-
-  if (tweetId) {
-    setCurrentTweetId(tweetId);
-  }
-
-  if (!isXConnected()) {
-    localStorage.setItem("pending_x_wallet", activeWallet);
-
-    showMessage("X authorization is required first. Redirecting to X...", "ok");
-
-    setTimeout(() => {
-      window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
-    }, 300);
-
-    return;
-  }
-
-  openTaskXDirect(tweetId);
+.hero-card + .pepe-divider {
+  margin-top: 42px !important;
+  margin-bottom: 52px !important;
 }
 
-function openTaskXDirect(tweetId) {
-  const latestTask = getLatestTask();
-
-  if (latestTask && tweetId && String(tweetId) !== String(latestTask.tweet_id)) {
-    setCurrentTweetId(tweetId);
-  }
-
-  showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest post, then manually return here to claim.`,
-    "ok"
-  );
-
-  const targetWebUrl = getXTargetUrl(tweetId);
-  const targetAppUrl = getXTargetAppUrl(tweetId);
-
-  try {
-    navigator.clipboard.writeText(targetWebUrl).catch(() => {});
-  } catch (error) {}
-
-  const userAgent = navigator.userAgent || "";
-  const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
-
-  let appOpened = false;
-
-  const onVisibilityChange = () => {
-    if (document.hidden) {
-      appOpened = true;
-    }
-  };
-
-  const onPageHide = () => {
-    appOpened = true;
-  };
-
-  document.addEventListener("visibilitychange", onVisibilityChange, { once: true });
-  window.addEventListener("pagehide", onPageHide, { once: true });
-
-  if (isIOS) {
-    window.location.href = targetAppUrl;
-
-    setTimeout(() => {
-      if (!appOpened) {
-        window.location.href = targetWebUrl;
-      }
-    }, 3200);
-
-    return;
-  }
-
-  window.location.href = targetAppUrl;
-
-  setTimeout(() => {
-    if (!appOpened) {
-      window.location.href = targetWebUrl;
-    }
-  }, 1800);
+.referral-card,
+.task-card,
+.tokenomics-card,
+.overview-card,
+.overview-card-two {
+  padding-top: 78px !important;
+  padding-bottom: 78px !important;
 }
 
-function shouldLockClaimButton(data) {
-  if (data && (data.lockClaim || data.alreadyClaimed)) {
-    return true;
-  }
-
-  const text = String(
-    data && (data.message || data.error || data.detail || "")
-  ).toLowerCase();
-
-  return (
-    text.includes("already claimed") ||
-    text.includes("latest official post already claimed") ||
-    text.includes("no unclaimed official posts found") ||
-    text.includes("already claimed on chain")
-  );
+.referral-card > .center-card-title-row,
+.task-card > .task-title-row,
+.tokenomics-card > .tokenomics-title-row,
+.overview-card > .overview-title-row {
+  margin-bottom: 48px !important;
 }
 
-function needsXAuthorization(data) {
-  const text = String(
-    data && (data.message || data.error || data.detail || "")
-  ).toLowerCase();
-
-  return (
-    text.includes("connect x") ||
-    text.includes("please connect x") ||
-    text.includes("x authorization required") ||
-    text.includes("x authorization is required") ||
-    text.includes("authorization is required") ||
-    text.includes("x first") ||
-    text.includes("x account not connected") ||
-    text.includes("no x account")
-  );
+.referral-card h2,
+.task-card h2,
+.tokenomics-card h2,
+.overview-card h2,
+.tokenomics-card .aligned-section-content h2,
+.overview-card .aligned-section-content h2 {
+  margin-top: 0 !important;
+  margin-bottom: 38px !important;
 }
 
-function redirectToXAuthorization(activeWallet, taskId = null) {
-  localStorage.setItem("pending_official_verify", "true");
-  localStorage.setItem("pending_x_wallet", activeWallet);
-
-  if (taskId) {
-    localStorage.setItem("pending_verify_task_id", String(taskId));
-  }
-
-  showMessage("X authorization is required once. Redirecting to X...", "ok");
-
-  setTimeout(() => {
-    window.location.href = `/api/auth/x/login?wallet=${encodeURIComponent(activeWallet)}`;
-  }, 300);
+.referral-card .card-title-row p.referral-intro {
+  text-align: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 auto 26px !important;
+  max-width: 860px !important;
+  line-height: 1.32 !important;
 }
 
-async function getClaimSignature(activeWallet, tweetId) {
-  const response = await fetch("/api/claim-signature", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      wallet: activeWallet,
-      tweetId: String(tweetId)
-    })
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!data.success) {
-    const error = new Error(data.error || data.detail || "Failed to get claim signature");
-    error.responseData = data;
-    throw error;
-  }
-
-  return data;
+.referral-levels {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  text-align: center !important;
 }
 
-async function claimOnChain(signatureData, activeWallet) {
-  const walletProvider = getWalletProvider();
-
-  if (!walletProvider) {
-    throw new Error("No wallet provider found");
-  }
-
-  await switchToBSC();
-
-  const web3Provider = new ethers.providers.Web3Provider(walletProvider, "any");
-  const web3Signer = web3Provider.getSigner();
-  const connectedAddress = await web3Signer.getAddress();
-
-  if (connectedAddress.toLowerCase() !== activeWallet.toLowerCase()) {
-    throw new Error("Connected wallet does not match verified wallet");
-  }
-
-  const contract = new ethers.Contract(
-    signatureData.contract,
-    TWITTER_TASK_CLAIM_ABI,
-    web3Signer
-  );
-
-  const alreadyClaimed = await contract.isClaimed(
-    activeWallet,
-    signatureData.tweetHash
-  );
-
-  if (alreadyClaimed) {
-    throw new Error("Already claimed on chain");
-  }
-
-  const claimFee = await contract.claimFee();
-
-  showMessage("Please confirm the on-chain claim transaction in your wallet.", "ok");
-
-  const tx = await contract.claim(
-    signatureData.tweetHash,
-    signatureData.deadline,
-    signatureData.signature,
-    {
-      value: claimFee
-    }
-  );
-
-  showMessage("Transaction submitted. Waiting for confirmation...", "ok");
-
-  await tx.wait();
-
-  return tx.hash;
+.referral-levels p {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center !important;
+  width: 100% !important;
+  font-size: clamp(26px, 3.5vw, 38px) !important;
+  line-height: 1.28 !important;
+  font-weight: 400 !important;
 }
 
-async function recordClaim(activeWallet, taskId, txHash) {
-  const response = await fetch("/api/claim", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      wallet: activeWallet,
-      taskId: Number(taskId),
-      txHash
-    })
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!data.success) {
-    const error = new Error(data.error || data.detail || "Failed to record claim");
-    error.responseData = data;
-    throw error;
-  }
-
-  return data;
+.ref-link-box {
+  margin-top: 44px !important;
+  background: #fffdf4 !important;
 }
 
-async function verifyAndClaim(task) {
-  if (isVerifying) return;
+.footer-note {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 220px !important;
+  padding: 70px 16px !important;
+  color: #111 !important;
+  font-family: Arial, sans-serif !important;
+  font-size: clamp(32px, 4.5vw, 58px) !important;
+  line-height: 1.1 !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  background: #fcb609 !important;
+}
 
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (!activeWallet) {
-    showMessage("Please connect wallet first.", "err");
-    return;
+@media (max-width: 760px) {
+  .hero-tagline {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
   }
 
-  const latestTask = getLatestTask();
-
-  if (!task || !task.id || !latestTask) {
-    showMessage("Mission data missing. Please refresh and try again.", "err");
-    return;
+  .hero-oh {
+    margin-bottom: 18px !important;
   }
 
-  const progress = getProgressForTask(task);
+  .hero-main-image {
+    margin-top: 22px !important;
+    margin-bottom: 28px !important;
+  }
 
-  try {
-    isVerifying = true;
-    renderMissions();
+  .three-social-icons {
+    max-width: 430px !important;
+    width: calc(100vw - 42px) !important;
+    gap: 0 !important;
+    margin-top: 16px !important;
+    margin-bottom: 38px !important;
+  }
 
-    const taskId = Number(task.id);
-    const tweetId = String(task.tweet_id);
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 82px !important;
+    height: 82px !important;
+    min-height: 82px !important;
+  }
 
-    setCurrentTweetId(tweetId);
+  .pepe-divider {
+    height: 22px !important;
+    background-size: 481px 22px !important;
+    margin-top: 40px !important;
+    margin-bottom: 40px !important;
+  }
 
-    showMessage("Checking latest X mission...");
+  .hero-card + .pepe-divider {
+    margin-top: 36px !important;
+    margin-bottom: 46px !important;
+  }
 
-    const verifyResponse = await fetch("/api/verify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        wallet: activeWallet,
-        taskId
-      })
-    });
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card,
+  .overview-card-two {
+    padding-top: 68px !important;
+    padding-bottom: 68px !important;
+  }
 
-    const verifyData = await verifyResponse.json().catch(() => ({}));
+  .referral-card > .center-card-title-row,
+  .task-card > .task-title-row,
+  .tokenomics-card > .tokenomics-title-row,
+  .overview-card > .overview-title-row {
+    margin-bottom: 42px !important;
+  }
 
-    if (verifyData.tweetId || verifyData.latestTweetId) {
-      setCurrentTweetId(verifyData.tweetId || verifyData.latestTweetId);
-    }
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-bottom: 34px !important;
+  }
 
-    if (!verifyData.success) {
-      if (needsXAuthorization(verifyData)) {
-        clearXConnected(activeWallet);
-        currentXConnected = false;
+  .referral-card .card-title-row p.referral-intro {
+    margin-bottom: 22px !important;
+    font-size: clamp(22px, 6vw, 30px) !important;
+  }
 
-        updateWalletUI();
-        renderMissions();
+  .referral-levels {
+    gap: 8px !important;
+  }
 
-        redirectToXAuthorization(activeWallet, taskId);
-        return;
-      }
+  .referral-levels p {
+    font-size: clamp(22px, 6vw, 30px) !important;
+    line-height: 1.3 !important;
+  }
 
-      if (shouldLockClaimButton(verifyData)) {
-        showMessage(
-          verifyData.message || verifyData.error || "Latest mission already claimed.",
-          "ok"
-        );
+  .ref-link-box {
+    margin-top: 38px !important;
+  }
 
-        await loadTasks(false);
-        return;
-      }
-
-      const targetTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
-      const targetTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
-
-      if (
-        progress &&
-        progress.claimed &&
-        Number(targetTaskId) === Number(taskId)
-      ) {
-        noNewMissionLocked = true;
-        noNewMissionTaskId = Number(taskId);
-
-        showMessage("No new mission yet. Please try again later.", "ok");
-
-        renderMissions();
-        return;
-      }
-
-      setCurrentTweetId(targetTweetId);
-
-      showMessage(
-        verifyData.message ||
-          verifyData.error ||
-          "Latest mission is not completed yet. Opening the exact X post...",
-        "ok"
-      );
-
-      await loadTasks(false);
-
-      setTimeout(() => {
-        openTaskXDirect(targetTweetId);
-      }, 800);
-
-      return;
-    }
-
-    const verifiedTweetId = String(verifyData.tweetId || verifyData.latestTweetId || tweetId);
-    const verifiedTaskId = verifyData.taskId || verifyData.latestTaskId || taskId;
-
-    if (
-      progress &&
-      progress.claimed &&
-      Number(verifiedTaskId) === Number(taskId)
-    ) {
-      noNewMissionLocked = true;
-      noNewMissionTaskId = Number(taskId);
-
-      showMessage("No new mission yet. Please try again later.", "ok");
-
-      renderMissions();
-      return;
-    }
-
-    showMessage("Mission verified. Getting claim signature...", "ok");
-
-    const signatureData = await getClaimSignature(
-      activeWallet,
-      verifiedTweetId
-    );
-
-    const txHash = await claimOnChain(signatureData, activeWallet);
-
-    showMessage("On-chain claim confirmed. Recording claim...", "ok");
-
-    await recordClaim(
-      activeWallet,
-      signatureData.taskId || verifiedTaskId,
-      txHash
-    );
-
-    showMessage("Claim successful. Tokens sent to your wallet.", "ok");
-
-    await loadTasks(false);
-  } catch (error) {
-    console.error(error);
-
-    const responseData = error && error.responseData;
-    const readableError = getReadableError(error);
-
-    if (
-      shouldLockClaimButton(responseData) ||
-      String(readableError).toLowerCase().includes("already claimed")
-    ) {
-      showMessage("Latest mission already claimed.", "ok");
-      await loadTasks(false);
-    } else {
-      showMessage("Claim failed: " + readableError, "err");
-    }
-  } finally {
-    isVerifying = false;
-    renderMissions();
+  .footer-note {
+    min-height: 150px !important;
+    padding: 48px 10px !important;
+    font-size: clamp(18px, 5vw, 25px) !important;
+    white-space: nowrap !important;
   }
 }
 
-function handleReturnFromX() {
-  const pendingX = localStorage.getItem("pending_official_x");
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
+@media (max-width: 430px) {
+  .hero-tagline {
+    margin-top: 28px !important;
+    margin-bottom: 28px !important;
+  }
 
-  if (pendingX && activeWallet) {
-    showMessage("Follow @GXFCLJ, like, repost, and comment. Then tap Claim Reward.", "ok");
+  .three-social-icons {
+    width: calc(100vw - 46px) !important;
+    max-width: 360px !important;
+    min-height: 96px !important;
+  }
+
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 76px !important;
+    height: 76px !important;
+    min-height: 76px !important;
+  }
+
+  .pepe-divider {
+    height: 20px !important;
+    background-size: 481px 20px !important;
+    margin-top: 38px !important;
+    margin-bottom: 38px !important;
+  }
+
+  .referral-card,
+  .task-card,
+  .tokenomics-card,
+  .overview-card,
+  .overview-card-two {
+    padding-top: 64px !important;
+    padding-bottom: 64px !important;
+  }
+
+  .referral-card > .center-card-title-row,
+  .task-card > .task-title-row,
+  .tokenomics-card > .tokenomics-title-row,
+  .overview-card > .overview-title-row {
+    margin-bottom: 38px !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .tokenomics-card h2,
+  .overview-card h2,
+  .tokenomics-card .aligned-section-content h2,
+  .overview-card .aligned-section-content h2 {
+    margin-bottom: 30px !important;
+  }
+
+  .footer-note {
+    font-size: clamp(17px, 4.6vw, 22px) !important;
+    min-height: 130px !important;
   }
 }
 
-function handleUrlStatus() {
-  const params = new URLSearchParams(window.location.search);
 
-  if (params.get("x_connected") === "1") {
-    const walletFromUrl = params.get("wallet");
-    const xUsernameFromUrl = params.get("x_username");
+/* 20260625 content update 3: footer, referral levels, icons, dividers */
+.pepe-divider {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 20px !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  margin-top: 28px !important;
+  margin-bottom: 28px !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 481px 100% !important;
+  background-position: center top !important;
+  transform: scale(1, -1) !important;
+}
 
-    showMessage("X connected. Complete the latest mission, then claim.", "ok");
+.hero-card + .pepe-divider {
+  margin-top: 28px !important;
+  margin-bottom: 34px !important;
+}
 
-    const activeWallet =
-      walletFromUrl ||
-      userAddress ||
-      localStorage.getItem("wallet_address") ||
-      localStorage.getItem("pending_x_wallet");
+.three-social-icons {
+  width: min(100%, 760px) !important;
+  max-width: 760px !important;
+  justify-content: space-between !important;
+  gap: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
-    if (activeWallet) {
-      localStorage.setItem("wallet_connected", "true");
-      localStorage.setItem("wallet_address", activeWallet);
-      localStorage.setItem("pending_x_wallet", activeWallet);
-      setXConnected(activeWallet);
-      currentXConnected = true;
-    }
+.referral-levels {
+  width: max-content !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  justify-items: start !important;
+  text-align: left !important;
+}
 
-    if (xUsernameFromUrl) {
-      currentXUsername = xUsernameFromUrl;
-      localStorage.setItem("x_username", xUsernameFromUrl);
-    }
+.referral-levels p {
+  width: auto !important;
+  text-align: left !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
-    const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
-    window.history.replaceState({}, document.title, cleanUrl);
+.footer-note {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 170px !important;
+  padding: 64px 16px 46px !important;
+  color: #111 !important;
+  font-family: "GentyRegular", Arial, sans-serif !important;
+  font-size: clamp(24px, 3.2vw, 42px) !important;
+  line-height: 1.1 !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  background: #fcb609 !important;
+}
+
+.footer-note::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  width: 100vw !important;
+  height: 20px !important;
+  transform: translateX(-50%) scale(1, -1) !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 481px 100% !important;
+  background-position: center top !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 760px) {
+  .pepe-divider {
+    height: 20px !important;
+    background-size: 481px 100% !important;
+    margin-top: 28px !important;
+    margin-bottom: 28px !important;
   }
 
-  const xError = params.get("x_error");
+  .hero-card + .pepe-divider {
+    margin-top: 24px !important;
+    margin-bottom: 32px !important;
+  }
 
-  if (xError) {
-    const errorMap = {
-      already_bound: "This X account is already bound to another wallet.",
-      missing_oauth_params: "Missing X authorization data. Please try Claim Reward again.",
-      oauth_state_not_found: "X authorization expired or opened in another browser. Please try Claim Reward again.",
-      oauth_expired: "X authorization expired. Please try Claim Reward again.",
-      missing_wallet: "Missing wallet address. Please connect wallet and try again."
-    };
+  .three-social-icons {
+    width: calc(100vw - 58px) !important;
+    max-width: 520px !important;
+    min-height: 96px !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    margin-top: 16px !important;
+    margin-bottom: 36px !important;
+  }
 
-    showMessage(errorMap[xError] || `X connection failed: ${xError}`, "err");
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 78px !important;
+    height: 78px !important;
+    min-height: 78px !important;
+  }
 
-    const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
-    window.history.replaceState({}, document.title, cleanUrl);
+  .referral-levels {
+    width: max-content !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-items: start !important;
+  }
+
+  .referral-levels p {
+    width: auto !important;
+    text-align: left !important;
+  }
+
+  .footer-note {
+    min-height: 120px !important;
+    padding: 46px 8px 34px !important;
+    font-size: clamp(16px, 4.1vw, 20px) !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+  }
+
+  .footer-note::before {
+    height: 20px !important;
+    background-size: 481px 100% !important;
   }
 }
 
-bindComingSoonLinks();
-
-if (connectBtn) {
-  connectBtn.addEventListener("click", connectWallet);
-}
-
-
-if (copyRefBtn) {
-  copyRefBtn.addEventListener("click", async () => {
-    const link = refLinkInput ? refLinkInput.value : getReferralLink(userAddress || localStorage.getItem("wallet_address"));
-
-    try {
-      await navigator.clipboard.writeText(link);
-      showRefMessage("Referral link copied.", "ok");
-    } catch (error) {
-      showRefMessage("Copy failed. Please copy the link manually.", "err");
-    }
-  });
-}
-
-if (claimReferralBtn) {
-  claimReferralBtn.addEventListener("click", claimReferralAirdrop);
-}
-
-window.addEventListener("focus", () => {
-  handleReturnFromX();
-});
-
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    handleReturnFromX();
-  }
-});
-
-window.addEventListener("load", async () => {
-  handleUrlStatus();
-
-  updateWalletUI();
-  renderMissions();
-
-  await autoConnectWallet();
-
-  const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
-  if (activeWallet) {
-    await loadTasks(true);
+@media (max-width: 430px) {
+  .three-social-icons {
+    width: calc(100vw - 52px) !important;
+    max-width: 380px !important;
+    min-height: 92px !important;
   }
 
-  listenWalletChange();
-});
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 72px !important;
+    height: 72px !important;
+    min-height: 72px !important;
+  }
+
+  .footer-note {
+    min-height: 108px !important;
+    padding: 42px 6px 30px !important;
+    font-size: clamp(15px, 4vw, 18px) !important;
+  }
+}
