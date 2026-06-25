@@ -2640,3 +2640,160 @@ body {
     min-height: 130px !important;
   }
 }
+
+
+/* 20260625 content update 3: footer, referral levels, icons, dividers */
+.pepe-divider {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 20px !important;
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  margin-top: 28px !important;
+  margin-bottom: 28px !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 481px 100% !important;
+  background-position: center top !important;
+  transform: scale(1, -1) !important;
+}
+
+.hero-card + .pepe-divider {
+  margin-top: 28px !important;
+  margin-bottom: 34px !important;
+}
+
+.three-social-icons {
+  width: min(100%, 760px) !important;
+  max-width: 760px !important;
+  justify-content: space-between !important;
+  gap: 0 !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.referral-levels {
+  width: max-content !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  justify-items: start !important;
+  text-align: left !important;
+}
+
+.referral-levels p {
+  width: auto !important;
+  text-align: left !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.footer-note {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 170px !important;
+  padding: 64px 16px 46px !important;
+  color: #111 !important;
+  font-family: "GentyRegular", Arial, sans-serif !important;
+  font-size: clamp(24px, 3.2vw, 42px) !important;
+  line-height: 1.1 !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  background: #fcb609 !important;
+}
+
+.footer-note::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  width: 100vw !important;
+  height: 20px !important;
+  transform: translateX(-50%) scale(1, -1) !important;
+  background-image: url("pepe-divider.svg") !important;
+  background-repeat: repeat-x !important;
+  background-size: 481px 100% !important;
+  background-position: center top !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 760px) {
+  .pepe-divider {
+    height: 20px !important;
+    background-size: 481px 100% !important;
+    margin-top: 28px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .hero-card + .pepe-divider {
+    margin-top: 24px !important;
+    margin-bottom: 32px !important;
+  }
+
+  .three-social-icons {
+    width: calc(100vw - 58px) !important;
+    max-width: 520px !important;
+    min-height: 96px !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    margin-top: 16px !important;
+    margin-bottom: 36px !important;
+  }
+
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 78px !important;
+    height: 78px !important;
+    min-height: 78px !important;
+  }
+
+  .referral-levels {
+    width: max-content !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-items: start !important;
+  }
+
+  .referral-levels p {
+    width: auto !important;
+    text-align: left !important;
+  }
+
+  .footer-note {
+    min-height: 120px !important;
+    padding: 46px 8px 34px !important;
+    font-size: clamp(16px, 4.1vw, 20px) !important;
+    line-height: 1.1 !important;
+    white-space: nowrap !important;
+  }
+
+  .footer-note::before {
+    height: 20px !important;
+    background-size: 481px 100% !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .three-social-icons {
+    width: calc(100vw - 52px) !important;
+    max-width: 380px !important;
+    min-height: 92px !important;
+  }
+
+  .three-social-icons .social-pill,
+  .three-social-icons .social-icon {
+    width: 72px !important;
+    height: 72px !important;
+    min-height: 72px !important;
+  }
+
+  .footer-note {
+    min-height: 108px !important;
+    padding: 42px 6px 30px !important;
+    font-size: clamp(15px, 4vw, 18px) !important;
+  }
+}
