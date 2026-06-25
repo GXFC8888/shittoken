@@ -325,33 +325,59 @@ button:disabled {
   transform: translateY(4px);
 }
 
-.exchange-logo {
+.exchange-logo-box {
   position: absolute;
-  right: 36px;
+  right: 34px;
   top: 50%;
-  display: block;
-  width: 48px;
-  height: 48px;
-  max-width: 58px;
-  max-height: 48px;
-  object-fit: contain;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 42px;
+  overflow: hidden;
   transform: translateY(-50%);
   pointer-events: none;
 }
 
-.bybit-logo,
-.upbit-logo,
-.kraken-logo,
-.cryptocom-logo {
-  width: 74px;
-  height: 30px;
-  max-width: 82px;
+.exchange-logo-box-dark {
+  background: #111;
+  border-radius: 999px;
 }
 
-.uniswap-logo,
+.exchange-logo {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.uniswap-logo {
+  width: 42px;
+  height: 42px;
+}
+
 .coinbase-logo {
-  width: 46px;
-  height: 46px;
+  width: 42px;
+  height: 42px;
+}
+
+.bybit-logo {
+  width: 62px;
+  height: auto;
+}
+
+.upbit-logo {
+  width: 64px;
+  height: auto;
+}
+
+.kraken-logo {
+  width: 72px;
+  height: auto;
+}
+
+.cryptocom-logo {
+  width: 78px;
+  height: auto;
 }
 
 .hero-main-image {
@@ -1157,27 +1183,36 @@ h6 {
     transform: translateY(3px);
   }
 
-  .exchange-logo {
-    right: 22px;
-    width: 34px;
+  .exchange-logo-box {
+    right: 20px;
+    width: 58px;
     height: 34px;
-    max-width: 48px;
-    max-height: 34px;
-  }
-
-  .bybit-logo,
-  .upbit-logo,
-  .kraken-logo,
-  .cryptocom-logo {
-    width: 52px;
-    height: 22px;
-    max-width: 56px;
   }
 
   .uniswap-logo,
   .coinbase-logo {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .bybit-logo {
+    width: 48px;
+    height: auto;
+  }
+
+  .upbit-logo {
+    width: 50px;
+    height: auto;
+  }
+
+  .kraken-logo {
+    width: 54px;
+    height: auto;
+  }
+
+  .cryptocom-logo {
+    width: 56px;
+    height: auto;
   }
 
   .hero-main-image {
@@ -1428,11 +1463,34 @@ h6 {
     font-size: clamp(27px, 8.2vw, 38px);
   }
 
-  .exchange-logo {
+  .exchange-logo-box {
     right: 18px;
+    width: 54px;
+    height: 32px;
   }
 
-  .hero-main-image {
+  .uniswap-logo,
+  .coinbase-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .bybit-logo {
+    width: 46px;
+  }
+
+  .upbit-logo {
+    width: 48px;
+  }
+
+  .kraken-logo {
+    width: 50px;
+  }
+
+  .cryptocom-logo {
+    width: 52px;
+  }
+.hero-main-image {
     width: 100%;
     max-width: 100%;
   }
