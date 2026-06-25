@@ -209,8 +209,8 @@ button:disabled {
   display: flex !important;
   align-items: center;
   justify-content: space-between;
-  width: min(100%, 520px);
-  max-width: 520px;
+  width: min(100%, 460px);
+  max-width: 460px;
   min-height: 120px;
   margin: 20px auto 26px;
   gap: 0;
@@ -828,8 +828,22 @@ h6 {
 }
 
 .overview-copy p,
-.overview-card > .aligned-card-copy p {
-  text-align: left;
+.overview-card > .aligned-card-copy p,
+#project-overview .overview-copy p,
+#project-overview-2 .overview-copy p,
+#project-overview .aligned-card-copy p,
+#project-overview-2 .aligned-card-copy p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#project-overview .overview-copy,
+#project-overview-2 .overview-copy,
+#project-overview .aligned-card-copy,
+#project-overview-2 .aligned-card-copy {
+  justify-items: center;
+  text-align: center;
 }
 
 .tokenomics-center-copy p,
@@ -1022,8 +1036,8 @@ h6 {
   .three-social-icons,
   .social-actions.three-social-icons,
   .icon-only-actions.three-social-icons {
-    width: min(100%, 250px);
-    max-width: 250px;
+    width: min(100%, 220px);
+    max-width: 220px;
     min-height: 86px;
     margin-top: 16px;
     margin-bottom: 20px;
@@ -1259,8 +1273,8 @@ h6 {
   .three-social-icons,
   .social-actions.three-social-icons,
   .icon-only-actions.three-social-icons {
-    width: min(100%, 238px);
-    max-width: 238px;
+    width: min(100%, 210px);
+    max-width: 210px;
   }
 
   .three-social-icons .social-pill,
@@ -1385,60 +1399,5 @@ h6 {
     min-height: 60px;
     padding: 17px 6px 7px;
     font-size: clamp(15px, 4vw, 18px);
-  }
-}
-
-.three-social-icons,
-.social-actions.three-social-icons,
-.icon-only-actions.three-social-icons {
-  width: min(100%, 460px);
-  max-width: 460px;
-}
-@media (max-width: 760px) {
-  .three-social-icons,
-  .social-actions.three-social-icons,
-  .icon-only-actions.three-social-icons {
-    width: min(100%, 220px);
-    max-width: 220px;
-  }
-}
-@media (max-width: 430px) {
-  .three-social-icons,
-  .social-actions.three-social-icons,
-  .icon-only-actions.three-social-icons {
-    width: min(100%, 210px);
-    max-width: 210px;
-  }
-}
-#project-overview .overview-copy,
-#project-overview-2 .overview-copy,
-#project-overview .aligned-card-copy,
-#project-overview-2 .aligned-card-copy {
-  justify-items: center;
-  text-align: center;
-}
-#project-overview .overview-copy p,
-#project-overview-2 .overview-copy p,
-#project-overview .aligned-card-copy p,
-#project-overview-2 .aligned-card-copy p {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-@media (max-width: 760px) {
-  #project-overview .overview-copy,
-  #project-overview-2 .overview-copy,
-  #project-overview .aligned-card-copy,
-  #project-overview-2 .aligned-card-copy {
-    justify-items: center;
-    text-align: center;
-  }
-  #project-overview .overview-copy p,
-  #project-overview-2 .overview-copy p,
-  #project-overview .aligned-card-copy p,
-  #project-overview-2 .aligned-card-copy p {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
   }
 }
