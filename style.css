@@ -1517,3 +1517,73 @@ h6 {
   position: relative !important;
   z-index: 2 !important;
 }
+
+.ref-link-box {
+  width: min(100% - 36px, 620px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.two-actions,
+.mission-actions {
+  width: min(100% - 36px, 620px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.two-actions .btn,
+.mission-actions .btn,
+#copyRefBtnMobile,
+#claimReferralBtn,
+.open-task-btn,
+.verify-task-btn {
+  width: 100% !important;
+}
+
+@media (max-width: 760px) {
+  .ref-link-box {
+    width: min(100% - 60px, 460px) !important;
+    min-height: 74px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .two-actions,
+  .mission-actions {
+    width: min(100% - 60px, 460px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .two-actions .btn,
+  .mission-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn {
+    min-height: 74px !important;
+    font-size: clamp(23px, 6.4vw, 30px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .ref-link-box {
+    width: min(100% - 54px, 420px) !important;
+    min-height: 70px !important;
+  }
+
+  .two-actions,
+  .mission-actions {
+    width: min(100% - 54px, 420px) !important;
+  }
+
+  .two-actions .btn,
+  .mission-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn {
+    min-height: 70px !important;
+    font-size: clamp(22px, 6vw, 28px) !important;
+  }
+}
