@@ -462,10 +462,6 @@ async function connectWallet() {
     if (connectBtn) {
       connectBtn.innerText = "Link wallet";
     }
-
-    if (refreshMissionsBtn) {
-      refreshMissionsBtn.innerText = "Connect Wallet";
-    }
   } finally {
     isConnectingWallet = false;
 
@@ -710,9 +706,6 @@ async function loadTasks(runPendingActions = true) {
     showMessage("Load missions failed: " + getReadableError(error), "err");
   } finally {
     isLoadingTasks = false;
-
-    const activeWallet = userAddress || localStorage.getItem("wallet_address");
-
   }
 }
 
