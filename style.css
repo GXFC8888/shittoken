@@ -1387,3 +1387,58 @@ h6 {
     font-size: clamp(15px, 4vw, 18px);
   }
 }
+
+.three-social-icons,
+.social-actions.three-social-icons,
+.icon-only-actions.three-social-icons {
+  width: min(100%, 460px);
+  max-width: 460px;
+}
+@media (max-width: 760px) {
+  .three-social-icons,
+  .social-actions.three-social-icons,
+  .icon-only-actions.three-social-icons {
+    width: min(100%, 220px);
+    max-width: 220px;
+  }
+}
+@media (max-width: 430px) {
+  .three-social-icons,
+  .social-actions.three-social-icons,
+  .icon-only-actions.three-social-icons {
+    width: min(100%, 210px);
+    max-width: 210px;
+  }
+}
+#project-overview .overview-copy,
+#project-overview-2 .overview-copy,
+#project-overview .aligned-card-copy,
+#project-overview-2 .aligned-card-copy {
+  justify-items: center;
+  text-align: center;
+}
+#project-overview .overview-copy p,
+#project-overview-2 .overview-copy p,
+#project-overview .aligned-card-copy p,
+#project-overview-2 .aligned-card-copy p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 760px) {
+  #project-overview .overview-copy,
+  #project-overview-2 .overview-copy,
+  #project-overview .aligned-card-copy,
+  #project-overview-2 .aligned-card-copy {
+    justify-items: center;
+    text-align: center;
+  }
+  #project-overview .overview-copy p,
+  #project-overview-2 .overview-copy p,
+  #project-overview .aligned-card-copy p,
+  #project-overview-2 .aligned-card-copy p {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
