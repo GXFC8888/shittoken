@@ -944,11 +944,11 @@ h6 {
 }
 
 .tokenomics-card > .tokenomics-center-copy p:nth-last-child(2) {
-  margin-top: 42px;
+  margin-top: 12px;
 }
 
 .tokenomics-card > .tokenomics-center-copy p:last-child {
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .footer-note {
@@ -1334,7 +1334,7 @@ h6 {
   }
 
   .tokenomics-card > .tokenomics-center-copy p:nth-last-child(2) {
-    margin-top: 34px;
+    margin-top: 10px;
   }
 
   .footer-note {
