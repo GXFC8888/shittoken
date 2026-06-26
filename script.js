@@ -89,7 +89,7 @@ function showCustomAlert(text) {
 }
 
 function bindComingSoonLinks() {
-  document.querySelectorAll(".coming-soon-link").forEach((link) => {
+  document.querySelectorAll(".coming-soon-link, .exchange-item").forEach((link) => {
     if (link.dataset.boundComingSoon === "true") return;
 
     link.dataset.boundComingSoon = "true";
