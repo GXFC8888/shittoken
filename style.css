@@ -1857,3 +1857,75 @@ h6 {
     font-size: clamp(17px, 4.5vw, 22px) !important;
   }
 }
+
+.x-task-intro p {
+  color: #fffdf4 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.mission-card.empty h3,
+.mission-card.empty p,
+.x-task-message,
+.mission-card .x-task-message {
+  color: #43a832 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  font-size: clamp(20px, 5vw, 27px) !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+#claimReferralBtn,
+.open-task-btn,
+.verify-task-btn,
+.mission-actions .btn {
+  font-size: clamp(12px, 3vw, 16px) !important;
+  line-height: 1 !important;
+}
+
+#copyRefBtnMobile {
+  font-size: clamp(15px, 3.8vw, 20px) !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 760px) {
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(18px, 4.8vw, 24px) !important;
+  }
+
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn,
+  .mission-actions .btn {
+    font-size: clamp(11px, 2.9vw, 15px) !important;
+  }
+
+  #copyRefBtnMobile {
+    font-size: clamp(14px, 3.6vw, 19px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(17px, 4.5vw, 23px) !important;
+  }
+
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn,
+  .mission-actions .btn {
+    font-size: clamp(10px, 2.7vw, 14px) !important;
+  }
+
+  #copyRefBtnMobile {
+    font-size: clamp(13px, 3.4vw, 18px) !important;
+  }
+}
