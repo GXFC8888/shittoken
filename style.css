@@ -1830,3 +1830,19 @@ h6 {
     padding-right: 54px !important;
   }
 }
+
+.exchange-list .exchange-item:nth-child(6) .exchange-name {
+  font-size: clamp(32px, 4.2vw, 50px) !important;
+}
+
+@media (max-width: 760px) {
+  .exchange-list .exchange-item:nth-child(6) .exchange-name {
+    font-size: clamp(19px, 4.9vw, 25px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .exchange-list .exchange-item:nth-child(6) .exchange-name {
+    font-size: clamp(18px, 4.7vw, 23px) !important;
+  }
+}
