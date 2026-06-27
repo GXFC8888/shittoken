@@ -43,7 +43,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  font-family: "EvermoreItalic", "Evermore", "Nebyla", Arial, sans-serif !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
 }
 
 html,
@@ -72,7 +72,7 @@ input,
 textarea,
 select,
 a {
-  font-family: "EvermoreItalic", "Evermore", "Nebyla", Arial, sans-serif !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
 }
 
 button,
