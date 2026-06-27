@@ -1650,3 +1650,27 @@ padding: 17px 6px 7px;
 font-size: clamp(15px, 4vw, 18px);
 }
 }
+
+.hero-main-image {
+  width: min(64vw, 560px) !important;
+  max-width: 64vw !important;
+  height: auto !important;
+  margin: 0 auto 34px !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 760px) {
+  .hero-main-image {
+    width: 58vw !important;
+    max-width: 58vw !important;
+    margin: 0 auto 30px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-main-image {
+    width: 56vw !important;
+    max-width: 56vw !important;
+  }
+}
