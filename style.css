@@ -753,9 +753,9 @@ h6 {
 
 .x-task-intro p {
   margin: 0;
+  color: var(--white) !important;
   text-align: left;
   text-decoration: none;
-  color: var(--white) !important;
 }
 
 .wallet-status-grid {
@@ -840,6 +840,14 @@ h6 {
   text-align: center;
 }
 
+.mission-card.empty h3,
+.mission-card.empty p,
+.x-task-message,
+.mission-card .x-task-message {
+  color: var(--green) !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
+}
+
 .mission-head {
   display: block;
   order: 1;
@@ -862,14 +870,6 @@ h6 {
   text-align: center;
   opacity: 1;
   visibility: visible;
-  color: var(--green) !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
-}
-
-.mission-card.empty h3,
-.mission-card.empty p {
-  color: var(--green) !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
 }
 
 .mission-link,
