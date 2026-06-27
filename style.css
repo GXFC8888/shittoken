@@ -2143,7 +2143,7 @@ h6 {
 .task-card .mission-card.empty p,
 .mission-card .x-task-message,
 .x-task-message {
-  color: #4caf39 !important;
+  color: #43a832 !important;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
 }
 
@@ -2159,7 +2159,7 @@ h6 {
   .task-card .mission-card.empty p,
   .mission-card .x-task-message,
   .x-task-message {
-    color: #4caf39 !important;
+    color: #43a832 !important;
   }
 }
 
@@ -2167,5 +2167,26 @@ h6 {
   .ref-link-box input,
   .ref-link-box textarea {
     font-size: clamp(15px, 4.1vw, 20px) !important;
+  }
+}
+
+.x-task-intro p,
+.task-card .card-title-row p,
+.task-card .mission-card.empty h3,
+.task-card .mission-card.empty p,
+.mission-card .x-task-message,
+.x-task-message {
+  color: #fffdf4 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-intro p,
+  .task-card .card-title-row p,
+  .task-card .mission-card.empty h3,
+  .task-card .mission-card.empty p,
+  .mission-card .x-task-message,
+  .x-task-message {
+    color: #fffdf4 !important;
   }
 }
