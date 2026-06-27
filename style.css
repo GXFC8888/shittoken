@@ -1656,3 +1656,30 @@ h6 {
     font-size: clamp(17px, 4.4vw, 23px) !important;
   }
 }
+
+.ref-link-box #refLink,
+.ref-link-box input#refLink {
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  transform: none !important;
+  padding: 0 !important;
+  color: #111111 !important;
+}
+
+@media (max-width: 760px) {
+  .ref-link-box #refLink,
+  .ref-link-box input#refLink {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .ref-link-box #refLink,
+  .ref-link-box input#refLink {
+    font-size: 17px !important;
+  }
+}
