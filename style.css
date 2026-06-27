@@ -1683,3 +1683,75 @@ h6 {
     font-size: 10px !important;
   }
 }
+
+.hero-copy,
+.referral-intro,
+.referral-levels p,
+.x-task-intro p,
+.overview-copy p,
+.tokenomics-center-copy p,
+.aligned-card-copy p,
+.mission-card.empty h3,
+.mission-card.empty p,
+.reward,
+.mission-head .reward,
+.status-pill span::after,
+.status-pill strong,
+#walletText,
+#xStatusText,
+.x-task-message,
+.mission-card .x-task-message,
+.message,
+.small-message {
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  line-height: 1.28 !important;
+}
+
+@media (max-width: 760px) {
+  .hero-copy,
+  .referral-intro,
+  .referral-levels p,
+  .x-task-intro p,
+  .overview-copy p,
+  .tokenomics-center-copy p,
+  .aligned-card-copy p,
+  .mission-card.empty h3,
+  .mission-card.empty p,
+  .reward,
+  .mission-head .reward,
+  .status-pill span::after,
+  .status-pill strong,
+  #walletText,
+  #xStatusText,
+  .x-task-message,
+  .mission-card .x-task-message,
+  .message,
+  .small-message {
+    font-size: clamp(36px, 8.9vw, 50px) !important;
+    line-height: 1.26 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-copy,
+  .referral-intro,
+  .referral-levels p,
+  .x-task-intro p,
+  .overview-copy p,
+  .tokenomics-center-copy p,
+  .aligned-card-copy p,
+  .mission-card.empty h3,
+  .mission-card.empty p,
+  .reward,
+  .mission-head .reward,
+  .status-pill span::after,
+  .status-pill strong,
+  #walletText,
+  #xStatusText,
+  .x-task-message,
+  .mission-card .x-task-message,
+  .message,
+  .small-message {
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+  }
+}
