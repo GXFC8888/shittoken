@@ -1680,6 +1680,6 @@ h6 {
 @media (max-width: 430px) {
   .ref-link-box #refLink,
   .ref-link-box input#refLink {
-    font-size: 12px !important;
+    font-size: 8px !important;
   }
 }
