@@ -356,6 +356,10 @@ button:disabled {
   margin: 0 auto 34px;
   object-fit: contain;
   filter: none;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  outline: none;
 }
 
 .pepe-divider {
