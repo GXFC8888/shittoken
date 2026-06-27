@@ -1566,3 +1566,303 @@ h6 {
     font-size: clamp(15px, 4vw, 18px);
   }
 }
+
+.tagline,
+.hero-tagline,
+.hero-oh,
+.hero-copy,
+.referral-card h2,
+.task-card h2,
+.overview-card h2,
+.overview-card .aligned-section-content h2,
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2,
+.card-title-row p,
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p,
+.task-card .card-title-row p,
+.referral-intro,
+.referral-levels p,
+.x-task-intro p,
+.aligned-card-copy p,
+.tokenomics-center-copy p,
+.overview-copy p,
+.overview-card > .aligned-card-copy p,
+.tokenomics-card > .tokenomics-center-copy p,
+.reward,
+.mission-head .reward,
+.mission-card.empty h3,
+.mission-card.empty p,
+.status-pill span::after,
+.status-pill strong,
+#walletText,
+#xStatusText,
+.message,
+.small-message,
+.x-task-message,
+.mission-card .x-task-message,
+.token-number,
+.footer-note {
+  color: #fffdf4 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
+}
+
+.message.ok,
+.small-message.ok,
+.x-task-message,
+.mission-card .x-task-message {
+  color: #fffdf4 !important;
+}
+
+.message.err,
+.small-message.err {
+  color: #fffdf4 !important;
+}
+
+.brand-word-text {
+  font-size: clamp(72px, 8.4vw, 118px);
+  -webkit-text-stroke: 1.8px var(--ink);
+  text-shadow: 0 5px 0 rgba(0, 0, 0, .28),
+               6px 8px 9px rgba(0, 0, 0, .2);
+}
+
+.hero-oh {
+  margin-bottom: 18px;
+  color: #fffdf4 !important;
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 400 !important;
+  line-height: 1.18;
+  letter-spacing: .02em;
+  text-align: center;
+}
+
+.hero-shit-center {
+  display: block;
+  width: 100%;
+  margin: 4px auto 0;
+  text-align: center;
+}
+
+.hero-copy {
+  color: #fffdf4 !important;
+  font-size: clamp(40px, 5.2vw, 62px);
+  line-height: 1.18;
+}
+
+.referral-card h2,
+.task-card h2,
+.overview-card h2,
+.overview-card .aligned-section-content h2 {
+  color: #fffdf4 !important;
+  font-size: clamp(50px, 6.4vw, 78px);
+}
+
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2 {
+  color: #fffdf4 !important;
+  font-size: clamp(66px, 8.2vw, 104px);
+}
+
+.card-title-row p,
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p,
+.task-card .card-title-row p,
+.referral-levels p,
+.x-task-intro p,
+.aligned-card-copy p,
+.tokenomics-center-copy p,
+.overview-copy p,
+.overview-card > .aligned-card-copy p,
+.tokenomics-card > .tokenomics-center-copy p,
+.reward,
+.mission-head .reward,
+.mission-card.empty h3,
+.status-pill span::after,
+.status-pill strong,
+#walletText,
+#xStatusText {
+  font-size: clamp(30px, 3.9vw, 44px);
+}
+
+.hero-main-image {
+  width: min(82vw, 700px);
+  max-width: 82%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.exchange-list {
+  width: min(100% - 84px, 620px);
+  max-width: 620px;
+  gap: 42px;
+}
+
+.exchange-item {
+  min-height: 78px;
+  padding: 14px 92px 8px 34px;
+  border: 3px solid rgba(255, 255, 255, .96);
+  background: transparent;
+  color: #fffdf4;
+  overflow: visible;
+  box-shadow: 0 10px 16px rgba(0, 0, 0, .12);
+}
+
+.exchange-item:hover {
+  background: rgba(255, 255, 255, .06);
+}
+
+.exchange-name {
+  color: #fffdf4;
+  font-size: clamp(44px, 5.8vw, 66px);
+  text-shadow: 0 4px 0 rgba(0, 0, 0, .18);
+}
+
+@media (max-width: 760px) {
+  .brand-word-text {
+    font-size: 54px;
+    -webkit-text-stroke: 1.3px var(--ink);
+    transform: translateY(7px);
+  }
+
+  .hero-oh {
+    margin-bottom: 12px;
+    font-size: clamp(27px, 7.4vw, 36px);
+    line-height: 1.22;
+  }
+
+  .hero-copy {
+    font-size: clamp(29px, 7.6vw, 39px);
+    line-height: 1.22;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .overview-card h2,
+  .overview-card .aligned-section-content h2 {
+    font-size: clamp(44px, 11.5vw, 60px);
+  }
+
+  .tokenomics-card h2,
+  .tokenomics-card .aligned-section-content h2 {
+    font-size: clamp(52px, 12.5vw, 72px);
+  }
+
+  .referral-levels p,
+  .card-title-row p,
+  .referral-card .card-title-row p,
+  .referral-card > .center-card-title-row p,
+  .task-card .card-title-row p,
+  .x-task-intro p,
+  .aligned-card-copy p,
+  .tokenomics-center-copy p,
+  .overview-copy p,
+  .overview-card > .aligned-card-copy p,
+  .tokenomics-card > .tokenomics-center-copy p,
+  .reward,
+  .mission-head .reward,
+  .mission-card.empty h3,
+  .mission-card.empty p,
+  .status-pill span::after,
+  .status-pill strong,
+  #walletText,
+  #xStatusText {
+    font-size: clamp(25px, 6.6vw, 34px);
+  }
+
+  .hero-main-image {
+    width: 74vw;
+    max-width: 74vw;
+    margin: 0 auto 30px;
+  }
+
+  .exchange-list {
+    width: min(100% - 54px, 420px);
+    max-width: 420px;
+    margin: 12px auto 62px;
+    gap: 28px;
+  }
+
+  .exchange-list .exchange-item:nth-child(5) {
+    margin-top: 20px;
+  }
+
+  .exchange-item {
+    width: 100%;
+    min-height: 66px;
+    padding: 12px 70px 8px 24px;
+    border: 2px solid rgba(255, 255, 255, .96);
+    background: transparent;
+    color: #fffdf4;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, .12);
+    overflow: visible;
+  }
+
+  .exchange-name {
+    color: #fffdf4;
+    font-size: clamp(31px, 8.2vw, 43px);
+    line-height: 1;
+    text-shadow: none;
+    transform: translateY(2px);
+    white-space: nowrap;
+  }
+
+  .exchange-logo {
+    right: 13px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .exchange-logo img {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-word-text {
+    font-size: 48px;
+  }
+
+  .hero-oh {
+    font-size: clamp(25px, 7vw, 32px);
+  }
+
+  .hero-copy {
+    font-size: clamp(27px, 7.2vw, 35px);
+  }
+
+  .hero-main-image {
+    width: 72vw;
+    max-width: 72vw;
+  }
+
+  .exchange-list {
+    width: min(100% - 48px, 380px);
+    max-width: 380px;
+    gap: 26px;
+  }
+
+  .exchange-list .exchange-item:nth-child(5) {
+    margin-top: 22px;
+  }
+
+  .exchange-item {
+    min-height: 64px;
+    padding: 12px 62px 8px 22px;
+  }
+
+  .exchange-name {
+    font-size: clamp(28px, 7.8vw, 38px);
+  }
+
+  .exchange-logo {
+    right: 11px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .exchange-logo img {
+    width: 34px;
+    height: 34px;
+  }
+}
