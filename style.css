@@ -1285,3 +1285,180 @@ h6 {
     font-size: clamp(46px, 11.5vw, 62px);
   }
 }
+
+.hero-oh {
+  transform: translateX(-2.1em) !important;
+}
+
+.referral-card h2,
+.task-card h2,
+.overview-card h2,
+.overview-card .aligned-section-content h2,
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2 {
+  font-size: clamp(60px, 7.4vw, 96px) !important;
+}
+
+.hero-copy {
+  font-size: clamp(46px, 5.8vw, 70px) !important;
+  line-height: 1.2 !important;
+}
+
+.card-title-row p,
+.referral-card .card-title-row p,
+.referral-card > .center-card-title-row p,
+.task-card .card-title-row p,
+.referral-intro,
+.x-task-intro p,
+.aligned-card-copy p,
+.tokenomics-center-copy p,
+.overview-copy p,
+.reward,
+.mission-head .reward,
+.status-pill span::after,
+.status-pill strong,
+#walletText,
+#xStatusText,
+.mission-card.empty h3,
+.mission-card.empty p {
+  font-size: clamp(36px, 4.6vw, 54px) !important;
+  line-height: 1.28 !important;
+}
+
+.referral-levels {
+  gap: 0 !important;
+  justify-items: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+.referral-levels p {
+  font-size: clamp(36px, 4.6vw, 54px) !important;
+  line-height: 1.05 !important;
+  margin: 0 auto 10px !important;
+  text-align: center !important;
+}
+
+.exchange-name {
+  font-size: clamp(38px, 4.8vw, 58px) !important;
+  transform: translateY(3px) !important;
+}
+
+@media (max-width: 760px) {
+  .hero-oh {
+    transform: translateX(-2em) !important;
+  }
+
+  .hero-oh-small {
+    font-size: clamp(27px, 6.7vw, 36px) !important;
+  }
+
+  .hero-shit-big {
+    font-size: clamp(48px, 11.2vw, 66px) !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(33px, 8.3vw, 44px) !important;
+    line-height: 1.22 !important;
+  }
+
+  .referral-card h2,
+  .task-card h2,
+  .overview-card h2,
+  .overview-card .aligned-section-content h2 {
+    font-size: clamp(52px, 13vw, 72px) !important;
+  }
+
+  .tokenomics-card h2,
+  .tokenomics-card .aligned-section-content h2 {
+    font-size: clamp(58px, 14vw, 78px) !important;
+  }
+
+  .card-title-row p,
+  .referral-card .card-title-row p,
+  .referral-card > .center-card-title-row p,
+  .task-card .card-title-row p,
+  .referral-intro,
+  .x-task-intro p,
+  .aligned-card-copy p,
+  .tokenomics-center-copy p,
+  .overview-copy p,
+  .reward,
+  .mission-head .reward,
+  .status-pill span::after,
+  .status-pill strong,
+  #walletText,
+  #xStatusText,
+  .mission-card.empty h3,
+  .mission-card.empty p {
+    font-size: clamp(30px, 7.4vw, 40px) !important;
+    line-height: 1.24 !important;
+  }
+
+  .referral-card .center-card-title-row {
+    margin-bottom: 16px !important;
+  }
+
+  .referral-intro {
+    margin-bottom: 26px !important;
+  }
+
+  .referral-levels {
+    gap: 0 !important;
+  }
+
+  .referral-levels p {
+    font-size: clamp(31px, 7.8vw, 42px) !important;
+    line-height: 1.05 !important;
+    margin: 0 auto 12px !important;
+  }
+
+  .exchange-list {
+    width: min(100% - 108px, 300px) !important;
+    max-width: 300px !important;
+  }
+
+  .exchange-name {
+    font-size: clamp(22px, 6.1vw, 29px) !important;
+    transform: translateY(2px) !important;
+  }
+
+  .exchange-item {
+    padding: 10px 44px 7px 14px !important;
+  }
+
+  .exchange-logo {
+    right: 8px !important;
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .exchange-logo img {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-oh {
+    transform: translateX(-1.8em) !important;
+  }
+
+  .hero-copy {
+    font-size: clamp(31px, 7.8vw, 39px) !important;
+  }
+
+  .exchange-list {
+    width: min(100% - 116px, 286px) !important;
+    max-width: 286px !important;
+  }
+
+  .exchange-name {
+    font-size: clamp(20px, 5.8vw, 26px) !important;
+  }
+
+  .referral-levels p {
+    font-size: clamp(29px, 7.2vw, 38px) !important;
+    margin-bottom: 10px !important;
+  }
+}
