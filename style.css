@@ -198,6 +198,7 @@ button:disabled {
   letter-spacing: .02em;
   text-align: center;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
+  transform: translateX(-2.1em);
 }
 
 .hero-oh-small {
@@ -223,9 +224,9 @@ button:disabled {
   max-width: 100%;
   margin-top: 0;
   color: var(--white) !important;
-  font-size: clamp(40px, 5.2vw, 62px);
+  font-size: clamp(46px, 5.8vw, 70px);
   font-weight: 400 !important;
-  line-height: 1.18;
+  line-height: 1.2;
   overflow-wrap: break-word;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
 }
@@ -306,7 +307,7 @@ button:disabled {
   position: relative;
   z-index: 2;
   display: grid;
-  width: min(100% - 120px, 620px);
+  width: min(100% - 60px, 620px);
   max-width: 620px;
   margin: 12px auto 72px;
   gap: 42px;
@@ -345,7 +346,7 @@ button:disabled {
   max-width: 100%;
   color: var(--white);
   font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-  font-size: clamp(44px, 5.8vw, 66px);
+  font-size: clamp(38px, 4.8vw, 58px);
   font-weight: 400 !important;
   font-style: italic !important;
   line-height: 1;
@@ -356,7 +357,7 @@ button:disabled {
   overflow: hidden;
   text-overflow: clip;
   text-shadow: 0 4px 0 rgba(0, 0, 0, .18);
-  transform: translateY(4px);
+  transform: translateY(3px);
 }
 
 .exchange-logo {
@@ -365,8 +366,8 @@ button:disabled {
   top: 50%;
   display: grid;
   place-items: center;
-  width: 62px;
-  height: 62px;
+  width: 70px;
+  height: 70px;
   transform: translateY(-50%);
   border-radius: 50%;
   overflow: visible;
@@ -374,8 +375,8 @@ button:disabled {
 
 .exchange-logo img {
   display: block;
-  width: 54px;
-  height: 54px;
+  width: 62px;
+  height: 62px;
   object-fit: contain;
   border-radius: 50%;
 }
@@ -488,7 +489,7 @@ h6 {
   width: 100%;
   margin: 0 0 34px;
   color: var(--white) !important;
-  font-size: clamp(50px, 6.4vw, 78px);
+  font-size: clamp(60px, 7.4vw, 96px);
   font-weight: 900 !important;
   line-height: 1.02;
   text-align: center;
@@ -500,7 +501,7 @@ h6 {
   width: 100%;
   margin: 0 0 20px;
   color: var(--white) !important;
-  font-size: clamp(66px, 8.2vw, 104px);
+  font-size: clamp(60px, 7.4vw, 96px);
   font-weight: 900 !important;
   line-height: 1.02;
   text-align: center;
@@ -547,40 +548,57 @@ h6 {
 #walletText,
 #xStatusText,
 .mission-card.empty h3 {
-  font-size: clamp(30px, 3.9vw, 44px);
+  font-size: clamp(36px, 4.6vw, 54px);
   font-weight: 400 !important;
-  line-height: 1.32;
+  line-height: 1.28;
+}
+
+.referral-card h2 {
+  margin-bottom: 64px !important;
+}
+
+.referral-card .center-card-title-row {
+  margin-bottom: 46px !important;
 }
 
 .referral-intro {
   max-width: 860px;
-  margin: 0 auto 22px !important;
+  margin: 0 auto 42px !important;
   padding: 0 !important;
   text-align: center !important;
 }
 
 .referral-levels {
   display: grid;
-  justify-items: start;
-  width: max-content;
+  justify-items: center;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  gap: 10px;
-  text-align: left;
+  gap: 0;
+  text-align: center;
+}
+
+.referral-levels p {
+  margin: 0 auto 10px !important;
+  text-align: center !important;
+  line-height: 1.05 !important;
 }
 
 .ref-link-box {
   position: relative;
   z-index: 1;
-  display: flex;
-  align-items: center;
-  width: min(100% - 36px, 620px);
-  min-height: 82px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: min(100% - 60px, 460px) !important;
+  max-width: 460px !important;
+  min-height: 74px !important;
+  height: 74px !important;
   margin: 38px auto 30px;
-  padding: 12px 30px;
-  background: #fffdf4;
-  border: 3px dashed rgba(17, 17, 17, .42);
-  border-radius: 28px;
+  padding: 10px 18px !important;
+  background: #fffdf4 !important;
+  border: 3px dashed rgba(17, 17, 17, .42) !important;
+  border-radius: 28px !important;
   box-shadow: none;
 }
 
@@ -588,19 +606,25 @@ h6 {
 .ref-link-box textarea {
   position: relative;
   z-index: 1;
-  width: 100%;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
   border: 0;
   outline: 0;
   resize: none;
   background: transparent;
   color: var(--ink);
-  font-size: clamp(24px, 3.4vw, 36px);
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-size: clamp(17px, 4.2vw, 22px) !important;
   font-weight: 400 !important;
-  line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transform: translateY(3px);
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  transform: none !important;
 }
 
 .icon-copy,
@@ -619,20 +643,33 @@ h6 {
   margin: 34px auto 0;
 }
 
-.btn {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
+.btn,
+.two-actions .btn,
+.mission-actions .btn,
+#copyRefBtnMobile,
+#claimReferralBtn,
+.open-task-btn,
+.verify-task-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 100%;
-  min-height: 78px;
-  padding: 18px 22px 10px;
+  min-height: 70px !important;
+  padding: 0 14px !important;
   border: 2px solid rgba(255, 255, 255, .74);
   border-radius: 999px;
   color: var(--ink);
-  font-size: clamp(22px, 3vw, 32px);
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-size: clamp(16px, 3.3vw, 24px) !important;
+  font-style: italic !important;
   font-weight: 400 !important;
-  line-height: 1;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
   text-decoration: none;
+  transform: none !important;
   box-shadow: 0 10px 16px rgba(0, 0, 0, .22), inset 0 -3px 0 rgba(0, 0, 0, .08);
   transition: transform .12s ease, opacity .12s ease;
 }
@@ -715,6 +752,7 @@ h6 {
   margin: 0;
   text-align: left;
   text-decoration: none;
+  color: var(--white) !important;
 }
 
 .wallet-status-grid {
@@ -821,6 +859,7 @@ h6 {
   text-align: center;
   opacity: 1;
   visibility: visible;
+  color: var(--white) !important;
 }
 
 .mission-link,
@@ -832,12 +871,6 @@ h6 {
 
 .mission-actions {
   order: 3;
-}
-
-.mission-actions .btn {
-  min-height: 72px;
-  margin: 0;
-  font-size: clamp(20px, 3vw, 29px);
 }
 
 .aligned-card-copy,
@@ -1041,18 +1074,19 @@ h6 {
     gap: 10px;
     margin-bottom: 20px;
     line-height: 1;
+    transform: translateX(-2em);
   }
 
   .hero-oh-small {
-    font-size: clamp(24px, 6.2vw, 32px);
+    font-size: clamp(27px, 6.7vw, 36px);
   }
 
   .hero-shit-big {
-    font-size: clamp(42px, 10vw, 58px);
+    font-size: clamp(48px, 11.2vw, 66px);
   }
 
   .hero-copy {
-    font-size: clamp(29px, 7.6vw, 39px);
+    font-size: clamp(33px, 8.3vw, 44px);
     line-height: 1.22;
   }
 
@@ -1077,8 +1111,8 @@ h6 {
   }
 
   .exchange-list {
-    width: min(100% - 92px, 340px);
-    max-width: 340px;
+    width: min(100% - 74px, 360px);
+    max-width: 360px;
     margin: 12px auto 66px;
     gap: 24px;
   }
@@ -1089,25 +1123,36 @@ h6 {
 
   .exchange-item {
     width: 100%;
-    min-height: 58px;
-    padding: 10px 52px 7px 18px;
+    min-height: 56px;
+    padding: 10px 54px 7px 14px;
     border-width: 2px;
   }
 
-  .exchange-name {
-    font-size: clamp(25px, 7vw, 34px);
-    transform: translateY(2px);
-  }
-
   .exchange-logo {
-    right: 10px;
-    width: 36px;
-    height: 36px;
+    right: 7px;
+    width: 42px;
+    height: 42px;
   }
 
   .exchange-logo img {
-    width: 31px;
-    height: 31px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .exchange-list .exchange-item:nth-child(1) .exchange-name,
+  .exchange-list .exchange-item:nth-child(5) .exchange-name,
+  .exchange-list .exchange-item:nth-child(6) .exchange-name {
+    font-size: clamp(17px, 4.5vw, 21px);
+  }
+
+  .exchange-list .exchange-item:nth-child(2) .exchange-name,
+  .exchange-list .exchange-item:nth-child(3) .exchange-name,
+  .exchange-list .exchange-item:nth-child(4) .exchange-name {
+    font-size: clamp(21px, 5.6vw, 28px);
+  }
+
+  .exchange-list .exchange-item:nth-child(6) {
+    padding-right: 54px;
   }
 
   .hero-main-image {
@@ -1130,14 +1175,26 @@ h6 {
   .overview-card h2,
   .overview-card .aligned-section-content h2 {
     margin-bottom: 26px;
-    font-size: clamp(44px, 11.5vw, 60px);
+    font-size: clamp(52px, 13vw, 72px);
     line-height: 1.05;
   }
 
   .tokenomics-card h2,
   .tokenomics-card .aligned-section-content h2 {
     margin-bottom: 18px;
-    font-size: clamp(52px, 12.5vw, 72px);
+    font-size: clamp(58px, 14vw, 78px);
+  }
+
+  .referral-card h2 {
+    margin-bottom: 64px !important;
+  }
+
+  .referral-card .center-card-title-row {
+    margin-bottom: 46px !important;
+  }
+
+  .referral-intro {
+    margin-bottom: 42px !important;
   }
 
   .referral-levels p,
@@ -1154,21 +1211,48 @@ h6 {
   .status-pill strong,
   #walletText,
   #xStatusText {
-    font-size: clamp(25px, 6.6vw, 34px);
-    line-height: 1.3;
+    font-size: clamp(30px, 7.4vw, 40px);
+    line-height: 1.24;
   }
 
-  .ref-link-box,
-  .two-actions,
-  .mission-actions {
-    width: min(100% - 60px, 460px);
+  .referral-levels p {
+    font-size: clamp(31px, 7.8vw, 42px);
+    line-height: 1.05 !important;
+    margin: 0 auto 12px !important;
+  }
+
+  .ref-link-box {
+    width: min(100% - 60px, 460px) !important;
+    max-width: 460px !important;
+    min-height: 74px !important;
+    height: 74px !important;
+    border-radius: 28px !important;
+    padding: 10px 16px !important;
+  }
+
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(16px, 4.4vw, 21px) !important;
   }
 
   .two-actions,
   .mission-actions {
     grid-template-columns: 1fr;
     gap: 18px;
+    width: min(100% - 60px, 460px);
     margin-top: 30px;
+  }
+
+  .btn,
+  .two-actions .btn,
+  .mission-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn {
+    min-height: 66px !important;
+    padding: 0 10px !important;
+    font-size: clamp(15px, 4vw, 20px) !important;
   }
 
   .x-task-intro {
@@ -1223,6 +1307,7 @@ h6 {
 
   .hero-oh {
     gap: 8px;
+    transform: translateX(-1.8em);
   }
 
   .hero-oh-small {
@@ -1234,12 +1319,12 @@ h6 {
   }
 
   .hero-copy {
-    font-size: clamp(27px, 7.2vw, 35px);
+    font-size: clamp(31px, 7.8vw, 39px);
   }
 
   .exchange-list {
-    width: min(100% - 96px, 320px);
-    max-width: 320px;
+    width: min(100% - 82px, 350px);
+    max-width: 350px;
     margin-bottom: 62px;
     gap: 22px;
   }
@@ -1249,23 +1334,35 @@ h6 {
   }
 
   .exchange-item {
-    min-height: 56px;
-    padding: 10px 48px 7px 16px;
-  }
-
-  .exchange-name {
-    font-size: clamp(23px, 6.8vw, 31px);
+    min-height: 54px;
+    padding: 10px 52px 7px 12px;
   }
 
   .exchange-logo {
-    right: 9px;
-    width: 34px;
-    height: 34px;
+    right: 7px;
+    width: 40px;
+    height: 40px;
   }
 
   .exchange-logo img {
-    width: 29px;
-    height: 29px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .exchange-list .exchange-item:nth-child(1) .exchange-name,
+  .exchange-list .exchange-item:nth-child(5) .exchange-name,
+  .exchange-list .exchange-item:nth-child(6) .exchange-name {
+    font-size: clamp(16px, 4.2vw, 20px);
+  }
+
+  .exchange-list .exchange-item:nth-child(2) .exchange-name,
+  .exchange-list .exchange-item:nth-child(3) .exchange-name,
+  .exchange-list .exchange-item:nth-child(4) .exchange-name {
+    font-size: clamp(20px, 5.3vw, 26px);
+  }
+
+  .exchange-list .exchange-item:nth-child(6) {
+    padding-right: 56px;
   }
 
   .hero-main-image {
@@ -1284,832 +1381,12 @@ h6 {
   .tokenomics-card .aligned-section-content h2 {
     font-size: clamp(46px, 11.5vw, 62px);
   }
-}
-
-.hero-oh {
-  transform: translateX(-2.1em) !important;
-}
-
-.referral-card h2,
-.task-card h2,
-.overview-card h2,
-.overview-card .aligned-section-content h2,
-.tokenomics-card h2,
-.tokenomics-card .aligned-section-content h2 {
-  font-size: clamp(60px, 7.4vw, 96px) !important;
-}
-
-.hero-copy {
-  font-size: clamp(46px, 5.8vw, 70px) !important;
-  line-height: 1.2 !important;
-}
-
-.card-title-row p,
-.referral-card .card-title-row p,
-.referral-card > .center-card-title-row p,
-.task-card .card-title-row p,
-.referral-intro,
-.x-task-intro p,
-.aligned-card-copy p,
-.tokenomics-center-copy p,
-.overview-copy p,
-.reward,
-.mission-head .reward,
-.status-pill span::after,
-.status-pill strong,
-#walletText,
-#xStatusText,
-.mission-card.empty h3,
-.mission-card.empty p {
-  font-size: clamp(36px, 4.6vw, 54px) !important;
-  line-height: 1.28 !important;
-}
-
-.referral-levels {
-  gap: 0 !important;
-  justify-items: center !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-}
-
-.referral-levels p {
-  font-size: clamp(36px, 4.6vw, 54px) !important;
-  line-height: 1.05 !important;
-  margin: 0 auto 10px !important;
-  text-align: center !important;
-}
-
-.exchange-name {
-  font-size: clamp(38px, 4.8vw, 58px) !important;
-  transform: translateY(3px) !important;
-}
-
-@media (max-width: 760px) {
-  .hero-oh {
-    transform: translateX(-2em) !important;
-  }
-
-  .hero-oh-small {
-    font-size: clamp(27px, 6.7vw, 36px) !important;
-  }
-
-  .hero-shit-big {
-    font-size: clamp(48px, 11.2vw, 66px) !important;
-  }
-
-  .hero-copy {
-    font-size: clamp(33px, 8.3vw, 44px) !important;
-    line-height: 1.22 !important;
-  }
-
-  .referral-card h2,
-  .task-card h2,
-  .overview-card h2,
-  .overview-card .aligned-section-content h2 {
-    font-size: clamp(52px, 13vw, 72px) !important;
-  }
-
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(58px, 14vw, 78px) !important;
-  }
-
-  .card-title-row p,
-  .referral-card .card-title-row p,
-  .referral-card > .center-card-title-row p,
-  .task-card .card-title-row p,
-  .referral-intro,
-  .x-task-intro p,
-  .aligned-card-copy p,
-  .tokenomics-center-copy p,
-  .overview-copy p,
-  .reward,
-  .mission-head .reward,
-  .status-pill span::after,
-  .status-pill strong,
-  #walletText,
-  #xStatusText,
-  .mission-card.empty h3,
-  .mission-card.empty p {
-    font-size: clamp(30px, 7.4vw, 40px) !important;
-    line-height: 1.24 !important;
-  }
-
-  .referral-card .center-card-title-row {
-    margin-bottom: 16px !important;
-  }
-
-  .referral-intro {
-    margin-bottom: 26px !important;
-  }
-
-  .referral-levels {
-    gap: 0 !important;
-  }
 
   .referral-levels p {
-    font-size: clamp(31px, 7.8vw, 42px) !important;
-    line-height: 1.05 !important;
-    margin: 0 auto 12px !important;
-  }
-
-  .exchange-list {
-    width: min(100% - 108px, 300px) !important;
-    max-width: 300px !important;
-  }
-
-  .exchange-name {
-    font-size: clamp(22px, 6.1vw, 29px) !important;
-    transform: translateY(2px) !important;
-  }
-
-  .exchange-item {
-    padding: 10px 44px 7px 14px !important;
-  }
-
-  .exchange-logo {
-    right: 8px !important;
-    width: 32px !important;
-    height: 32px !important;
-  }
-
-  .exchange-logo img {
-    width: 28px !important;
-    height: 28px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .hero-oh {
-    transform: translateX(-1.8em) !important;
-  }
-
-  .hero-copy {
-    font-size: clamp(31px, 7.8vw, 39px) !important;
-  }
-
-  .exchange-list {
-    width: min(100% - 116px, 286px) !important;
-    max-width: 286px !important;
-  }
-
-  .exchange-name {
-    font-size: clamp(20px, 5.8vw, 26px) !important;
-  }
-
-  .referral-levels p {
-    font-size: clamp(29px, 7.2vw, 38px) !important;
+    font-size: clamp(29px, 7.2vw, 38px);
     margin-bottom: 10px !important;
   }
-}
 
-.exchange-list {
-  width: min(100% - 60px, 620px) !important;
-  max-width: 620px !important;
-}
-
-@media (max-width: 760px) {
-  .exchange-list {
-    width: min(100% - 54px, 420px) !important;
-    max-width: 420px !important;
-  }
-
-  .exchange-item {
-    min-height: 58px !important;
-    padding: 10px 52px 7px 18px !important;
-  }
-
-  .exchange-name {
-    font-size: clamp(21px, 5.6vw, 28px) !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .exchange-list {
-    width: min(100% - 54px, 420px) !important;
-    max-width: 420px !important;
-  }
-
-  .exchange-item {
-    min-height: 56px !important;
-    padding: 10px 48px 7px 16px !important;
-  }
-
-  .exchange-name {
-    font-size: clamp(20px, 5.3vw, 26px) !important;
-  }
-}
-
-.referral-card h2 {
-  margin-bottom: 46px !important;
-}
-
-.referral-card .center-card-title-row {
-  margin-bottom: 34px !important;
-}
-
-.referral-intro {
-  margin-top: 0 !important;
-  margin-bottom: 36px !important;
-}
-
-@media (max-width: 760px) {
-  .referral-card h2 {
-    margin-bottom: 44px !important;
-  }
-
-  .referral-card .center-card-title-row {
-    margin-bottom: 34px !important;
-  }
-
-  .referral-intro {
-    margin-top: 0 !important;
-    margin-bottom: 38px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card h2 {
-    margin-bottom: 42px !important;
-  }
-
-  .referral-intro {
-    margin-bottom: 36px !important;
-  }
-}
-
-@media (max-width: 760px) {
-  .exchange-list {
-    width: min(100% - 74px, 360px) !important;
-    max-width: 360px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  .exchange-item {
-    min-height: 56px !important;
-    padding: 10px 46px 7px 14px !important;
-  }
-
-  .exchange-name {
-    font-size: clamp(18px, 5vw, 24px) !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-    transform: translateY(2px) !important;
-  }
-
-  .exchange-logo {
-    right: 8px !important;
-    width: 34px !important;
-    height: 34px !important;
-  }
-
-  .exchange-logo img {
-    width: 30px !important;
-    height: 30px !important;
-  }
-
-  .referral-card h2 {
-    margin-bottom: 62px !important;
-  }
-
-  .referral-card .center-card-title-row {
-    margin-bottom: 46px !important;
-  }
-
-  .referral-intro {
-    margin-top: 0 !important;
-    margin-bottom: 42px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .exchange-list {
-    width: min(100% - 82px, 350px) !important;
-    max-width: 350px !important;
-  }
-
-  .exchange-item {
-    min-height: 54px !important;
-    padding: 10px 42px 7px 12px !important;
-  }
-
-  .exchange-name {
-    font-size: clamp(17px, 4.8vw, 22px) !important;
-  }
-
-  .exchange-logo {
-    right: 7px !important;
-    width: 32px !important;
-    height: 32px !important;
-  }
-
-  .exchange-logo img {
-    width: 28px !important;
-    height: 28px !important;
-  }
-
-  .referral-card h2 {
-    margin-bottom: 64px !important;
-  }
-
-  .referral-intro {
-    margin-bottom: 42px !important;
-  }
-}
-
-.exchange-logo {
-  width: 70px !important;
-  height: 70px !important;
-}
-
-.exchange-logo img {
-  width: 62px !important;
-  height: 62px !important;
-}
-
-.btn,
-.two-actions .btn,
-.mission-actions .btn,
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-  font-style: italic !important;
-  font-size: clamp(38px, 4.8vw, 58px) !important;
-  line-height: 1 !important;
-  padding: 0 22px !important;
-  min-height: 78px !important;
-}
-
-.ref-link-box {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-  font-style: italic !important;
-  font-size: clamp(38px, 4.8vw, 58px) !important;
-  line-height: 1 !important;
-  padding: 0 !important;
-  transform: none !important;
-}
-
-@media (max-width: 760px) {
-  .exchange-logo {
-    right: 7px !important;
-    width: 42px !important;
-    height: 42px !important;
-  }
-
-  .exchange-logo img {
-    width: 38px !important;
-    height: 38px !important;
-  }
-
-  .exchange-item {
-    padding-right: 54px !important;
-  }
-
-  .btn,
-  .two-actions .btn,
-  .mission-actions .btn,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-    font-style: italic !important;
-    font-size: clamp(22px, 6vw, 30px) !important;
-    line-height: 1 !important;
-    text-align: center !important;
-  }
-
-  .btn,
-  .two-actions .btn,
-  .mission-actions .btn,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn {
-    min-height: 74px !important;
-    padding: 0 18px !important;
-  }
-
-  .ref-link-box {
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea {
-    transform: none !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .exchange-logo {
-    right: 7px !important;
-    width: 40px !important;
-    height: 40px !important;
-  }
-
-  .exchange-logo img {
-    width: 36px !important;
-    height: 36px !important;
-  }
-
-  .exchange-item {
-    padding-right: 52px !important;
-  }
-
-  .btn,
-  .two-actions .btn,
-  .mission-actions .btn,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-size: clamp(21px, 5.8vw, 28px) !important;
-  }
-}
-
-.ref-link-box input,
-.ref-link-box textarea,
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn,
-.mission-actions .btn,
-.two-actions .btn {
-  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-  font-style: italic !important;
-  font-weight: 400 !important;
-  font-size: clamp(38px, 4.8vw, 58px) !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transform: none !important;
-}
-
-.ref-link-box {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  width: 100% !important;
-  height: 100% !important;
-  padding: 0 18px !important;
-}
-
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn,
-.mission-actions .btn,
-.two-actions .btn {
-  min-height: 78px !important;
-  padding: 0 22px !important;
-}
-
-@media (max-width: 760px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    font-size: clamp(22px, 6vw, 30px) !important;
-    line-height: 1 !important;
-    text-align: center !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    min-height: 74px !important;
-    padding: 0 18px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    font-size: clamp(21px, 5.8vw, 28px) !important;
-  }
-}
-
-.ref-link-box input,
-.ref-link-box textarea,
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn,
-.mission-actions .btn,
-.two-actions .btn {
-  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-  font-style: italic !important;
-  font-weight: 400 !important;
-  font-size: clamp(26px, 3.6vw, 38px) !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transform: none !important;
-}
-
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn,
-.mission-actions .btn,
-.two-actions .btn {
-  min-height: 74px !important;
-  padding: 0 18px !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  padding: 0 14px !important;
-}
-
-@media (max-width: 760px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    font-size: clamp(20px, 5.2vw, 26px) !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    font-size: clamp(19px, 4.8vw, 24px) !important;
-  }
-}
-
-.ref-link-box input,
-.ref-link-box textarea,
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn,
-.mission-actions .btn,
-.two-actions .btn {
-  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
-  font-style: italic !important;
-  font-weight: 400 !important;
-  font-size: clamp(16px, 3.3vw, 24px) !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  text-align: center !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transform: none !important;
-  overflow: hidden !important;
-  text-overflow: clip !important;
-}
-
-#copyRefBtnMobile,
-#claimReferralBtn,
-.open-task-btn,
-.verify-task-btn,
-.mission-actions .btn,
-.two-actions .btn {
-  min-height: 70px !important;
-  padding: 0 14px !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  width: 100% !important;
-  height: 100% !important;
-  padding: 0 12px !important;
-}
-
-@media (max-width: 760px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    font-size: clamp(15px, 4vw, 20px) !important;
-    white-space: nowrap !important;
-    line-height: 1 !important;
-  }
-
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    min-height: 66px !important;
-    padding: 0 10px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #copyRefBtnMobile,
-  #claimReferralBtn,
-  .open-task-btn,
-  .verify-task-btn,
-  .mission-actions .btn,
-  .two-actions .btn {
-    font-size: clamp(14px, 3.8vw, 16px) !important;
-  }
-}
-
-@media (max-width: 760px) {
-  .exchange-list .exchange-item:nth-child(1) .exchange-name,
-  .exchange-list .exchange-item:nth-child(5) .exchange-name,
-  .exchange-list .exchange-item:nth-child(6) .exchange-name {
-    font-size: clamp(17px, 4.5vw, 21px) !important;
-  }
-
-  .exchange-list .exchange-item:nth-child(2) .exchange-name,
-  .exchange-list .exchange-item:nth-child(3) .exchange-name,
-  .exchange-list .exchange-item:nth-child(4) .exchange-name {
-    font-size: clamp(21px, 5.6vw, 28px) !important;
-  }
-
-  .exchange-list .exchange-item:nth-child(6) {
-    padding-right: 54px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .exchange-list .exchange-item:nth-child(1) .exchange-name,
-  .exchange-list .exchange-item:nth-child(5) .exchange-name,
-  .exchange-list .exchange-item:nth-child(6) .exchange-name {
-    font-size: clamp(16px, 4.2vw, 20px) !important;
-  }
-
-  .exchange-list .exchange-item:nth-child(2) .exchange-name,
-  .exchange-list .exchange-item:nth-child(3) .exchange-name,
-  .exchange-list .exchange-item:nth-child(4) .exchange-name {
-    font-size: clamp(20px, 5.3vw, 26px) !important;
-  }
-
-  .exchange-list .exchange-item:nth-child(6) {
-    padding-right: 56px !important;
-  }
-}
-
-.ref-link-box {
-  min-height: 66px !important;
-  height: 66px !important;
-  width: min(100% - 54px, 620px) !important;
-  padding: 8px 18px !important;
-  border-radius: 999px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
-  font-size: clamp(22px, 3.2vw, 32px) !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  transform: none !important;
-  padding: 0 !important;
-  width: 100% !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-@media (max-width: 760px) {
-  .ref-link-box {
-    min-height: 64px !important;
-    height: 64px !important;
-    width: min(100% - 54px, 420px) !important;
-    padding: 8px 14px !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-size: clamp(18px, 4.4vw, 24px) !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .ref-link-box {
-    min-height: 62px !important;
-    height: 62px !important;
-    width: min(100% - 46px, 390px) !important;
-    padding: 8px 12px !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-size: clamp(16px, 4vw, 21px) !important;
-  }
-}
-
-.ref-link-box {
-  width: min(100% - 60px, 460px) !important;
-  max-width: 460px !important;
-  min-height: 74px !important;
-  height: 74px !important;
-  padding: 10px 18px !important;
-  border-radius: 28px !important;
-  border: 3px dashed rgba(17, 17, 17, .42) !important;
-  background: #fffdf4 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
-  font-size: clamp(18px, 3vw, 26px) !important;
-  line-height: 1 !important;
-  text-align: center !important;
-  transform: none !important;
-  padding: 0 !important;
-  width: 100% !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-@media (max-width: 760px) {
-  .ref-link-box {
-    width: min(100% - 60px, 460px) !important;
-    max-width: 460px !important;
-    min-height: 74px !important;
-    height: 74px !important;
-    border-radius: 28px !important;
-    padding: 10px 16px !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-size: clamp(15px, 3.8vw, 20px) !important;
-  }
-}
-
-@media (max-width: 430px) {
   .ref-link-box {
     width: min(100% - 54px, 420px) !important;
     max-width: 420px !important;
@@ -2120,73 +1397,16 @@ h6 {
 
   .ref-link-box input,
   .ref-link-box textarea {
-    font-size: clamp(14px, 3.5vw, 18px) !important;
-  }
-}
-
-.ref-link-box input,
-.ref-link-box textarea {
-  font-size: clamp(17px, 4.2vw, 22px) !important;
-  line-height: 1 !important;
-  font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
-  font-weight: 400 !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-.x-task-intro p,
-.task-card .card-title-row p,
-.task-card .mission-card.empty h3,
-.task-card .mission-card.empty p,
-.mission-card .x-task-message,
-.x-task-message {
-  color: #43a832 !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
-}
-
-@media (max-width: 760px) {
-  .ref-link-box input,
-  .ref-link-box textarea {
-    font-size: clamp(16px, 4.4vw, 21px) !important;
-  }
-
-  .x-task-intro p,
-  .task-card .card-title-row p,
-  .task-card .mission-card.empty h3,
-  .task-card .mission-card.empty p,
-  .mission-card .x-task-message,
-  .x-task-message {
-    color: #43a832 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .ref-link-box input,
-  .ref-link-box textarea {
     font-size: clamp(15px, 4.1vw, 20px) !important;
   }
-}
 
-.x-task-intro p,
-.task-card .card-title-row p,
-.task-card .mission-card.empty h3,
-.task-card .mission-card.empty p,
-.mission-card .x-task-message,
-.x-task-message {
-  color: #fffdf4 !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-}
-
-@media (max-width: 760px) {
-  .x-task-intro p,
-  .task-card .card-title-row p,
-  .task-card .mission-card.empty h3,
-  .task-card .mission-card.empty p,
-  .mission-card .x-task-message,
-  .x-task-message {
-    color: #fffdf4 !important;
+  .btn,
+  .two-actions .btn,
+  .mission-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn {
+    font-size: clamp(14px, 3.8vw, 16px) !important;
   }
 }
