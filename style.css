@@ -2123,3 +2123,49 @@ h6 {
     font-size: clamp(14px, 3.5vw, 18px) !important;
   }
 }
+
+.ref-link-box input,
+.ref-link-box textarea {
+  font-size: clamp(17px, 4.2vw, 22px) !important;
+  line-height: 1 !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.x-task-intro p,
+.task-card .card-title-row p,
+.task-card .mission-card.empty h3,
+.task-card .mission-card.empty p,
+.mission-card .x-task-message,
+.x-task-message {
+  color: #4caf39 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
+}
+
+@media (max-width: 760px) {
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(16px, 4.4vw, 21px) !important;
+  }
+
+  .x-task-intro p,
+  .task-card .card-title-row p,
+  .task-card .mission-card.empty h3,
+  .task-card .mission-card.empty p,
+  .mission-card .x-task-message,
+  .x-task-message {
+    color: #4caf39 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(15px, 4.1vw, 20px) !important;
+  }
+}
