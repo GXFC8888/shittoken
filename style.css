@@ -7,11 +7,28 @@
 }
 
 @font-face {
+  font-family: "Evermore";
+  src: url("/webFonts/Evermore/Evermore.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
   font-family: "EvermoreItalic";
   src: url("/webFonts/Evermore/EvermoreItalic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
   font-display: block;
+}
+
+
+.shit-font,
+.brand-word-text,
+.hero-oh .shit-font {
+  font-family: "EvermoreItalic", "Evermore", "Nebyla", Arial, sans-serif !important;
+  font-weight: 400 !important;
+  font-style: italic;
 }
 
 :root {
