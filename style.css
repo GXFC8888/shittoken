@@ -1789,3 +1789,71 @@ h6 {
     font-size: 13px !important;
   }
 }
+
+.top-wallet-link {
+  min-width: 104px !important;
+  min-height: 42px !important;
+  padding: 10px 16px 6px !important;
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-size: clamp(13px, 2vw, 18px) !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.hero-shit-big {
+  font-size: clamp(64px, 8vw, 102px) !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  font-size: clamp(20px, 4.8vw, 25px) !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+}
+
+.x-task-intro p {
+  color: #43a832 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
+}
+
+@media (max-width: 760px) {
+  .top-wallet-link {
+    min-width: 98px !important;
+    min-height: 40px !important;
+    padding: 9px 12px 5px !important;
+    font-size: 12px !important;
+  }
+
+  .hero-shit-big {
+    font-size: clamp(54px, 12.2vw, 72px) !important;
+  }
+
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(18px, 4.8vw, 23px) !important;
+  }
+
+  .x-task-intro p {
+    color: #43a832 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .top-wallet-link {
+    min-width: 92px !important;
+    min-height: 38px !important;
+    padding: 8px 10px 5px !important;
+    font-size: 11px !important;
+  }
+
+  .hero-shit-big {
+    font-size: clamp(48px, 11.5vw, 64px) !important;
+  }
+
+  .ref-link-box input,
+  .ref-link-box textarea {
+    font-size: clamp(17px, 4.5vw, 22px) !important;
+  }
+}
