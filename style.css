@@ -1836,3 +1836,74 @@ h6 {
     font-size: 12px !important;
   }
 }
+
+.top-wallet-link {
+  min-width: 104px !important;
+  max-width: 124px !important;
+  min-height: 38px !important;
+  padding: 8px 12px 5px !important;
+  font-size: clamp(11px, 1.6vw, 15px) !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  border-radius: 999px !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea,
+#refLink {
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(17px, 4.2vw, 23px) !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  transform: none !important;
+}
+
+#claimReferralBtn {
+  color: #111111 !important;
+  background: rgba(255, 255, 255, .94) !important;
+}
+
+#refMessage,
+.referral-card .message,
+.referral-card .small-message,
+.message.ok,
+.small-message.ok {
+  color: #43a832 !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .25) !important;
+}
+
+@media (max-width: 760px) {
+  .top-wallet-link {
+    min-width: 98px !important;
+    max-width: 116px !important;
+    min-height: 36px !important;
+    padding: 7px 10px 5px !important;
+    font-size: 10px !important;
+  }
+
+  .ref-link-box input,
+  .ref-link-box textarea,
+  #refLink {
+    font-size: clamp(16px, 4vw, 21px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .top-wallet-link {
+    min-width: 92px !important;
+    max-width: 108px !important;
+    min-height: 34px !important;
+    padding: 7px 9px 4px !important;
+    font-size: 9px !important;
+  }
+
+  .ref-link-box input,
+  .ref-link-box textarea,
+  #refLink {
+    font-size: clamp(15px, 3.8vw, 20px) !important;
+  }
+}
