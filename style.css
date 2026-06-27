@@ -1895,3 +1895,81 @@ h6 {
     font-size: clamp(19px, 4.8vw, 24px) !important;
   }
 }
+
+.ref-link-box input,
+.ref-link-box textarea,
+#copyRefBtnMobile,
+#claimReferralBtn,
+.open-task-btn,
+.verify-task-btn,
+.mission-actions .btn,
+.two-actions .btn {
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(16px, 3.3vw, 24px) !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+}
+
+#copyRefBtnMobile,
+#claimReferralBtn,
+.open-task-btn,
+.verify-task-btn,
+.mission-actions .btn,
+.two-actions .btn {
+  min-height: 70px !important;
+  padding: 0 14px !important;
+}
+
+.ref-link-box input,
+.ref-link-box textarea {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 12px !important;
+}
+
+@media (max-width: 760px) {
+  .ref-link-box input,
+  .ref-link-box textarea,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn,
+  .mission-actions .btn,
+  .two-actions .btn {
+    font-size: clamp(15px, 4vw, 20px) !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn,
+  .mission-actions .btn,
+  .two-actions .btn {
+    min-height: 66px !important;
+    padding: 0 10px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .ref-link-box input,
+  .ref-link-box textarea,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .open-task-btn,
+  .verify-task-btn,
+  .mission-actions .btn,
+  .two-actions .btn {
+    font-size: clamp(14px, 3.8vw, 18px) !important;
+  }
+}
