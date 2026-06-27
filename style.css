@@ -1970,7 +1970,7 @@ h6 {
   .verify-task-btn,
   .mission-actions .btn,
   .two-actions .btn {
-    font-size: clamp(14px, 3.8vw, 18px) !important;
+    font-size: clamp(14px, 3.8vw, 16px) !important;
   }
 }
 
