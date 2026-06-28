@@ -2667,3 +2667,189 @@ h6 {
     margin: 18px 0 0 !important;
   }
 }
+
+.x-task-mission-area {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 18px 0 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+.x-task-mission-area .mission-list,
+.x-task-mission-area .mission-card {
+  width: 100% !important;
+  display: block !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.x-task-mission-area .mission-head {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-task-mission-area .mission-head h3 {
+  display: none !important;
+}
+
+.x-task-mission-area .mission-head .reward,
+.x-task-mission-area .reward {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 52px 0 !important;
+  padding: 0 !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.18 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.x-task-mission-area .x-task-message,
+.x-task-mission-area .mission-card .x-task-message,
+.x-task-mission-area #missionList .x-task-message,
+.x-task-mission-area #missionList .mission-card .x-task-message {
+  position: relative !important;
+  left: calc(-96px - 28px) !important;
+  width: calc(100% + 96px + 28px) !important;
+  max-width: none !important;
+  margin: 0 auto 34px !important;
+  padding: 28px 24px !important;
+  border: 4px solid rgba(255, 255, 255, .96) !important;
+  border-radius: 0 34px 0 34px !important;
+  background: rgba(255, 255, 255, .04) !important;
+  color: var(--white) !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: center !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+  box-sizing: border-box !important;
+}
+
+.x-task-mission-area .mission-actions {
+  position: relative !important;
+  left: calc(-96px - 28px) !important;
+  width: calc(100% + 96px + 28px) !important;
+  max-width: none !important;
+  margin: 30px 0 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 34px !important;
+  justify-items: center !important;
+}
+
+.x-task-mission-area .mission-actions .btn,
+.x-task-mission-area .mission-actions button,
+.x-task-mission-area .open-task-btn,
+.x-task-mission-area .verify-task-btn {
+  width: min(100% - 54px, 420px) !important;
+  max-width: 420px !important;
+  min-height: 70px !important;
+  margin: 0 auto !important;
+  padding: 0 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--ink) !important;
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-size: clamp(18px, 4.7vw, 24px) !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  text-transform: none !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-mission-area {
+    margin: 18px 0 0 !important;
+  }
+
+  .x-task-mission-area .mission-head .reward,
+  .x-task-mission-area .reward {
+    margin: 0 0 52px 0 !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+    line-height: 1.18 !important;
+  }
+
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    left: calc(-68px - 18px) !important;
+    width: calc(100% + 68px + 18px) !important;
+    max-width: none !important;
+    margin: 0 auto 32px !important;
+    padding: 26px 22px !important;
+    border-radius: 0 32px 0 32px !important;
+    font-size: clamp(34px, 8.2vw, 48px) !important;
+    line-height: 1.26 !important;
+  }
+
+  .x-task-mission-area .mission-actions {
+    left: calc(-68px - 18px) !important;
+    width: calc(100% + 68px + 18px) !important;
+    margin: 30px 0 0 !important;
+    gap: 34px !important;
+  }
+
+  .x-task-mission-area .mission-actions .btn,
+  .x-task-mission-area .mission-actions button,
+  .x-task-mission-area .open-task-btn,
+  .x-task-mission-area .verify-task-btn {
+    width: min(100% - 54px, 420px) !important;
+    max-width: 420px !important;
+    font-size: clamp(18px, 4.7vw, 24px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-mission-area .mission-head .reward,
+  .x-task-mission-area .reward {
+    margin: 0 0 52px 0 !important;
+    font-size: clamp(31px, 7.8vw, 42px) !important;
+  }
+
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    left: calc(-68px - 16px) !important;
+    width: calc(100% + 68px + 16px) !important;
+    margin: 0 auto 30px !important;
+    padding: 24px 18px !important;
+    border-radius: 0 30px 0 30px !important;
+    font-size: clamp(31px, 7.8vw, 42px) !important;
+  }
+
+  .x-task-mission-area .mission-actions {
+    left: calc(-68px - 16px) !important;
+    width: calc(100% + 68px + 16px) !important;
+    margin: 28px 0 0 !important;
+  }
+
+  .x-task-mission-area .mission-actions .btn,
+  .x-task-mission-area .mission-actions button,
+  .x-task-mission-area .open-task-btn,
+  .x-task-mission-area .verify-task-btn {
+    font-size: clamp(17px, 4.4vw, 23px) !important;
+  }
+}
