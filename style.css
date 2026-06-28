@@ -230,7 +230,7 @@ button:disabled {
 .hero-shit-big {
   display: inline-block;
   color: var(--white) !important;
-  font-size: clamp(64px, 8vw, 102px);
+  font-size: clamp(78px, 9.2vw, 126px) !important;
   font-weight: 900 !important;
   line-height: 1;
   text-shadow: 0 4px 5px rgba(0, 0, 0, .34);
@@ -561,11 +561,11 @@ h6 {
 .tokenomics-card h2,
 .tokenomics-card .aligned-section-content h2 {
   width: 100%;
-  margin: 0 0 34px;
+  margin: 0 0 42px;
   color: var(--white) !important;
-  font-size: clamp(66px, 8vw, 108px);
+  font-size: clamp(78px, 9.2vw, 126px) !important;
   font-weight: 900 !important;
-  line-height: 1.02;
+  line-height: 1.02 !important;
   text-align: center;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
 }
@@ -959,16 +959,6 @@ h6 {
   margin-bottom: 20px !important;
 }
 
-.tokenomics-card h2,
-.tokenomics-card .aligned-section-content h2 {
-  font-size: clamp(58px, 13vw, 88px) !important;
-  line-height: 1 !important;
-  margin-bottom: 42px !important;
-  max-width: 100% !important;
-  text-align: center !important;
-  overflow-wrap: normal !important;
-}
-
 .tokenomics-center-copy > p:nth-child(1),
 .tokenomics-center-copy > p:nth-child(3),
 .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
@@ -1224,7 +1214,7 @@ h6 {
   }
 
   .hero-shit-big {
-    font-size: clamp(54px, 12.2vw, 72px);
+    font-size: clamp(66px, 15.5vw, 96px) !important;
   }
 
   .hero-copy,
@@ -1347,12 +1337,9 @@ h6 {
   .overview-card .aligned-section-content h2,
   .tokenomics-card h2,
   .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(58px, 14vw, 82px);
-    line-height: 1.05;
-  }
-
-  .task-card h2 {
-    font-size: clamp(62px, 14.5vw, 88px) !important;
+    font-size: clamp(66px, 15.5vw, 96px) !important;
+    line-height: 1.04 !important;
+    margin-bottom: 44px !important;
   }
 
   .referral-card h2 {
@@ -1447,12 +1434,6 @@ h6 {
 
   .tokenomics-title-row {
     margin-bottom: 14px !important;
-  }
-
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(54px, 12.5vw, 72px) !important;
-    margin-bottom: 38px !important;
   }
 
   .tokenomics-center-copy > p:nth-child(1),
@@ -1555,7 +1536,7 @@ h6 {
   }
 
   .hero-shit-big {
-    font-size: clamp(48px, 11.5vw, 64px);
+    font-size: clamp(60px, 14.5vw, 86px) !important;
   }
 
   .hero-copy,
@@ -1628,7 +1609,8 @@ h6 {
   .overview-card .aligned-section-content h2,
   .tokenomics-card h2,
   .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(52px, 13vw, 74px);
+    font-size: clamp(60px, 14.5vw, 86px) !important;
+    line-height: 1.04 !important;
   }
 
   .referral-levels p {
@@ -1678,11 +1660,6 @@ h6 {
 
   .tokenomics-card {
     padding-bottom: 30px !important;
-  }
-
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(52px, 12vw, 68px) !important;
   }
 
   .tokenomics-center-copy > p:nth-child(1),
@@ -1736,62 +1713,5 @@ h6 {
 
   #project-overview-2 .overview-copy {
     margin-bottom: 44px !important;
-  }
-}
-
-.referral-card h2,
-.task-card h2,
-.overview-card h2,
-.overview-card .aligned-section-content h2,
-.tokenomics-card h2,
-.tokenomics-card .aligned-section-content h2 {
-  font-size: clamp(78px, 9.2vw, 126px) !important;
-  line-height: 1.02 !important;
-  margin-bottom: 42px !important;
-}
-
-@media (max-width: 760px) {
-  .referral-card h2,
-  .task-card h2,
-  .overview-card h2,
-  .overview-card .aligned-section-content h2,
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(66px, 15.5vw, 96px) !important;
-    line-height: 1.04 !important;
-    margin-bottom: 44px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .referral-card h2,
-  .task-card h2,
-  .overview-card h2,
-  .overview-card .aligned-section-content h2,
-  .tokenomics-card h2,
-  .tokenomics-card .aligned-section-content h2 {
-    font-size: clamp(60px, 14.5vw, 86px) !important;
-    line-height: 1.04 !important;
-  }
-}
-
-.hero-shit-big {
-  display: inline-block;
-  color: var(--white) !important;
-  font-size: clamp(78px, 9.2vw, 126px) !important;
-  font-weight: 900 !important;
-  line-height: 1;
-  text-shadow: 0 4px 5px rgba(0, 0, 0, .34);
-}
-
-@media (max-width: 760px) {
-  .hero-shit-big {
-    font-size: clamp(66px, 15.5vw, 96px) !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .hero-shit-big {
-    font-size: clamp(60px, 14.5vw, 86px) !important;
   }
 }
