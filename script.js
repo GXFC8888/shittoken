@@ -1405,33 +1405,3 @@ window.addEventListener("load", async () => {
 
   listenWalletChange();
 });
-
-.x-task-status-row {
-  align-items: center !important;
-}
-
-.toaster-character-small {
-  align-self: center !important;
-  justify-self: center !important;
-  transform: translateY(8px) !important;
-}
-
-.x-right-content .wallet-status-grid {
-  margin-bottom: 18px !important;
-}
-
-.x-right-content .mission-list {
-  margin-top: 18px !important;
-}
-
-.x-right-content .x-task-message,
-.x-right-content .mission-card .x-task-message,
-.x-right-content .mission-card.empty h3,
-.x-right-content .mission-card.empty p,
-.x-right-content #missionList .mission-card.empty h3,
-.x-right-content #missionList .mission-card.empty p,
-.x-right-content #missionList .x-task-message,
-.x-right-content #missionList .mission-card .x-task-message {
-  margin: 18px auto 34px !important;
-}
-
