@@ -1541,3 +1541,112 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+.exchange-item {
+  min-height: 86px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  overflow: visible !important;
+}
+
+.exchange-name {
+  line-height: 1.18 !important;
+  padding-top: 4px !important;
+  padding-bottom: 8px !important;
+  overflow: visible !important;
+  transform: translateY(-1px) !important;
+}
+
+.exchange-logo {
+  overflow: visible !important;
+}
+
+.tokenomics-center-copy > p:nth-child(1),
+.tokenomics-center-copy > p:nth-child(3),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+  font-size: clamp(70px, 8.8vw, 108px) !important;
+  line-height: 1.05 !important;
+  margin: 20px auto 14px !important;
+}
+
+.token-number,
+.token-number span,
+.tokenomics-card .token-number,
+.tokenomics-card .token-number span,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  font-size: clamp(52px, 6vw, 78px) !important;
+  line-height: 1 !important;
+}
+
+.token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  margin-bottom: 60px !important;
+}
+
+@media (max-width: 760px) {
+  .exchange-item {
+    min-height: 64px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .exchange-name {
+    line-height: 1.18 !important;
+    padding-top: 4px !important;
+    padding-bottom: 7px !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    font-size: clamp(44px, 10.8vw, 64px) !important;
+    line-height: 1.05 !important;
+    margin: 16px auto 12px !important;
+  }
+
+  .token-number,
+  .token-number span,
+  .tokenomics-card .token-number,
+  .tokenomics-card .token-number span,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: clamp(32px, 7.8vw, 46px) !important;
+    line-height: 1.02 !important;
+  }
+
+  .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    margin-bottom: 48px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .exchange-item {
+    min-height: 62px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .exchange-name {
+    line-height: 1.2 !important;
+    padding-top: 4px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    font-size: clamp(38px, 9.8vw, 56px) !important;
+  }
+
+  .token-number,
+  .token-number span,
+  .tokenomics-card .token-number,
+  .tokenomics-card .token-number span,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: clamp(28px, 7vw, 40px) !important;
+  }
+}
