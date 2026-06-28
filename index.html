@@ -1,165 +1,240 @@
-.x-task-layout {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 116px minmax(0, 1fr);
-  align-items: start;
-  justify-content: center;
-  gap: 28px;
-  width: min(100% - 40px, 620px);
-  margin: -10px auto 16px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHIT - Referral Airdrop & X Tasks</title>
+  <link rel="preload" href="/webFonts/Nebyla/NebylaRegular.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="/webFonts/Evermore/Evermore.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="/webFonts/Evermore/EvermoreItalic.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="stylesheet" href="/style.css?v=20260628xalign1" />
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero-top" id="home">
+      <a class="brand-mark" href="#home" aria-label="SHIT home">
+        <img src="/shit-logo-original-color-bold.png" alt="SHIT character" />
+        <span class="brand-word-text">SHIT</span>
+      </a>
+      <button id="connectBtn" class="top-wallet-link" type="button">Link wallet</button>
+    </header>
 
-.x-left-media {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding-top: 8px;
-}
+    <section class="hero-card">
+      <p class="tagline hero-tagline">
+        <span class="hero-oh">
+          <span class="hero-oh-small">Oh</span>
+          <span class="hero-shit-big">SHIT</span>
+        </span>
+        <span class="hero-copy">The craziest memecoin airdrop experiment in existence is starting! Claim $shit for free and have fun</span>
+      </p>
 
-.toaster-character-small {
-  display: block;
-  width: 112px;
-  height: auto;
-  object-fit: contain;
-}
+      <div class="social-actions icon-only-actions three-social-icons">
+        <a class="social-pill coming-soon-link" href="#" aria-label="CoinGecko">
+          <span class="social-icon image-icon">
+            <img src="/coingecko.svg" alt="CoinGecko" />
+          </span>
+        </a>
+        <a class="social-pill" href="https://x.com/GXFCLJ" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <span class="social-icon image-icon x-image-icon">
+            <img src="/x.svg" alt="X" />
+          </span>
+        </a>
+        <a class="social-pill coming-soon-link" href="#" aria-label="CoinMarketCap">
+          <span class="social-icon image-icon">
+            <img src="/coinmarketcap.png" alt="CoinMarketCap" />
+          </span>
+        </a>
+      </div>
 
-.x-right-content {
-  display: grid;
-  justify-items: start;
-  text-align: left;
-  min-width: 0;
-}
+      <div class="exchange-list" aria-label="Exchange links">
+        <a class="exchange-item coming-soon-link" href="#" aria-label="Uniswap">
+          <span class="exchange-name">uniswap</span>
+          <span class="exchange-logo"><img src="/uniswap.png" alt="Uniswap" /></span>
+        </a>
 
-.x-right-content .x-task-intro {
-  display: block;
-  width: 100%;
-  margin: 0 0 54px !important;
-}
+        <a class="exchange-item coming-soon-link" href="#" aria-label="Bybit">
+          <span class="exchange-name">bybit</span>
+          <span class="exchange-logo"><img src="/bybit.png" alt="Bybit" /></span>
+        </a>
 
-.x-right-content .x-task-intro p {
-  margin: 0;
-  text-align: left !important;
-}
+        <a class="exchange-item coming-soon-link" href="#" aria-label="Upbit">
+          <span class="exchange-name">upbit</span>
+          <span class="exchange-logo"><img src="/upbit.png" alt="Upbit" /></span>
+        </a>
 
-.x-right-content .wallet-status-grid {
-  display: grid;
-  gap: 0;
-  width: 100%;
-  margin: 0 0 62px !important;
-  text-align: left !important;
-}
+        <a class="exchange-item coming-soon-link" href="#" aria-label="Kraken">
+          <span class="exchange-name">kraken</span>
+          <span class="exchange-logo"><img src="/kraken.png" alt="Kraken" /></span>
+        </a>
 
-.x-right-content .status-pill:first-child {
-  display: none !important;
-}
+        <img class="exchange-middle-logo" src="/converted_logo.png" alt="KuCoin" />
 
-.x-right-content .status-pill {
-  display: block !important;
-  width: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  text-align: left !important;
-}
+        <a class="exchange-item coming-soon-link" href="#" aria-label="Coinbase">
+          <span class="exchange-name">coinbase</span>
+          <span class="exchange-logo"><img src="/coinbase.png" alt="Coinbase" /></span>
+        </a>
 
-.x-right-content .status-pill span {
-  display: inline !important;
-  margin: 0 !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
-  text-align: left !important;
-}
+        <a class="exchange-item coming-soon-link" href="#" aria-label="Crypto.com">
+          <span class="exchange-name">crypto.com</span>
+          <span class="exchange-logo"><img src="/cryptocom.png" alt="Crypto.com" /></span>
+        </a>
+      </div>
 
-.x-right-content .status-pill span::after {
-  content: ":";
-}
+      <img class="hero-main-image" src="/shit-dog-walker.png" alt="SHIT character walking dogs" />
+    </section>
 
-.x-right-content .status-pill strong,
-.x-right-content #xStatusText {
-  display: block !important;
-  width: 100%;
-  margin: 0 !important;
-  text-align: left !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
+    <div class="pepe-divider"></div>
 
-.x-right-content .status-pill strong::before,
-.x-right-content #xStatusText::before {
-  content: "";
-}
+    <section class="airdrop-stack" id="airdrop">
+      <article class="glass-card referral-card">
+        <div class="card-title-row center-card-title-row">
+          <div>
+            <h2>Airdrop1: Refer</h2>
+            <p class="referral-intro">Copy link: Invite frens and earn 6-level referral rewards</p>
+            <div class="referral-levels">
+              <p>level1: 100%</p>
+              <p>level2: 50%</p>
+              <p>level3: 40%</p>
+              <p>level4: 30%</p>
+              <p>level5: 20%</p>
+              <p>level6: 10%</p>
+            </div>
+          </div>
+        </div>
 
-.x-right-content .mission-list {
-  width: 100%;
-  margin: 0 !important;
-}
+        <div class="ref-link-box">
+          <input id="refLink" type="text" value="https://shitcoin.meme/?ref=YOURID" readonly />
+          <button id="copyRefBtn" class="icon-copy hidden-copy-button" type="button" aria-label="Copy referral link"></button>
+        </div>
 
-.x-right-content .mission-card {
-  width: 100%;
-  text-align: left !important;
-}
+        <div class="two-actions">
+          <button id="copyRefBtnMobile" class="btn light copy-ref-proxy" type="button">Copy Link</button>
+          <button id="claimReferralBtn" class="btn dark" type="button" disabled>Claim Airdrop</button>
+        </div>
 
-.x-right-content .mission-head {
-  display: block !important;
-  order: 1;
-  width: 100%;
-  margin: 0 0 32px !important;
-  text-align: left !important;
-}
+        <p id="refMessage" class="message small-message"></p>
+      </article>
 
-.x-right-content .mission-head .reward,
-.x-right-content .reward {
-  display: block !important;
-  width: 100%;
-  margin: 0 !important;
-  text-align: left !important;
-}
+      <div class="pepe-divider"></div>
 
-@media (max-width: 760px) {
-  .x-task-layout {
-    grid-template-columns: 78px minmax(0, 1fr);
-    gap: 18px;
-    width: min(100% - 34px, 520px);
-    margin: -14px auto 14px;
-  }
+      <article class="glass-card task-card">
+        <div class="card-title-row center-card-title-row task-title-row">
+          <div>
+            <h2>
+              Airdrop2:<br />
+              X Task
+            </h2>
+          </div>
+        </div>
 
-  .x-left-media {
-    gap: 20px;
-    padding-top: 4px;
-  }
+        <div class="x-task-layout">
+          <div class="x-left-media">
+            <div class="round-x small-round-x">
+              <img src="/x.svg" alt="X" />
+            </div>
+            <img class="toaster-character-small" src="/toaster_character_transparent.png" alt="SHIT toaster character" />
+          </div>
 
-  .toaster-character-small {
-    width: 82px;
-  }
+          <div class="x-right-content">
+            <div class="x-task-intro">
+              <p>Complete X tasks<br />and claim<br />rewards.</p>
+            </div>
 
-  .x-right-content .x-task-intro {
-    margin-bottom: 42px !important;
-  }
+            <div class="wallet-status-grid">
+              <div class="status-pill">
+                <span>Wallet</span>
+                <strong id="walletText">Not connected</strong>
+              </div>
+              <div class="status-pill">
+                <span>X account</span>
+                <strong id="xStatusText">Not connected</strong>
+              </div>
+            </div>
 
-  .x-right-content .wallet-status-grid {
-    margin-bottom: 52px !important;
-  }
-}
+            <p id="message" class="message hidden"></p>
 
-@media (max-width: 430px) {
-  .x-task-layout {
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: 16px;
-    width: min(100% - 26px, 420px);
-  }
+            <div id="missionList" class="mission-list compact-missions">
+              <div class="mission-card empty">
+                <h3>Connect your wallet to load the latest official X mission.</h3>
+                <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
 
-  .toaster-character-small {
-    width: 76px;
-  }
+      <div class="pepe-divider"></div>
 
-  .x-right-content .x-task-intro {
-    margin-bottom: 38px !important;
-  }
+      <article class="glass-card tokenomics-card" id="tokenomics">
+        <div class="card-title-row tokenomics-title-row aligned-section-row center-card-title-row">
+          <div class="aligned-section-content">
+            <h2>Tokenomics</h2>
+          </div>
+        </div>
 
-  .x-right-content .wallet-status-grid {
-    margin-bottom: 48px !important;
-  }
-}
+        <div class="tokenomics-copy aligned-card-copy tokenomics-center-copy">
+          <p>Token Supply:</p>
+          <p class="token-number">
+            <span>1,000,000,000,</span>
+            <span>000,000</span>
+          </p>
+          <p>Airdrop Supply:</p>
+          <p class="token-number">
+            <span>500,000,000,</span>
+            <span>000,000</span>
+          </p>
+          <p>LP tokens are burnt, and contract ownership is renounced.</p>
+          <p>No Taxes, No insiders. No whale games.</p>
+        </div>
+      </article>
+
+      <div class="pepe-divider"></div>
+
+      <article class="glass-card overview-card" id="project-overview">
+        <div class="card-title-row overview-title-row aligned-section-row center-card-title-row">
+          <div class="aligned-section-content">
+            <h2>About shit</h2>
+          </div>
+        </div>
+
+        <div class="overview-copy aligned-card-copy">
+          <p>Pure community chaos. Free claim. No whale games.</p>
+          <p>$shit is a wild memecoin airdrop experiment, launched organically by crypto lovers from communities all around the world.</p>
+          <p>You no longer need to buy the token.</p>
+        </div>
+      </article>
+
+      <div class="pepe-divider"></div>
+
+      <article class="glass-card overview-card overview-card-two" id="project-overview-2">
+        <div class="card-title-row overview-title-row aligned-section-row center-card-title-row">
+          <div class="aligned-section-content">
+            <h2>Community</h2>
+          </div>
+        </div>
+
+        <div class="overview-copy aligned-card-copy">
+          <p>50% of the total $shit supply will be airdropped to the community.</p>
+          <p>All you have to do is invite others to claim for free.</p>
+          <p>The more you refer, the more you claim.</p>
+          <p>The community has already raised 100 eth for token buybacks.</p>
+          <p>No insiders. No whale games. Just pure community chaos.</p>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer-note">© 2026 by Shit. All rights reserved!</footer>
+  </main>
+
+  <div id="customAlert" class="custom-alert hidden">
+    <div class="custom-alert-box">
+      <h3>Notice</h3>
+      <p id="customAlertText">$shit is still in the airdrop phase. Trading has not launched yet.</p>
+      <button id="customAlertOk" type="button">OK</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="/script.js?v=20260627b"></script>
+</body>
+</html>
