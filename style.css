@@ -888,7 +888,7 @@ h6 {
   height: auto !important;
   min-height: 0 !important;
   margin: 34px auto 42px !important;
-  padding: 24px !important;
+  padding: 22px 24px !important;
   border: 4px solid rgba(255, 255, 255, .96) !important;
   border-radius: 0 34px 0 34px !important;
   color: var(--ink) !important;
@@ -897,7 +897,7 @@ h6 {
   font-style: italic !important;
   font-size: clamp(15px, 3.8vw, 21px) !important;
   font-weight: 400 !important;
-  line-height: 1.55 !important;
+  line-height: 2.3 !important;
   letter-spacing: 0 !important;
   text-align: center !important;
   text-shadow: 0 3px 0 rgba(0, 0, 0, .18) !important;
@@ -1437,7 +1437,7 @@ h6 {
     border-width: 4px !important;
     border-radius: 0 32px 0 32px !important;
     font-size: clamp(14px, 3.6vw, 20px) !important;
-    line-height: 1.9 !important;
+    line-height: 2.3 !important;
   }
 
   .tokenomics-card {
@@ -1673,7 +1673,7 @@ h6 {
     padding: 20px 18px !important;
     border-radius: 0 30px 0 30px !important;
     font-size: clamp(13px, 3.4vw, 18px) !important;
-    line-height: 1.9 !important;
+    line-height: 2.3 !important;
   }
 
   .tokenomics-card {
@@ -1737,15 +1737,4 @@ h6 {
   #project-overview-2 .overview-copy {
     margin-bottom: 44px !important;
   }
-}
-
-#missionList .x-task-message,
-#missionList .mission-card .x-task-message,
-#missionList .mission-card.empty h3,
-#missionList .mission-card.empty p {
-  line-height: 2.3 !important;
-  padding-top: 22px !important;
-  padding-bottom: 22px !important;
-  height: auto !important;
-  min-height: 0 !important;
 }
