@@ -1738,3 +1738,14 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message,
+#missionList .mission-card.empty h3,
+#missionList .mission-card.empty p {
+  line-height: 2.3 !important;
+  padding-top: 22px !important;
+  padding-bottom: 22px !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
