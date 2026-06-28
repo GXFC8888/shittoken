@@ -1742,3 +1742,37 @@ h6 {
     margin-bottom: 18px !important;
   }
 }
+
+.token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  line-height: 1.52 !important;
+}
+
+.token-number span,
+.tokenomics-card .token-number span {
+  line-height: 1.52 !important;
+}
+
+@media (max-width: 760px) {
+  .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    line-height: 1.56 !important;
+  }
+
+  .token-number span,
+  .tokenomics-card .token-number span {
+    line-height: 1.56 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    line-height: 1.6 !important;
+  }
+
+  .token-number span,
+  .tokenomics-card .token-number span {
+    line-height: 1.6 !important;
+  }
+}
