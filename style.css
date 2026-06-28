@@ -1600,3 +1600,221 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+.three-social-icons .social-pill:nth-child(1) {
+  transform: translateY(18px);
+}
+
+.three-social-icons .social-pill:nth-child(2) {
+  transform: translateY(0);
+}
+
+.three-social-icons .social-pill:nth-child(3) {
+  transform: translateY(-18px);
+}
+
+.three-social-icons .social-pill:nth-child(1):hover {
+  transform: translateY(12px) scale(1.04);
+}
+
+.three-social-icons .social-pill:nth-child(2):hover {
+  transform: translateY(-6px) scale(1.04);
+}
+
+.three-social-icons .social-pill:nth-child(3):hover {
+  transform: translateY(-24px) scale(1.04);
+}
+
+.exchange-list {
+  gap: 50px !important;
+}
+
+.exchange-list .exchange-item:nth-child(1) {
+  margin-bottom: 16px !important;
+}
+
+.exchange-middle-logo {
+  display: block;
+  width: 62px;
+  height: 62px;
+  margin: -18px auto -18px;
+  object-fit: cover;
+  border-radius: 0;
+  box-shadow: 0 10px 16px rgba(0, 0, 0, .18);
+}
+
+.hero-main-image {
+  width: min(76.8vw, 672px) !important;
+  max-width: 76.8vw !important;
+}
+
+.task-card h2 {
+  font-size: clamp(72px, 8.8vw, 118px) !important;
+  line-height: 1.02 !important;
+}
+
+.x-task-message,
+.mission-card .x-task-message,
+.mission-card.empty h3,
+.mission-card.empty p {
+  width: min(100% - 60px, 460px) !important;
+  max-width: 460px !important;
+  margin: 34px auto 42px !important;
+  padding: 26px 24px 22px !important;
+  border: 3px solid rgba(255, 255, 255, .96) !important;
+  border-radius: 34px 34px 10px 34px !important;
+  color: var(--ink) !important;
+  background: rgba(255, 255, 255, .06) !important;
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-size: clamp(26px, 3.8vw, 38px) !important;
+  font-weight: 400 !important;
+  line-height: 1.22 !important;
+  text-align: center !important;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, .16) !important;
+}
+
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2 {
+  font-size: clamp(82px, 9.4vw, 126px) !important;
+  line-height: .96 !important;
+  margin-bottom: 48px !important;
+}
+
+.tokenomics-center-copy > p:nth-child(1),
+.tokenomics-center-copy > p:nth-child(3),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+  font-size: clamp(34px, 4.1vw, 52px) !important;
+  line-height: 1.08 !important;
+  margin: 10px auto 12px !important;
+}
+
+.token-number,
+.token-number span,
+.tokenomics-card .token-number,
+.tokenomics-card .token-number span,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  font-size: clamp(36px, 4.2vw, 52px) !important;
+  line-height: 1.22 !important;
+}
+
+.token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  margin-bottom: 58px !important;
+}
+
+.tokenomics-center-copy > p:nth-child(5) {
+  margin-top: 18px !important;
+  margin-bottom: 46px !important;
+}
+
+.tokenomics-center-copy > p:nth-child(6) {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .three-social-icons .social-pill:nth-child(1) {
+    transform: translateY(14px);
+  }
+
+  .three-social-icons .social-pill:nth-child(2) {
+    transform: translateY(0);
+  }
+
+  .three-social-icons .social-pill:nth-child(3) {
+    transform: translateY(-14px);
+  }
+
+  .exchange-list {
+    gap: 34px !important;
+  }
+
+  .exchange-list .exchange-item:nth-child(1) {
+    margin-bottom: 14px !important;
+  }
+
+  .exchange-middle-logo {
+    width: 38px;
+    height: 38px;
+    margin: -14px auto -14px;
+  }
+
+  .hero-main-image {
+    width: 69.6vw !important;
+    max-width: 69.6vw !important;
+  }
+
+  .task-card h2 {
+    font-size: clamp(62px, 14.5vw, 88px) !important;
+  }
+
+  .x-task-message,
+  .mission-card .x-task-message,
+  .mission-card.empty h3,
+  .mission-card.empty p {
+    width: min(100% - 60px, 460px) !important;
+    padding: 22px 18px 18px !important;
+    font-size: clamp(22px, 5.8vw, 32px) !important;
+  }
+
+  .tokenomics-card h2,
+  .tokenomics-card .aligned-section-content h2 {
+    font-size: clamp(70px, 16vw, 96px) !important;
+    margin-bottom: 42px !important;
+  }
+
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    font-size: clamp(30px, 7.4vw, 42px) !important;
+    margin-bottom: 10px !important;
+  }
+
+  .token-number,
+  .token-number span,
+  .tokenomics-card .token-number,
+  .tokenomics-card .token-number span,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: clamp(26px, 6.2vw, 34px) !important;
+    line-height: 1.28 !important;
+  }
+
+  .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    margin-bottom: 52px !important;
+  }
+
+  .tokenomics-center-copy > p:nth-child(5) {
+    margin-bottom: 44px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .exchange-list {
+    gap: 32px !important;
+  }
+
+  .exchange-list .exchange-item:nth-child(1) {
+    margin-bottom: 12px !important;
+  }
+
+  .hero-main-image {
+    width: 67.2vw !important;
+    max-width: 67.2vw !important;
+  }
+
+  .tokenomics-card h2,
+  .tokenomics-card .aligned-section-content h2 {
+    font-size: clamp(64px, 15vw, 86px) !important;
+  }
+
+  .token-number,
+  .token-number span,
+  .tokenomics-card .token-number,
+  .tokenomics-card .token-number span,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: clamp(24px, 5.8vw, 32px) !important;
+  }
+}
