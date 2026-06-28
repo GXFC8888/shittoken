@@ -366,9 +366,9 @@ button:disabled {
   gap: 42px;
 }
 
-.exchange-list > .exchange-item:first-child {
-  transform: translateY(22px) !important;
-  margin-bottom: 24px !important;
+.exchange-list .exchange-item:nth-of-type(1) {
+  margin-top: 10px !important;
+  margin-bottom: 18px !important;
 }
 
 .exchange-item {
@@ -394,16 +394,8 @@ button:disabled {
   background: rgba(255, 255, 255, .06);
 }
 
-.exchange-list > .exchange-item:first-child:hover {
-  transform: translateY(20px) !important;
-}
-
 .exchange-item:active {
   transform: translateY(2px) scale(.99);
-}
-
-.exchange-list > .exchange-item:first-child:active {
-  transform: translateY(22px) scale(.99) !important;
 }
 
 .exchange-name,
@@ -892,21 +884,21 @@ h6 {
 #missionList .mission-card .x-task-message {
   display: block;
   order: 2;
-  width: min(100% - 40px, 620px) !important;
-  max-width: 620px !important;
+  width: min(100% - 70px, 460px) !important;
+  max-width: 460px !important;
   height: auto !important;
   min-height: 0 !important;
   margin: 34px auto 42px !important;
-  padding: 28px 28px !important;
+  padding: 22px 24px !important;
   border: 4px solid rgba(255, 255, 255, .96) !important;
   border-radius: 0 34px 0 34px !important;
   color: var(--white) !important;
   background: rgba(255, 255, 255, .04) !important;
   font-family: "Nebyla", Arial, sans-serif !important;
   font-style: normal !important;
-  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-size: clamp(15px, 3.8vw, 21px) !important;
   font-weight: 400 !important;
-  line-height: 1.28 !important;
+  line-height: 2.3 !important;
   letter-spacing: 0 !important;
   text-align: center !important;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
@@ -1283,17 +1275,9 @@ h6 {
     gap: 24px;
   }
 
-  .exchange-list > .exchange-item:first-child {
-    transform: translateY(18px) !important;
-    margin-bottom: 20px !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:hover {
-    transform: translateY(18px) !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:active {
-    transform: translateY(18px) scale(.99) !important;
+  .exchange-list .exchange-item:nth-of-type(1) {
+    margin-top: 8px !important;
+    margin-bottom: 16px !important;
   }
 
   .exchange-item {
@@ -1437,16 +1421,15 @@ h6 {
   #missionList .mission-card.empty p,
   #missionList .x-task-message,
   #missionList .mission-card .x-task-message {
-    width: min(100% - 40px, 520px) !important;
-    max-width: 520px !important;
-    padding: 24px 20px !important;
+    width: min(100% - 70px, 420px) !important;
+    padding: 22px 20px !important;
     border-width: 4px !important;
     border-radius: 0 32px 0 32px !important;
     font-family: "Nebyla", Arial, sans-serif !important;
     font-style: normal !important;
     color: var(--white) !important;
-    font-size: clamp(36px, 8.9vw, 50px) !important;
-    line-height: 1.26 !important;
+    font-size: clamp(14px, 3.6vw, 20px) !important;
+    line-height: 2.3 !important;
     text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
   }
 
@@ -1586,17 +1569,9 @@ h6 {
     gap: 22px;
   }
 
-  .exchange-list > .exchange-item:first-child {
-    transform: translateY(18px) !important;
-    margin-bottom: 20px !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:hover {
-    transform: translateY(18px) !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:active {
-    transform: translateY(18px) scale(.99) !important;
+  .exchange-list .exchange-item:nth-of-type(1) {
+    margin-top: 8px !important;
+    margin-bottom: 14px !important;
   }
 
   .exchange-item {
@@ -1683,15 +1658,14 @@ h6 {
   #missionList .mission-card.empty p,
   #missionList .x-task-message,
   #missionList .mission-card .x-task-message {
-    width: min(100% - 34px, 520px) !important;
-    max-width: 520px !important;
-    padding: 22px 18px !important;
+    width: min(100% - 66px, 390px) !important;
+    padding: 20px 18px !important;
     border-radius: 0 30px 0 30px !important;
     font-family: "Nebyla", Arial, sans-serif !important;
     font-style: normal !important;
     color: var(--white) !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.26 !important;
+    font-size: clamp(13px, 3.4vw, 18px) !important;
+    line-height: 2.3 !important;
     text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
   }
 
@@ -1750,235 +1724,5 @@ h6 {
 
   #project-overview-2 .overview-copy {
     margin-bottom: 44px !important;
-  }
-}
-
-.x-task-layout {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: 116px minmax(0, 1fr);
-  align-items: start;
-  justify-content: center;
-  gap: 28px;
-  width: min(100% - 40px, 620px);
-  margin: -10px auto 16px;
-}
-
-.x-left-media {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 26px;
-  padding-top: 8px;
-}
-
-.toaster-character-small {
-  display: block;
-  width: 118px;
-  height: auto;
-  object-fit: contain;
-}
-
-.x-right-content {
-  display: grid;
-  justify-items: start;
-  text-align: left;
-  min-width: 0;
-}
-
-.x-right-content .x-task-intro {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 0 48px !important;
-  padding: 0 !important;
-}
-
-.x-right-content .x-task-intro p {
-  margin: 0 !important;
-  text-align: left !important;
-}
-
-.x-right-content .wallet-status-grid {
-  display: grid !important;
-  gap: 0 !important;
-  width: 100% !important;
-  margin: 0 0 58px !important;
-  padding: 0 !important;
-  text-align: left !important;
-}
-
-.x-right-content .status-pill:first-child {
-  display: none !important;
-}
-
-.x-right-content .status-pill {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  text-align: left !important;
-}
-
-.x-right-content .status-pill span {
-  display: inline !important;
-  margin: 0 !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-}
-
-.x-right-content .status-pill span::after {
-  content: "X:" !important;
-  display: inline !important;
-  color: var(--white) !important;
-  font-size: clamp(44px, 5.4vw, 66px) !important;
-  font-weight: 400 !important;
-  line-height: 1.28 !important;
-  text-align: left !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-}
-
-.x-right-content .status-pill strong,
-.x-right-content #xStatusText {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 !important;
-  color: var(--white) !important;
-  font-size: clamp(44px, 5.4vw, 66px) !important;
-  font-weight: 400 !important;
-  line-height: 1.28 !important;
-  text-align: left !important;
-  white-space: pre-line !important;
-  overflow-wrap: anywhere !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-}
-
-.x-right-content .mission-list {
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.x-right-content .mission-card {
-  width: 100% !important;
-  text-align: left !important;
-}
-
-.x-right-content .mission-head {
-  display: block !important;
-  order: 1;
-  width: 100% !important;
-  margin: 0 0 32px !important;
-  text-align: left !important;
-}
-
-.x-right-content .mission-head .reward,
-.x-right-content .reward {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 !important;
-  text-align: left !important;
-}
-
-.x-right-content .x-task-message,
-.x-right-content .mission-card .x-task-message,
-.x-right-content .mission-card.empty h3,
-.x-right-content .mission-card.empty p,
-.x-right-content #missionList .mission-card.empty h3,
-.x-right-content #missionList .mission-card.empty p,
-.x-right-content #missionList .x-task-message,
-.x-right-content #missionList .mission-card .x-task-message {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: var(--white) !important;
-  font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
-  font-size: clamp(44px, 5.4vw, 66px) !important;
-  font-weight: 400 !important;
-  line-height: 1.28 !important;
-  text-align: left !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-}
-
-@media (max-width: 760px) {
-  .x-task-layout {
-    grid-template-columns: 76px minmax(0, 1fr);
-    gap: 18px;
-    width: min(100% - 34px, 520px);
-    margin: -14px auto 14px;
-  }
-
-  .x-left-media {
-    gap: 20px;
-    padding-top: 4px;
-  }
-
-  .toaster-character-small {
-    width: 82px;
-  }
-
-  .x-right-content .x-task-intro {
-    margin-bottom: 42px !important;
-  }
-
-  .x-right-content .wallet-status-grid {
-    margin-bottom: 52px !important;
-  }
-
-  .x-right-content .status-pill span::after,
-  .x-right-content .status-pill strong,
-  .x-right-content #xStatusText,
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    font-size: clamp(36px, 8.9vw, 50px) !important;
-    line-height: 1.26 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-task-layout {
-    grid-template-columns: 70px minmax(0, 1fr);
-    gap: 16px;
-    width: min(100% - 26px, 420px);
-  }
-
-  .toaster-character-small {
-    width: 76px;
-  }
-
-  .x-right-content .x-task-intro {
-    margin-bottom: 38px !important;
-  }
-
-  .x-right-content .wallet-status-grid {
-    margin-bottom: 48px !important;
-  }
-
-  .x-right-content .status-pill span::after,
-  .x-right-content .status-pill strong,
-  .x-right-content #xStatusText,
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.26 !important;
   }
 }
