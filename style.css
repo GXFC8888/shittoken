@@ -1824,3 +1824,22 @@ h6 {
     height: auto !important;
   }
 }
+
+.toaster-character-small {
+  width: 96px !important;
+  height: auto !important;
+}
+
+@media (max-width: 760px) {
+  .toaster-character-small {
+    width: 68px !important;
+    height: auto !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .toaster-character-small {
+    width: 68px !important;
+    height: auto !important;
+  }
+}
