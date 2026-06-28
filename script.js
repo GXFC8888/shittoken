@@ -1519,3 +1519,61 @@ window.addEventListener("load", async () => {
 .x-right-content #missionList .mission-card .x-task-message {
   margin: 18px auto 34px !important;
 }
+
+.x-right-content .mission-card.empty,
+.x-right-content #missionList .mission-card.empty {
+  display: grid !important;
+  justify-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.x-right-content .mission-card.empty h3,
+.x-right-content .mission-card.empty p,
+.x-right-content #missionList .mission-card.empty h3,
+.x-right-content #missionList .mission-card.empty p {
+  display: block !important;
+  width: min(100% - 40px, 520px) !important;
+  max-width: 520px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+@media (max-width: 760px) {
+  .x-right-content .mission-card.empty h3,
+  .x-right-content .mission-card.empty p,
+  .x-right-content #missionList .mission-card.empty h3,
+  .x-right-content #missionList .mission-card.empty p {
+    width: min(100% - 24px, 420px) !important;
+    max-width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-right-content .mission-card.empty h3,
+  .x-right-content .mission-card.empty p,
+  .x-right-content #missionList .mission-card.empty h3,
+  .x-right-content #missionList .mission-card.empty p {
+    width: min(100% - 20px, 380px) !important;
+    max-width: 380px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+  }
+}
+
+.x-right-content {
+  justify-items: center !important;
+}
+
+.x-right-content .wallet-status-grid {
+  justify-self: start !important;
+}
+
+.x-right-content .mission-list {
+  justify-self: center !important;
+}
