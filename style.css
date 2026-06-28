@@ -2415,3 +2415,42 @@ h6 {
     font-size: clamp(17px, 4.4vw, 23px) !important;
   }
 }
+
+.x-right-content .x-task-message,
+.x-right-content .mission-card .x-task-message,
+.x-right-content #missionList .x-task-message,
+.x-right-content #missionList .mission-card .x-task-message {
+  width: 420px !important;
+  max-width: 420px !important;
+  margin-top: 46px !important;
+  margin-bottom: 46px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 28px 24px !important;
+}
+
+@media (max-width: 760px) {
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    width: 420px !important;
+    max-width: calc(100vw - 90px) !important;
+    margin-top: 48px !important;
+    margin-bottom: 46px !important;
+    padding: 26px 22px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    width: 360px !important;
+    max-width: calc(100vw - 70px) !important;
+    margin-top: 50px !important;
+    margin-bottom: 44px !important;
+    padding: 24px 18px !important;
+  }
+}
