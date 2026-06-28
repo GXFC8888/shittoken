@@ -365,8 +365,8 @@ function updateWalletUI() {
   if (xStatusText) {
     xStatusText.innerText = connectedX
       ? currentXUsername
-        ? `Connected @${currentXUsername}`
-        : "Connected"
+        ? `@${currentXUsername}`
+        : ""
       : "Not connected";
   }
 
