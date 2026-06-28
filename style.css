@@ -2326,3 +2326,25 @@ h6 {
     padding: 0 16px !important;
   }
 }
+
+.x-right-content .verify-task-btn {
+  font-size: 18px !important;
+  min-height: 68px !important;
+  padding: 0 14px !important;
+}
+
+@media (max-width: 760px) {
+  .x-right-content .verify-task-btn {
+    font-size: 18px !important;
+    min-height: 68px !important;
+    padding: 0 14px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-right-content .verify-task-btn {
+    font-size: 18px !important;
+    min-height: 68px !important;
+    padding: 0 14px !important;
+  }
+}
