@@ -1846,3 +1846,22 @@ h6 {
     font-size: clamp(18px, 4.7vw, 23px) !important;
   }
 }
+
+@font-face {
+  font-family: "EvermoreRegular";
+  src: url("/webFonts/Evermore/Evermore.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.token-number,
+.token-number span,
+.tokenomics-card .token-number,
+.tokenomics-card .token-number span {
+  font-family: "EvermoreRegular", "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.05 !important;
+}
