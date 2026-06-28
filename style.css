@@ -1858,3 +1858,13 @@ h6 {
 .tokenomics-card .token-number span {
   line-height: 1.34 !important;
 }
+
+#missionList .mission-card.empty h3,
+#missionList .mission-card.empty p,
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message {
+  line-height: 1.55 !important;
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
+  min-height: auto !important;
+}
