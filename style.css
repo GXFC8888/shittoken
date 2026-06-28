@@ -1752,3 +1752,233 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+.x-task-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  align-items: start;
+  justify-content: center;
+  gap: 28px;
+  width: min(100% - 40px, 620px);
+  margin: -10px auto 16px;
+}
+
+.x-left-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  padding-top: 8px;
+}
+
+.toaster-character-small {
+  display: block;
+  width: 118px;
+  height: auto;
+  object-fit: contain;
+}
+
+.x-right-content {
+  display: grid;
+  justify-items: start;
+  text-align: left;
+  min-width: 0;
+}
+
+.x-right-content .x-task-intro {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 48px !important;
+  padding: 0 !important;
+}
+
+.x-right-content .x-task-intro p {
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .wallet-status-grid {
+  display: grid !important;
+  gap: 0 !important;
+  width: 100% !important;
+  margin: 0 0 58px !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .status-pill:first-child {
+  display: none !important;
+}
+
+.x-right-content .status-pill {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .status-pill span {
+  display: inline !important;
+  margin: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.x-right-content .status-pill span::after {
+  content: "X:" !important;
+  display: inline !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: left !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.x-right-content .status-pill strong,
+.x-right-content #xStatusText {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: left !important;
+  white-space: pre-line !important;
+  overflow-wrap: anywhere !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.x-right-content .mission-list {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.x-right-content .mission-card {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.x-right-content .mission-head {
+  display: block !important;
+  order: 1;
+  width: 100% !important;
+  margin: 0 0 32px !important;
+  text-align: left !important;
+}
+
+.x-right-content .mission-head .reward,
+.x-right-content .reward {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .x-task-message,
+.x-right-content .mission-card .x-task-message,
+.x-right-content .mission-card.empty h3,
+.x-right-content .mission-card.empty p,
+.x-right-content #missionList .mission-card.empty h3,
+.x-right-content #missionList .mission-card.empty p,
+.x-right-content #missionList .x-task-message,
+.x-right-content #missionList .mission-card .x-task-message {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--white) !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: left !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-layout {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 18px;
+    width: min(100% - 34px, 520px);
+    margin: -14px auto 14px;
+  }
+
+  .x-left-media {
+    gap: 20px;
+    padding-top: 4px;
+  }
+
+  .toaster-character-small {
+    width: 82px;
+  }
+
+  .x-right-content .x-task-intro {
+    margin-bottom: 42px !important;
+  }
+
+  .x-right-content .wallet-status-grid {
+    margin-bottom: 52px !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content .status-pill strong,
+  .x-right-content #xStatusText,
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content .mission-card.empty h3,
+  .x-right-content .mission-card.empty p,
+  .x-right-content #missionList .mission-card.empty h3,
+  .x-right-content #missionList .mission-card.empty p,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    font-size: clamp(36px, 8.9vw, 50px) !important;
+    line-height: 1.26 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-layout {
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 16px;
+    width: min(100% - 26px, 420px);
+  }
+
+  .toaster-character-small {
+    width: 76px;
+  }
+
+  .x-right-content .x-task-intro {
+    margin-bottom: 38px !important;
+  }
+
+  .x-right-content .wallet-status-grid {
+    margin-bottom: 48px !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content .status-pill strong,
+  .x-right-content #xStatusText,
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content .mission-card.empty h3,
+  .x-right-content .mission-card.empty p,
+  .x-right-content #missionList .mission-card.empty h3,
+  .x-right-content #missionList .mission-card.empty p,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+    line-height: 1.26 !important;
+  }
+}
