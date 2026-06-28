@@ -1748,3 +1748,14 @@ h6 {
 .tokenomics-card > .tokenomics-center-copy .token-number {
   line-height: 1.7 !important;
 }
+
+#missionList .mission-card.empty h3,
+#missionList .mission-card.empty p,
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message {
+  min-height: 0 !important;
+  height: auto !important;
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
+  line-height: 1.55 !important;
+}
