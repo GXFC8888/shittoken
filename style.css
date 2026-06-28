@@ -2348,3 +2348,70 @@ h6 {
     padding: 0 14px !important;
   }
 }
+
+.x-right-content .x-task-message,
+.x-right-content .mission-card .x-task-message,
+.x-right-content #missionList .x-task-message,
+.x-right-content #missionList .mission-card .x-task-message {
+  margin-top: 24px !important;
+  margin-bottom: 42px !important;
+}
+
+.x-right-content .mission-actions {
+  margin-top: 34px !important;
+  gap: 34px !important;
+}
+
+.x-right-content .mission-actions .btn,
+.x-right-content .open-task-btn,
+.x-right-content .verify-task-btn {
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-size: clamp(20px, 4.8vw, 28px) !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 760px) {
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    margin-top: 22px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .x-right-content .mission-actions {
+    margin-top: 32px !important;
+    gap: 34px !important;
+  }
+
+  .x-right-content .mission-actions .btn,
+  .x-right-content .open-task-btn,
+  .x-right-content .verify-task-btn {
+    font-size: clamp(18px, 4.7vw, 24px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    margin-top: 18px !important;
+    margin-bottom: 36px !important;
+  }
+
+  .x-right-content .mission-actions {
+    margin-top: 30px !important;
+    gap: 34px !important;
+  }
+
+  .x-right-content .mission-actions .btn,
+  .x-right-content .open-task-btn,
+  .x-right-content .verify-task-btn {
+    font-size: clamp(17px, 4.4vw, 23px) !important;
+  }
+}
