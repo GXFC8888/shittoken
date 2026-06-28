@@ -1717,3 +1717,28 @@ h6 {
     line-height: 1.46 !important;
   }
 }
+
+.tokenomics-center-copy > p:nth-child(1),
+.tokenomics-center-copy > p:nth-child(3),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+  margin-bottom: 22px !important;
+}
+
+@media (max-width: 760px) {
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    margin-bottom: 20px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    margin-bottom: 18px !important;
+  }
+}
