@@ -1810,3 +1810,77 @@ h6 {
     line-height: 1.26 !important;
   }
 }
+
+.tokenomics-center-copy > p:nth-child(1),
+.tokenomics-center-copy > p:nth-child(3),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+  font-family: "EvermoreRegular", "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  font-size: clamp(48px, 6.2vw, 76px) !important;
+  line-height: 1.05 !important;
+  letter-spacing: .01em !important;
+  margin: 10px auto 4px !important;
+  text-transform: lowercase !important;
+}
+
+.token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  font-family: "EvermoreRegular", "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-size: clamp(46px, 5.4vw, 70px) !important;
+  line-height: 1.36 !important;
+  margin-top: 0 !important;
+  margin-bottom: 42px !important;
+}
+
+.token-number span,
+.tokenomics-card .token-number span {
+  display: block !important;
+  line-height: 1.36 !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    font-size: clamp(34px, 8.4vw, 48px) !important;
+    line-height: 1.05 !important;
+    margin: 8px auto 2px !important;
+  }
+
+  .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: clamp(30px, 7.4vw, 42px) !important;
+    line-height: 1.42 !important;
+    margin-bottom: 36px !important;
+  }
+
+  .token-number span,
+  .tokenomics-card .token-number span {
+    line-height: 1.42 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-center-copy > p:nth-child(3),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+    font-size: clamp(30px, 7.6vw, 42px) !important;
+  }
+
+  .token-number,
+  .tokenomics-card > .tokenomics-center-copy .token-number {
+    font-size: clamp(27px, 6.8vw, 38px) !important;
+    line-height: 1.46 !important;
+  }
+
+  .token-number span,
+  .tokenomics-card .token-number span {
+    line-height: 1.46 !important;
+  }
+}
