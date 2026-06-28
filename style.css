@@ -748,6 +748,7 @@ h6 {
   width: min(100% - 40px, 620px) !important;
   margin: -10px auto 16px !important;
   gap: 46px !important;
+  overflow: visible !important;
 }
 
 .x-task-top-row,
@@ -822,6 +823,8 @@ h6 {
   align-items: start !important;
   text-align: left !important;
   min-width: 0 !important;
+  width: 100% !important;
+  overflow: visible !important;
 }
 
 .wallet-status-grid {
@@ -870,7 +873,7 @@ h6 {
 .x-right-content .wallet-status-grid {
   display: grid !important;
   width: 100% !important;
-  margin: 0 0 24px !important;
+  margin: 0 0 22px !important;
   padding: 0 !important;
   text-align: left !important;
 }
@@ -902,7 +905,7 @@ h6 {
   color: var(--white) !important;
   font-size: clamp(44px, 5.4vw, 66px) !important;
   font-weight: 400 !important;
-  line-height: 1.28 !important;
+  line-height: 1.18 !important;
   text-align: left !important;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
 }
@@ -915,7 +918,7 @@ h6 {
   color: var(--white) !important;
   font-size: clamp(44px, 5.4vw, 66px) !important;
   font-weight: 400 !important;
-  line-height: 1.28 !important;
+  line-height: 1.18 !important;
   text-align: left !important;
   white-space: nowrap !important;
   overflow-wrap: normal !important;
@@ -1007,13 +1010,17 @@ h6 {
 
 .x-right-content .mission-list {
   width: 100% !important;
-  margin: 0 !important;
+  display: grid !important;
+  justify-items: center !important;
+  margin-top: 48px !important;
   padding: 0 !important;
 }
 
 .x-right-content .mission-card {
   width: 100% !important;
-  text-align: left !important;
+  display: grid !important;
+  justify-items: center !important;
+  text-align: center !important;
 }
 
 .x-right-content .mission-head {
@@ -1040,21 +1047,41 @@ h6 {
 .x-right-content #missionList .mission-card.empty p,
 .x-right-content #missionList .x-task-message,
 .x-right-content #missionList .mission-card .x-task-message {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+  display: block !important;
+  width: min(100% - 40px, 620px) !important;
+  max-width: 620px !important;
+  margin: 48px auto 54px !important;
+  padding: 28px 28px !important;
+  border: 4px solid rgba(255, 255, 255, .96) !important;
+  border-radius: 0 34px 0 34px !important;
+  background: rgba(255, 255, 255, .04) !important;
   color: var(--white) !important;
   font-family: "Nebyla", Arial, sans-serif !important;
   font-style: normal !important;
   font-size: clamp(44px, 5.4vw, 66px) !important;
   font-weight: 400 !important;
   line-height: 1.28 !important;
-  text-align: left !important;
+  text-align: center !important;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.x-right-content .mission-actions {
+  width: min(100% - 40px, 620px) !important;
+  max-width: 620px !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  justify-items: center !important;
+}
+
+.x-right-content .mission-actions .btn,
+.x-right-content .open-task-btn,
+.x-right-content .verify-task-btn {
+  width: 100% !important;
+  max-width: 620px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .mission-link,
@@ -1555,6 +1582,10 @@ h6 {
     font-size: clamp(18px, 4.7vw, 24px) !important;
   }
 
+  .task-card {
+    overflow: visible !important;
+  }
+
   .small-round-x {
     width: 68px !important;
     height: 68px !important;
@@ -1564,50 +1595,95 @@ h6 {
   }
 
   .x-task-layout {
-    width: min(100% - 34px, 520px) !important;
-    gap: 42px !important;
+    width: min(100% - 24px, 520px) !important;
+    max-width: 520px !important;
     margin: -14px auto 14px !important;
+    gap: 42px !important;
+    overflow: visible !important;
   }
 
   .x-task-top-row,
   .x-task-status-row {
+    display: grid !important;
     grid-template-columns: 68px minmax(0, 1fr) !important;
     gap: 18px !important;
+    width: 100% !important;
+    align-items: start !important;
+  }
+
+  .x-task-top-row {
+    align-items: center !important;
   }
 
   .toaster-character-small {
     width: 68px !important;
     height: auto !important;
+    justify-self: center !important;
+  }
+
+  .x-right-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+    text-align: left !important;
   }
 
   .x-right-content .wallet-status-grid {
-    margin-bottom: 24px !important;
+    width: 100% !important;
+    margin: 0 0 22px !important;
+    padding: 0 !important;
+    text-align: left !important;
   }
 
-  .x-task-message,
-  .mission-card .x-task-message,
-  .mission-card.empty h3,
-  .mission-card.empty p,
-  #missionList .mission-card.empty h3,
-  #missionList .mission-card.empty p,
-  #missionList .x-task-message,
-  #missionList .mission-card .x-task-message {
-    width: min(100% - 40px, 520px) !important;
-    max-width: 520px !important;
-    padding: 24px 20px !important;
-    border-width: 4px !important;
-    border-radius: 0 32px 0 32px !important;
-    font-family: "Nebyla", Arial, sans-serif !important;
-    font-style: normal !important;
+  .x-right-content .status-pill:first-child {
+    display: none !important;
+  }
+
+  .x-right-content .status-pill span {
+    display: inline !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+  }
+
+  .x-right-content .status-pill span::after {
+    content: "X Connected:" !important;
+    display: block !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+    line-height: 1.18 !important;
     color: var(--white) !important;
-    font-size: clamp(36px, 8.9vw, 50px) !important;
-    line-height: 1.26 !important;
+    text-align: left !important;
     text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
   }
 
-  .x-right-content .status-pill span::after,
   .x-right-content .status-pill strong,
-  .x-right-content #xStatusText,
+  .x-right-content #xStatusText {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+    line-height: 1.18 !important;
+    color: var(--white) !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+  }
+
+  .x-right-content .mission-list {
+    width: 100% !important;
+    display: grid !important;
+    justify-items: center !important;
+    margin-top: 48px !important;
+    padding: 0 !important;
+  }
+
+  .x-right-content .mission-card {
+    width: 100% !important;
+    display: grid !important;
+    justify-items: center !important;
+    text-align: center !important;
+  }
+
   .x-right-content .x-task-message,
   .x-right-content .mission-card .x-task-message,
   .x-right-content .mission-card.empty h3,
@@ -1616,8 +1692,31 @@ h6 {
   .x-right-content #missionList .mission-card.empty p,
   .x-right-content #missionList .x-task-message,
   .x-right-content #missionList .mission-card .x-task-message {
-    font-size: clamp(36px, 8.9vw, 50px) !important;
+    display: block !important;
+    width: min(100% - 16px, 520px) !important;
+    max-width: 520px !important;
+    margin: 48px auto 48px !important;
+    padding: 22px 18px !important;
+    border: 4px solid rgba(255, 255, 255, .96) !important;
+    border-radius: 0 30px 0 30px !important;
+    background: rgba(255, 255, 255, .04) !important;
+    color: var(--white) !important;
+    font-family: "Nebyla", Arial, sans-serif !important;
+    font-style: normal !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
     line-height: 1.26 !important;
+    text-align: center !important;
+    text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .x-right-content .mission-actions {
+    width: min(100% - 16px, 520px) !important;
+    max-width: 520px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    justify-items: center !important;
   }
 
   .tokenomics-card {
@@ -1846,7 +1945,7 @@ h6 {
   }
 
   .x-task-layout {
-    width: min(100% - 26px, 420px) !important;
+    width: min(100% - 20px, 420px) !important;
     gap: 38px !important;
   }
 
@@ -1865,29 +1964,10 @@ h6 {
     margin-bottom: 22px !important;
   }
 
-  .x-task-message,
-  .mission-card .x-task-message,
-  .mission-card.empty h3,
-  .mission-card.empty p,
-  #missionList .mission-card.empty h3,
-  #missionList .mission-card.empty p,
-  #missionList .x-task-message,
-  #missionList .mission-card .x-task-message {
-    width: min(100% - 34px, 520px) !important;
-    max-width: 520px !important;
-    padding: 22px 18px !important;
-    border-radius: 0 30px 0 30px !important;
-    font-family: "Nebyla", Arial, sans-serif !important;
-    font-style: normal !important;
-    color: var(--white) !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.26 !important;
-    text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+  .x-right-content .mission-list {
+    margin-top: 48px !important;
   }
 
-  .x-right-content .status-pill span::after,
-  .x-right-content .status-pill strong,
-  .x-right-content #xStatusText,
   .x-right-content .x-task-message,
   .x-right-content .mission-card .x-task-message,
   .x-right-content .mission-card.empty h3,
@@ -1896,8 +1976,20 @@ h6 {
   .x-right-content #missionList .mission-card.empty p,
   .x-right-content #missionList .x-task-message,
   .x-right-content #missionList .mission-card .x-task-message {
-    font-size: clamp(33px, 8.3vw, 46px) !important;
+    width: min(100% - 14px, 420px) !important;
+    max-width: 420px !important;
+    margin: 48px auto 46px !important;
+    padding: 22px 16px !important;
+    border-radius: 0 30px 0 30px !important;
+    font-size: clamp(31px, 7.8vw, 42px) !important;
     line-height: 1.26 !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content .status-pill strong,
+  .x-right-content #xStatusText {
+    font-size: clamp(31px, 7.8vw, 42px) !important;
+    line-height: 1.18 !important;
   }
 
   .tokenomics-card {
@@ -1955,365 +2047,5 @@ h6 {
 
   #project-overview-2 .overview-copy {
     margin-bottom: 44px !important;
-  }
-}
-
-.x-right-content .x-task-message,
-.x-right-content .mission-card .x-task-message,
-.x-right-content .mission-card.empty h3,
-.x-right-content .mission-card.empty p,
-.x-right-content #missionList .mission-card.empty h3,
-.x-right-content #missionList .mission-card.empty p,
-.x-right-content #missionList .x-task-message,
-.x-right-content #missionList .mission-card .x-task-message {
-  display: block !important;
-  width: min(100% - 40px, 620px) !important;
-  max-width: 620px !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 34px 0 42px !important;
-  padding: 28px 28px !important;
-  border: 4px solid rgba(255, 255, 255, .96) !important;
-  border-radius: 0 34px 0 34px !important;
-  color: var(--white) !important;
-  background: rgba(255, 255, 255, .04) !important;
-  font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
-  font-size: clamp(44px, 5.4vw, 66px) !important;
-  font-weight: 400 !important;
-  line-height: 1.28 !important;
-  letter-spacing: 0 !important;
-  text-align: center !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-  white-space: normal !important;
-  overflow-wrap: normal !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-@media (max-width: 760px) {
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    width: min(100% - 20px, 520px) !important;
-    max-width: 520px !important;
-    padding: 24px 20px !important;
-    border-width: 4px !important;
-    border-radius: 0 32px 0 32px !important;
-    font-size: clamp(36px, 8.9vw, 50px) !important;
-    line-height: 1.26 !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    width: min(100% - 16px, 520px) !important;
-    max-width: 520px !important;
-    padding: 22px 18px !important;
-    border-radius: 0 30px 0 30px !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.26 !important;
-  }
-}
-
-.x-right-content .mission-list {
-  width: 100% !important;
-  display: grid !important;
-  justify-items: center !important;
-  margin-top: 42px !important;
-  padding: 0 !important;
-}
-
-.x-right-content .mission-card {
-  width: 100% !important;
-  display: grid !important;
-  justify-items: center !important;
-  text-align: center !important;
-}
-
-.x-right-content .x-task-message,
-.x-right-content .mission-card .x-task-message,
-.x-right-content .mission-card.empty h3,
-.x-right-content .mission-card.empty p,
-.x-right-content #missionList .mission-card.empty h3,
-.x-right-content #missionList .mission-card.empty p,
-.x-right-content #missionList .x-task-message,
-.x-right-content #missionList .mission-card .x-task-message {
-  display: block !important;
-  width: min(100% - 40px, 620px) !important;
-  max-width: 620px !important;
-  margin: 46px auto 54px !important;
-  padding: 28px 28px !important;
-  border: 4px solid rgba(255, 255, 255, .96) !important;
-  border-radius: 0 34px 0 34px !important;
-  color: var(--white) !important;
-  background: rgba(255, 255, 255, .04) !important;
-  font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
-  font-size: clamp(44px, 5.4vw, 66px) !important;
-  font-weight: 400 !important;
-  line-height: 1.28 !important;
-  text-align: center !important;
-  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-  white-space: normal !important;
-  overflow-wrap: normal !important;
-}
-
-.x-right-content .mission-actions {
-  width: min(100% - 40px, 620px) !important;
-  max-width: 620px !important;
-  margin: 0 auto !important;
-  display: grid !important;
-  justify-items: center !important;
-}
-
-.x-right-content .mission-actions .btn,
-.x-right-content .open-task-btn,
-.x-right-content .verify-task-btn {
-  width: 100% !important;
-  max-width: 620px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-@media (max-width: 760px) {
-  .x-right-content .mission-list {
-    margin-top: 46px !important;
-  }
-
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    width: min(100% - 20px, 520px) !important;
-    max-width: 520px !important;
-    margin: 46px auto 50px !important;
-    padding: 24px 20px !important;
-    border-radius: 0 32px 0 32px !important;
-    font-size: clamp(36px, 8.9vw, 50px) !important;
-    line-height: 1.26 !important;
-  }
-
-  .x-right-content .mission-actions {
-    width: min(100% - 20px, 520px) !important;
-    max-width: 520px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-right-content .mission-list {
-    margin-top: 48px !important;
-  }
-
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    width: min(100% - 16px, 520px) !important;
-    max-width: 520px !important;
-    margin: 48px auto 48px !important;
-    padding: 22px 18px !important;
-    border-radius: 0 30px 0 30px !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.26 !important;
-  }
-
-  .x-right-content .mission-actions {
-    width: min(100% - 16px, 520px) !important;
-    max-width: 520px !important;
-  }
-}
-@media (max-width: 760px) {
-  .task-card {
-    overflow: visible !important;
-  }
-
-  .x-task-layout {
-    width: min(100% - 24px, 520px) !important;
-    max-width: 520px !important;
-    margin: -14px auto 14px !important;
-    gap: 42px !important;
-    overflow: visible !important;
-  }
-
-  .x-task-top-row,
-  .x-task-status-row {
-    display: grid !important;
-    grid-template-columns: 68px minmax(0, 1fr) !important;
-    gap: 18px !important;
-    width: 100% !important;
-    align-items: start !important;
-  }
-
-  .x-task-top-row {
-    align-items: center !important;
-  }
-
-  .small-round-x {
-    width: 68px !important;
-    height: 68px !important;
-    min-width: 68px !important;
-    min-height: 68px !important;
-  }
-
-  .toaster-character-small {
-    width: 68px !important;
-    height: auto !important;
-    justify-self: center !important;
-  }
-
-  .x-right-content {
-    width: 100% !important;
-    min-width: 0 !important;
-    overflow: visible !important;
-    text-align: left !important;
-  }
-
-  .x-right-content .wallet-status-grid {
-    width: 100% !important;
-    margin: 0 0 22px !important;
-    padding: 0 !important;
-    text-align: left !important;
-  }
-
-  .x-right-content .status-pill:first-child {
-    display: none !important;
-  }
-
-  .x-right-content .status-pill span {
-    display: inline !important;
-    font-size: 0 !important;
-    line-height: 0 !important;
-  }
-
-  .x-right-content .status-pill span::after {
-    content: "X Connected:" !important;
-    display: block !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.18 !important;
-    color: var(--white) !important;
-    text-align: left !important;
-    text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-  }
-
-  .x-right-content .status-pill strong,
-  .x-right-content #xStatusText {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.18 !important;
-    color: var(--white) !important;
-    text-align: left !important;
-    white-space: nowrap !important;
-    overflow-wrap: normal !important;
-    text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-  }
-
-  .x-right-content .mission-list {
-    width: 100% !important;
-    display: grid !important;
-    justify-items: center !important;
-    margin-top: 48px !important;
-    padding: 0 !important;
-  }
-
-  .x-right-content .mission-card {
-    width: 100% !important;
-    display: grid !important;
-    justify-items: center !important;
-    text-align: center !important;
-  }
-
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    display: block !important;
-    width: min(100% - 16px, 520px) !important;
-    max-width: 520px !important;
-    margin: 48px auto 48px !important;
-    padding: 22px 18px !important;
-    border: 4px solid rgba(255, 255, 255, .96) !important;
-    border-radius: 0 30px 0 30px !important;
-    background: rgba(255, 255, 255, .04) !important;
-    color: var(--white) !important;
-    font-family: "Nebyla", Arial, sans-serif !important;
-    font-style: normal !important;
-    font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.26 !important;
-    text-align: center !important;
-    text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
-    white-space: normal !important;
-    overflow-wrap: normal !important;
-  }
-
-  .x-right-content .mission-actions {
-    width: min(100% - 16px, 520px) !important;
-    max-width: 520px !important;
-    margin: 0 auto !important;
-    display: grid !important;
-    justify-items: center !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-task-layout {
-    width: min(100% - 20px, 420px) !important;
-    gap: 38px !important;
-  }
-
-  .x-task-top-row,
-  .x-task-status-row {
-    grid-template-columns: 68px minmax(0, 1fr) !important;
-    gap: 16px !important;
-  }
-
-  .x-right-content .wallet-status-grid {
-    margin-bottom: 22px !important;
-  }
-
-  .x-right-content .mission-list {
-    margin-top: 48px !important;
-  }
-
-  .x-right-content .x-task-message,
-  .x-right-content .mission-card .x-task-message,
-  .x-right-content .mission-card.empty h3,
-  .x-right-content .mission-card.empty p,
-  .x-right-content #missionList .mission-card.empty h3,
-  .x-right-content #missionList .mission-card.empty p,
-  .x-right-content #missionList .x-task-message,
-  .x-right-content #missionList .mission-card .x-task-message {
-    width: min(100% - 14px, 420px) !important;
-    max-width: 420px !important;
-    margin: 48px auto 46px !important;
-    padding: 22px 16px !important;
-    font-size: clamp(31px, 7.8vw, 42px) !important;
-    line-height: 1.26 !important;
   }
 }
