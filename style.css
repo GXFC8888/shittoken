@@ -2365,3 +2365,70 @@ h6 {
     text-align: left !important;
   }
 }
+
+.x-task-mission-area {
+  width: 100% !important;
+  max-width: none !important;
+  margin: -18px 0 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  text-align: left !important;
+  justify-items: stretch !important;
+  overflow: visible !important;
+}
+
+.x-task-mission-area .mission-list,
+.x-task-mission-area .mission-card {
+  width: 100% !important;
+  display: block !important;
+  text-align: left !important;
+  justify-items: stretch !important;
+}
+
+.x-task-mission-area .mission-head {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-task-mission-area .mission-head .reward,
+.x-task-mission-area .reward {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  line-height: 1.18 !important;
+}
+@media (max-width: 760px) {
+  .x-task-mission-area {
+    width: 100% !important;
+    max-width: none !important;
+    margin: -16px 0 0 !important;
+    padding: 0 !important;
+  }
+
+  .x-task-mission-area .mission-head {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-mission-area {
+    width: 100% !important;
+    max-width: none !important;
+    margin: -14px 0 0 !important;
+    padding: 0 !important;
+  }
+
+  .x-task-mission-area .mission-head {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+}
