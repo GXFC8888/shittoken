@@ -1728,3 +1728,23 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+#missionList .mission-card.empty h3,
+#missionList .mission-card.empty p,
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message {
+  line-height: 1.95 !important;
+  padding-top: 36px !important;
+  padding-bottom: 36px !important;
+  min-height: 220px !important;
+}
+
+.token-number span,
+.tokenomics-card .token-number span {
+  line-height: 1.65 !important;
+}
+
+.token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  line-height: 1.7 !important;
+}
