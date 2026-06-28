@@ -1733,10 +1733,10 @@ h6 {
 #missionList .mission-card.empty p,
 #missionList .x-task-message,
 #missionList .mission-card .x-task-message {
-  line-height: 1.95 !important;
-  padding-top: 36px !important;
-  padding-bottom: 36px !important;
-  min-height: 220px !important;
+  line-height: 2.25 !important;
+  padding-top: 42px !important;
+  padding-bottom: 42px !important;
+  min-height: 260px !important;
 }
 
 .token-number span,
