@@ -2208,3 +2208,71 @@ h6 {
     text-transform: none !important;
   }
 }
+
+.x-right-content .mission-actions {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 54px auto 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 34px !important;
+  justify-items: center !important;
+}
+
+.x-right-content .mission-actions .btn,
+.x-right-content .open-task-btn,
+.x-right-content .verify-task-btn {
+  width: 100% !important;
+  max-width: 360px !important;
+  min-height: 72px !important;
+  margin: 0 auto !important;
+  padding: 0 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  text-transform: none !important;
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 760px) {
+  .x-right-content .mission-actions {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 56px !important;
+    gap: 34px !important;
+  }
+
+  .x-right-content .mission-actions .btn,
+  .x-right-content .open-task-btn,
+  .x-right-content .verify-task-btn {
+    width: 100% !important;
+    max-width: 320px !important;
+    min-height: 70px !important;
+    padding: 0 18px !important;
+    font-size: 22px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-right-content .mission-actions {
+    margin-top: 58px !important;
+    gap: 34px !important;
+  }
+
+  .x-right-content .mission-actions .btn,
+  .x-right-content .open-task-btn,
+  .x-right-content .verify-task-btn {
+    width: 100% !important;
+    max-width: 300px !important;
+    min-height: 68px !important;
+    padding: 0 16px !important;
+    font-size: 21px !important;
+  }
+}
