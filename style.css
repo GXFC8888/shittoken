@@ -215,7 +215,7 @@ button:disabled {
   letter-spacing: .02em;
   text-align: center;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
-  transform: translateX(-2.1em);
+  transform: none !important;
 }
 
 .hero-oh-small {
@@ -368,7 +368,7 @@ button:disabled {
 
 .exchange-list > .exchange-item:first-child {
   transform: translateY(22px) !important;
-  margin-bottom: 24px !important;
+  margin-bottom: 34px !important;
 }
 
 .exchange-item {
@@ -833,6 +833,109 @@ h6 {
   text-align: center;
 }
 
+.x-task-layout {
+  position: relative;
+  z-index: 1;
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  align-items: start !important;
+  justify-content: center !important;
+  gap: 28px !important;
+  width: min(100% - 40px, 620px) !important;
+  margin: -10px auto 16px !important;
+}
+
+.x-left-media {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 58px !important;
+  padding-top: 8px !important;
+}
+
+.toaster-character-small {
+  display: block !important;
+  width: 96px !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+.x-right-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+  min-width: 0 !important;
+}
+
+.x-right-content .x-task-intro {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 48px !important;
+  padding: 0 !important;
+}
+
+.x-right-content .x-task-intro p {
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .wallet-status-grid {
+  display: grid !important;
+  gap: 0 !important;
+  width: 100% !important;
+  margin: 0 0 52px !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .status-pill:first-child {
+  display: none !important;
+}
+
+.x-right-content .status-pill {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .status-pill span {
+  display: inline !important;
+  margin: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.x-right-content .status-pill span::after {
+  content: "X " !important;
+  display: inline !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: left !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.x-right-content .status-pill strong,
+.x-right-content #xStatusText {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: left !important;
+  white-space: pre-line !important;
+  overflow-wrap: anywhere !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
 .mission-list {
   margin-top: 0;
 }
@@ -914,6 +1017,58 @@ h6 {
   overflow-wrap: normal !important;
   opacity: 1;
   visibility: visible;
+}
+
+.x-right-content .mission-list {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.x-right-content .mission-card {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.x-right-content .mission-head {
+  display: block !important;
+  order: 1;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .mission-head .reward,
+.x-right-content .reward {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .x-task-message,
+.x-right-content .mission-card .x-task-message,
+.x-right-content .mission-card.empty h3,
+.x-right-content .mission-card.empty p,
+.x-right-content #missionList .mission-card.empty h3,
+.x-right-content #missionList .mission-card.empty p,
+.x-right-content #missionList .x-task-message,
+.x-right-content #missionList .mission-card .x-task-message {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--white) !important;
+  font-family: "Nebyla", Arial, sans-serif !important;
+  font-style: normal !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  text-align: left !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
 }
 
 .mission-link,
@@ -1215,7 +1370,7 @@ h6 {
     gap: 10px;
     margin-bottom: 20px;
     line-height: 1;
-    transform: translateX(-2em);
+    transform: none !important;
   }
 
   .hero-oh-small {
@@ -1285,7 +1440,7 @@ h6 {
 
   .exchange-list > .exchange-item:first-child {
     transform: translateY(18px) !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 28px !important;
   }
 
   .exchange-list > .exchange-item:first-child:hover {
@@ -1429,6 +1584,31 @@ h6 {
     border-width: 2px !important;
   }
 
+  .x-task-layout {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 18px !important;
+    width: min(100% - 34px, 520px) !important;
+    margin: -14px auto 14px !important;
+  }
+
+  .x-left-media {
+    gap: 44px !important;
+    padding-top: 4px !important;
+  }
+
+  .toaster-character-small {
+    width: 68px !important;
+    height: auto !important;
+  }
+
+  .x-right-content .x-task-intro {
+    margin-bottom: 42px !important;
+  }
+
+  .x-right-content .wallet-status-grid {
+    margin-bottom: 48px !important;
+  }
+
   .x-task-message,
   .mission-card .x-task-message,
   .mission-card.empty h3,
@@ -1448,6 +1628,21 @@ h6 {
     font-size: clamp(36px, 8.9vw, 50px) !important;
     line-height: 1.26 !important;
     text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content .status-pill strong,
+  .x-right-content #xStatusText,
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content .mission-card.empty h3,
+  .x-right-content .mission-card.empty p,
+  .x-right-content #missionList .mission-card.empty h3,
+  .x-right-content #missionList .mission-card.empty p,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    font-size: clamp(36px, 8.9vw, 50px) !important;
+    line-height: 1.26 !important;
   }
 
   .tokenomics-card {
@@ -1551,7 +1746,7 @@ h6 {
 
   .hero-oh {
     gap: 8px;
-    transform: translateX(-1.8em);
+    transform: none !important;
   }
 
   .hero-oh-small {
@@ -1588,7 +1783,7 @@ h6 {
 
   .exchange-list > .exchange-item:first-child {
     transform: translateY(18px) !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 28px !important;
   }
 
   .exchange-list > .exchange-item:first-child:hover {
@@ -1675,6 +1870,29 @@ h6 {
     font-size: clamp(17px, 4.4vw, 23px) !important;
   }
 
+  .x-task-layout {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 16px !important;
+    width: min(100% - 26px, 420px) !important;
+  }
+
+  .x-left-media {
+    gap: 40px !important;
+  }
+
+  .toaster-character-small {
+    width: 68px !important;
+    height: auto !important;
+  }
+
+  .x-right-content .x-task-intro {
+    margin-bottom: 38px !important;
+  }
+
+  .x-right-content .wallet-status-grid {
+    margin-bottom: 44px !important;
+  }
+
   .x-task-message,
   .mission-card .x-task-message,
   .mission-card.empty h3,
@@ -1693,6 +1911,21 @@ h6 {
     font-size: clamp(33px, 8.3vw, 46px) !important;
     line-height: 1.26 !important;
     text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content .status-pill strong,
+  .x-right-content #xStatusText,
+  .x-right-content .x-task-message,
+  .x-right-content .mission-card .x-task-message,
+  .x-right-content .mission-card.empty h3,
+  .x-right-content .mission-card.empty p,
+  .x-right-content #missionList .mission-card.empty h3,
+  .x-right-content #missionList .mission-card.empty p,
+  .x-right-content #missionList .x-task-message,
+  .x-right-content #missionList .mission-card .x-task-message {
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+    line-height: 1.26 !important;
   }
 
   .tokenomics-card {
@@ -1750,96 +1983,5 @@ h6 {
 
   #project-overview-2 .overview-copy {
     margin-bottom: 44px !important;
-  }
-}
-
-.hero-oh {
-  transform: none !important;
-}
-
-.exchange-list > .exchange-item:first-child {
-  transform: translateY(22px) !important;
-  margin-bottom: 34px !important;
-}
-
-.exchange-list > .exchange-item:first-child:hover {
-  transform: translateY(20px) !important;
-}
-
-.exchange-list > .exchange-item:first-child:active {
-  transform: translateY(22px) scale(.99) !important;
-}
-
-.toaster-character-small {
-  display: block;
-  width: 96px !important;
-  height: auto !important;
-  object-fit: contain !important;
-}
-
-@media (max-width: 760px) {
-  .hero-oh {
-    transform: none !important;
-  }
-
-  .exchange-list > .exchange-item:first-child {
-    transform: translateY(18px) !important;
-    margin-bottom: 28px !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:hover {
-    transform: translateY(18px) !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:active {
-    transform: translateY(18px) scale(.99) !important;
-  }
-
-  .toaster-character-small {
-    width: 68px !important;
-    height: auto !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .hero-oh {
-    transform: none !important;
-  }
-
-  .exchange-list > .exchange-item:first-child {
-    transform: translateY(18px) !important;
-    margin-bottom: 28px !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:hover {
-    transform: translateY(18px) !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:active {
-    transform: translateY(18px) scale(.99) !important;
-  }
-
-  .toaster-character-small {
-    width: 68px !important;
-    height: auto !important;
-  }
-}
-
-.toaster-character-small {
-  width: 96px !important;
-  height: auto !important;
-}
-
-@media (max-width: 760px) {
-  .toaster-character-small {
-    width: 68px !important;
-    height: auto !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .toaster-character-small {
-    width: 68px !important;
-    height: auto !important;
   }
 }
