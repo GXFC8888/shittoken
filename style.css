@@ -2107,6 +2107,37 @@ h6 {
   }
 }
 
+.toaster-character-small {
+  transform: translateY(52px) !important;
+}
+
+.x-task-mission-area {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 18px 0 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+.x-task-mission-area .mission-head {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-task-mission-area .mission-head .reward,
+.x-task-mission-area .reward {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 52px 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
 .x-task-message,
 .mission-card .x-task-message,
 #missionList .x-task-message,
@@ -2115,21 +2146,27 @@ h6 {
 .x-task-mission-area .mission-card .x-task-message,
 .x-task-mission-area #missionList .x-task-message,
 .x-task-mission-area #missionList .mission-card .x-task-message {
-  width: min(100% - 60px, 460px) !important;
+  position: relative !important;
+  left: calc(-96px - 28px) !important;
+  width: min(calc(100vw - 72px), 460px) !important;
   max-width: 460px !important;
-  left: calc((-96px - 28px) / 2) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  margin: 0 auto 34px !important;
+  padding: 28px 24px !important;
   box-sizing: border-box !important;
 }
 
 .mission-actions,
 .x-task-mission-area .mission-actions {
-  width: min(100% - 60px, 460px) !important;
+  position: relative !important;
+  left: calc(-96px - 28px) !important;
+  width: min(calc(100vw - 72px), 460px) !important;
   max-width: 460px !important;
-  left: calc((-96px - 28px) / 2) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  margin: 30px auto 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 34px !important;
+  justify-items: center !important;
   box-sizing: border-box !important;
 }
 
@@ -2139,12 +2176,27 @@ h6 {
 .x-task-mission-area .verify-task-btn {
   width: 100% !important;
   max-width: 460px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  min-height: 70px !important;
+  margin: 0 auto !important;
+  padding: 0 18px !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 @media (max-width: 760px) {
+  .toaster-character-small {
+    transform: translateY(46px) !important;
+  }
+
+  .x-task-mission-area {
+    margin: 18px 0 0 !important;
+  }
+
+  .x-task-mission-area .mission-head .reward,
+  .x-task-mission-area .reward {
+    margin: 0 0 52px 0 !important;
+  }
+
   .x-task-message,
   .mission-card .x-task-message,
   #missionList .x-task-message,
@@ -2153,20 +2205,19 @@ h6 {
   .x-task-mission-area .mission-card .x-task-message,
   .x-task-mission-area #missionList .x-task-message,
   .x-task-mission-area #missionList .mission-card .x-task-message {
-    width: min(100% - 60px, 460px) !important;
-    max-width: 460px !important;
-    left: calc((-68px - 18px) / 2) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    left: calc(-68px - 18px) !important;
+    width: min(calc(100vw - 54px), 420px) !important;
+    max-width: 420px !important;
+    margin: 0 auto 32px !important;
+    padding: 26px 22px !important;
   }
 
   .mission-actions,
   .x-task-mission-area .mission-actions {
-    width: min(100% - 60px, 460px) !important;
-    max-width: 460px !important;
-    left: calc((-68px - 18px) / 2) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    left: calc(-68px - 18px) !important;
+    width: min(calc(100vw - 54px), 420px) !important;
+    max-width: 420px !important;
+    margin: 30px auto 0 !important;
   }
 
   .x-task-mission-area .mission-actions .btn,
@@ -2174,11 +2225,15 @@ h6 {
   .x-task-mission-area .open-task-btn,
   .x-task-mission-area .verify-task-btn {
     width: 100% !important;
-    max-width: 460px !important;
+    max-width: 420px !important;
   }
 }
 
 @media (max-width: 430px) {
+  .toaster-character-small {
+    transform: translateY(44px) !important;
+  }
+
   .x-task-message,
   .mission-card .x-task-message,
   #missionList .x-task-message,
@@ -2187,16 +2242,19 @@ h6 {
   .x-task-mission-area .mission-card .x-task-message,
   .x-task-mission-area #missionList .x-task-message,
   .x-task-mission-area #missionList .mission-card .x-task-message {
-    width: min(100% - 54px, 420px) !important;
+    left: calc(-68px - 16px) !important;
+    width: min(calc(100vw - 54px), 420px) !important;
     max-width: 420px !important;
-    left: calc((-68px - 16px) / 2) !important;
+    margin: 0 auto 30px !important;
+    padding: 24px 18px !important;
   }
 
   .mission-actions,
   .x-task-mission-area .mission-actions {
-    width: min(100% - 54px, 420px) !important;
+    left: calc(-68px - 16px) !important;
+    width: min(calc(100vw - 54px), 420px) !important;
     max-width: 420px !important;
-    left: calc((-68px - 16px) / 2) !important;
+    margin: 28px auto 0 !important;
   }
 
   .x-task-mission-area .mission-actions .btn,
