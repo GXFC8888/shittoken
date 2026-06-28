@@ -2497,3 +2497,173 @@ h6 {
     text-align: left !important;
   }
 }
+
+.x-task-status-row {
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 28px !important;
+  width: 100% !important;
+}
+
+.x-task-status-row .toaster-character-small {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: 96px !important;
+  height: auto !important;
+  justify-self: center !important;
+  align-self: start !important;
+  transform: translateY(28px) !important;
+}
+
+.x-task-status-row .x-right-content {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  display: grid !important;
+  justify-items: start !important;
+  align-items: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .wallet-status-grid {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  justify-items: start !important;
+  text-align: left !important;
+}
+
+.x-right-content .status-pill {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-right-content .status-pill span::after {
+  content: "X Connected:" !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.18 !important;
+  text-align: left !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.x-right-content #xStatusText,
+.x-right-content .status-pill strong {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.18 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+.x-task-mission-area {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 18px 0 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+.x-task-mission-area .mission-list,
+.x-task-mission-area .mission-card {
+  width: 100% !important;
+  display: block !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.x-task-mission-area .mission-head {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+.x-task-mission-area .mission-head h3 {
+  display: none !important;
+}
+
+.x-task-mission-area .mission-head .reward,
+.x-task-mission-area .reward {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--white) !important;
+  font-size: clamp(44px, 5.4vw, 66px) !important;
+  font-weight: 400 !important;
+  line-height: 1.18 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-status-row {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 18px !important;
+  }
+
+  .x-task-status-row .toaster-character-small {
+    width: 68px !important;
+    transform: translateY(28px) !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content #xStatusText,
+  .x-right-content .status-pill strong,
+  .x-task-mission-area .mission-head .reward,
+  .x-task-mission-area .reward {
+    font-size: clamp(33px, 8.3vw, 46px) !important;
+    line-height: 1.18 !important;
+  }
+
+  .x-task-mission-area {
+    margin: 18px 0 0 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-status-row {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .x-task-status-row .toaster-character-small {
+    width: 68px !important;
+    transform: translateY(26px) !important;
+  }
+
+  .x-right-content .status-pill span::after,
+  .x-right-content #xStatusText,
+  .x-right-content .status-pill strong,
+  .x-task-mission-area .mission-head .reward,
+  .x-task-mission-area .reward {
+    font-size: clamp(31px, 7.8vw, 42px) !important;
+    line-height: 1.18 !important;
+  }
+
+  .x-task-mission-area {
+    margin: 18px 0 0 !important;
+  }
+}
