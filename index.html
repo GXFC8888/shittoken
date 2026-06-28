@@ -7,7 +7,7 @@
   <link rel="preload" href="/webFonts/Nebyla/NebylaRegular.ttf" as="font" type="font/ttf" crossorigin />
   <link rel="preload" href="/webFonts/Evermore/Evermore.ttf" as="font" type="font/ttf" crossorigin />
   <link rel="preload" href="/webFonts/Evermore/EvermoreItalic.ttf" as="font" type="font/ttf" crossorigin />
-  <link rel="stylesheet" href="/style.css?v=20260628xalign2" />
+  <link rel="stylesheet" href="/style.css?v=20260628xalign3" />
 </head>
 <body>
   <main class="page-shell">
@@ -128,35 +128,38 @@
         </div>
 
         <div class="x-task-layout">
-          <div class="x-left-media">
+          <div class="x-task-top-row">
             <div class="round-x small-round-x">
               <img src="/x.svg" alt="X" />
             </div>
-            <img class="toaster-character-small" src="/toaster_character_transparent.png" alt="SHIT toaster character" />
-          </div>
 
-          <div class="x-right-content">
             <div class="x-task-intro">
               <p>Complete X tasks<br />and claim<br />rewards.</p>
             </div>
+          </div>
 
-            <div class="wallet-status-grid">
-              <div class="status-pill">
-                <span>Wallet</span>
-                <strong id="walletText">Not connected</strong>
+          <div class="x-task-status-row">
+            <img class="toaster-character-small" src="/toaster_character_transparent.png" alt="SHIT toaster character" />
+
+            <div class="x-right-content">
+              <div class="wallet-status-grid">
+                <div class="status-pill">
+                  <span>Wallet</span>
+                  <strong id="walletText">Not connected</strong>
+                </div>
+                <div class="status-pill">
+                  <span>X account</span>
+                  <strong id="xStatusText">Not connected</strong>
+                </div>
               </div>
-              <div class="status-pill">
-                <span>X account</span>
-                <strong id="xStatusText">Not connected</strong>
-              </div>
-            </div>
 
-            <p id="message" class="message hidden"></p>
+              <p id="message" class="message hidden"></p>
 
-            <div id="missionList" class="mission-list compact-missions">
-              <div class="mission-card empty">
-                <h3>Connect your wallet to load the latest official X mission.</h3>
-                <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
+              <div id="missionList" class="mission-list compact-missions">
+                <div class="mission-card empty">
+                  <h3>Connect your wallet to load the latest official X mission.</h3>
+                  <p>Use TokenPocket, MetaMask, OKX Wallet, Trust Wallet or another Web3 wallet browser.</p>
+                </div>
               </div>
             </div>
           </div>
