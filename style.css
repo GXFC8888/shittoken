@@ -1739,6 +1739,17 @@ h6 {
   }
 }
 
+.referral-card h2,
+.task-card h2,
+.overview-card h2,
+.overview-card .aligned-section-content h2,
+.tokenomics-card h2,
+.tokenomics-card .aligned-section-content h2 {
+  font-size: clamp(78px, 9.2vw, 126px) !important;
+  line-height: 1.02 !important;
+  margin-bottom: 42px !important;
+}
+
 @media (max-width: 760px) {
   .referral-card h2,
   .task-card h2,
