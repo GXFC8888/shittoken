@@ -820,7 +820,7 @@ h6 {
 }
 
 .status-pill span::after {
-  content: "X:";
+  content: "X ";
 }
 
 .status-pill strong,
