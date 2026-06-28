@@ -741,21 +741,39 @@ h6 {
   display: block !important;
 }
 
+.x-task-layout {
+  position: relative;
+  z-index: 1;
+  display: grid !important;
+  width: min(100% - 40px, 620px) !important;
+  margin: -10px auto 16px !important;
+  gap: 46px !important;
+}
+
+.x-task-top-row,
+.x-task-status-row {
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  align-items: start !important;
+  gap: 28px !important;
+  width: 100% !important;
+}
+
+.x-task-top-row {
+  align-items: center !important;
+}
+
 .x-task-intro {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: 96px auto;
-  justify-content: center;
-  align-items: center;
-  gap: 28px;
+  display: block !important;
   width: 100%;
-  margin: -10px auto 16px;
+  margin: 0 !important;
 }
 
 .x-task-intro p {
-  margin: 0;
-  text-align: left;
+  margin: 0 !important;
+  text-align: left !important;
   text-decoration: none;
 }
 
@@ -788,6 +806,22 @@ h6 {
   height: 100%;
   object-fit: contain;
   border-radius: 50%;
+}
+
+.toaster-character-small {
+  display: block !important;
+  width: 96px !important;
+  height: auto !important;
+  object-fit: contain !important;
+  justify-self: center !important;
+}
+
+.x-right-content {
+  display: grid !important;
+  justify-items: start !important;
+  align-items: start !important;
+  text-align: left !important;
+  min-width: 0 !important;
 }
 
 .wallet-status-grid {
@@ -833,56 +867,8 @@ h6 {
   text-align: center;
 }
 
-.x-task-layout {
-  position: relative;
-  z-index: 1;
-  display: grid !important;
-  grid-template-columns: 96px minmax(0, 1fr) !important;
-  align-items: start !important;
-  justify-content: center !important;
-  gap: 28px !important;
-  width: min(100% - 40px, 620px) !important;
-  margin: -10px auto 16px !important;
-}
-
-.x-left-media {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 58px !important;
-  padding-top: 8px !important;
-}
-
-.toaster-character-small {
-  display: block !important;
-  width: 96px !important;
-  height: auto !important;
-  object-fit: contain !important;
-}
-
-.x-right-content {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  text-align: left !important;
-  min-width: 0 !important;
-}
-
-.x-right-content .x-task-intro {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 0 48px !important;
-  padding: 0 !important;
-}
-
-.x-right-content .x-task-intro p {
-  margin: 0 !important;
-  text-align: left !important;
-}
-
 .x-right-content .wallet-status-grid {
   display: grid !important;
-  gap: 0 !important;
   width: 100% !important;
   margin: 0 0 52px !important;
   padding: 0 !important;
@@ -1569,13 +1555,6 @@ h6 {
     font-size: clamp(18px, 4.7vw, 24px) !important;
   }
 
-  .x-task-intro {
-    grid-template-columns: 68px auto;
-    gap: 18px;
-    margin-top: -14px;
-    margin-bottom: 14px;
-  }
-
   .small-round-x {
     width: 68px !important;
     height: 68px !important;
@@ -1585,24 +1564,20 @@ h6 {
   }
 
   .x-task-layout {
-    grid-template-columns: 68px minmax(0, 1fr) !important;
-    gap: 18px !important;
     width: min(100% - 34px, 520px) !important;
+    gap: 42px !important;
     margin: -14px auto 14px !important;
   }
 
-  .x-left-media {
-    gap: 44px !important;
-    padding-top: 4px !important;
+  .x-task-top-row,
+  .x-task-status-row {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 18px !important;
   }
 
   .toaster-character-small {
     width: 68px !important;
     height: auto !important;
-  }
-
-  .x-right-content .x-task-intro {
-    margin-bottom: 42px !important;
   }
 
   .x-right-content .wallet-status-grid {
@@ -1871,22 +1846,19 @@ h6 {
   }
 
   .x-task-layout {
-    grid-template-columns: 68px minmax(0, 1fr) !important;
-    gap: 16px !important;
     width: min(100% - 26px, 420px) !important;
+    gap: 38px !important;
   }
 
-  .x-left-media {
-    gap: 40px !important;
+  .x-task-top-row,
+  .x-task-status-row {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 16px !important;
   }
 
   .toaster-character-small {
     width: 68px !important;
     height: auto !important;
-  }
-
-  .x-right-content .x-task-intro {
-    margin-bottom: 38px !important;
   }
 
   .x-right-content .wallet-status-grid {
