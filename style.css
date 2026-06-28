@@ -870,7 +870,7 @@ h6 {
 .x-right-content .wallet-status-grid {
   display: grid !important;
   width: 100% !important;
-  margin: 0 0 52px !important;
+  margin: 0 0 24px !important;
   padding: 0 !important;
   text-align: left !important;
 }
@@ -897,8 +897,8 @@ h6 {
 }
 
 .x-right-content .status-pill span::after {
-  content: "X " !important;
-  display: inline !important;
+  content: "X Connected:" !important;
+  display: block !important;
   color: var(--white) !important;
   font-size: clamp(44px, 5.4vw, 66px) !important;
   font-weight: 400 !important;
@@ -917,8 +917,8 @@ h6 {
   font-weight: 400 !important;
   line-height: 1.28 !important;
   text-align: left !important;
-  white-space: pre-line !important;
-  overflow-wrap: anywhere !important;
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32) !important;
 }
 
@@ -1581,7 +1581,7 @@ h6 {
   }
 
   .x-right-content .wallet-status-grid {
-    margin-bottom: 48px !important;
+    margin-bottom: 24px !important;
   }
 
   .x-task-message,
@@ -1862,7 +1862,7 @@ h6 {
   }
 
   .x-right-content .wallet-status-grid {
-    margin-bottom: 44px !important;
+    margin-bottom: 22px !important;
   }
 
   .x-task-message,
