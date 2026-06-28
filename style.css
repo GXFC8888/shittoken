@@ -1808,3 +1808,53 @@ h6 {
     margin-bottom: 62px !important;
   }
 }
+
+@media (max-width: 760px) {
+  .top-wallet-link {
+    min-width: 108px !important;
+    max-width: 126px !important;
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+    font-size: 8.5px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .top-wallet-link {
+    min-width: 104px !important;
+    max-width: 122px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    font-size: 8px !important;
+  }
+}
+
+.tokenomics-center-copy > p:nth-child(1),
+.tokenomics-center-copy > p:nth-child(3),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
+.tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
+  font-size: clamp(20px, 4.8vw, 28px) !important;
+  line-height: 1.18 !important;
+  margin: 12px auto 18px !important;
+  padding: 0 12px !important;
+}
+
+.token-number,
+.token-number span,
+.tokenomics-card .token-number,
+.tokenomics-card .token-number span,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  font-size: clamp(24px, 5.8vw, 34px) !important;
+  line-height: 1.34 !important;
+}
+
+.token-number,
+.tokenomics-card > .tokenomics-center-copy .token-number {
+  margin-top: 0 !important;
+  margin-bottom: 70px !important;
+}
+
+.token-number span,
+.tokenomics-card .token-number span {
+  line-height: 1.34 !important;
+}
