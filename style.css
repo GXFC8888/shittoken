@@ -2085,3 +2085,61 @@ h6 {
     margin: 0 auto 18px !important;
   }
 }
+
+#about .overview-title-row,
+#project-overview .overview-title-row,
+#project-overview-2 .overview-title-row,
+.overview-card .overview-title-row,
+.overview-card-two .overview-title-row {
+  margin-bottom: 14px !important;
+}
+
+#about h2,
+#project-overview h2,
+#project-overview-2 h2,
+.overview-card h2,
+.overview-card-two h2,
+.overview-card .aligned-section-content h2,
+.overview-card-two .aligned-section-content h2 {
+  margin-bottom: 16px !important;
+}
+
+@media (max-width: 760px) {
+  #about .overview-title-row,
+  #project-overview .overview-title-row,
+  #project-overview-2 .overview-title-row,
+  .overview-card .overview-title-row,
+  .overview-card-two .overview-title-row {
+    margin-bottom: 12px !important;
+  }
+
+  #about h2,
+  #project-overview h2,
+  #project-overview-2 h2,
+  .overview-card h2,
+  .overview-card-two h2,
+  .overview-card .aligned-section-content h2,
+  .overview-card-two .aligned-section-content h2 {
+    margin-bottom: 14px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #about .overview-title-row,
+  #project-overview .overview-title-row,
+  #project-overview-2 .overview-title-row,
+  .overview-card .overview-title-row,
+  .overview-card-two .overview-title-row {
+    margin-bottom: 10px !important;
+  }
+
+  #about h2,
+  #project-overview h2,
+  #project-overview-2 h2,
+  .overview-card h2,
+  .overview-card-two h2,
+  .overview-card .aligned-section-content h2,
+  .overview-card-two .aligned-section-content h2 {
+    margin-bottom: 12px !important;
+  }
+}
