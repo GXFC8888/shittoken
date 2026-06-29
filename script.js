@@ -48,6 +48,7 @@ let currentTweetId = localStorage.getItem("current_official_tweet_id") || null;
 
 const connectBtn = document.getElementById("connectBtn");
 const missionList = document.getElementById("missionList");
+const xTaskButtonArea = document.getElementById("xTaskButtonArea");
 const message = document.getElementById("message");
 const walletText = document.getElementById("walletText");
 const xStatusText = document.getElementById("xStatusText");
@@ -768,12 +769,34 @@ function getLatestTaskProgress() {
   return latestTask ? getProgressForTask(latestTask) : null;
 }
 
+function clearXTaskButtonArea() {
+  if (xTaskButtonArea) {
+    xTaskButtonArea.innerHTML = "";
+  }
+}
+
+function moveMissionButtonsToButtonArea() {
+  if (!xTaskButtonArea || !missionList) return;
+
+  const actions = missionList.querySelector(".mission-actions");
+
+  if (!actions) {
+    xTaskButtonArea.innerHTML = "";
+    return;
+  }
+
+  xTaskButtonArea.innerHTML = "";
+  xTaskButtonArea.appendChild(actions);
+}
+
 function renderMissions() {
   if (!missionList) return;
 
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
 
   if (!activeWallet) {
+    clearXTaskButtonArea();
+
     missionList.innerHTML = `
       <div class="mission-card empty">
         <h3>Connect your wallet to load the latest official X mission.</h3>
@@ -786,6 +809,8 @@ function renderMissions() {
   const latestTask = getLatestTask();
 
   if (!latestTask) {
+    clearXTaskButtonArea();
+
     missionList.innerHTML = `
       <div class="mission-card empty">
         <h3>No active mission yet.</h3>
@@ -857,8 +882,11 @@ function renderMissions() {
     </div>
   `;
 
-  const openButton = missionList.querySelector(".open-task-btn");
-  const verifyButton = missionList.querySelector(".verify-task-btn");
+  moveMissionButtonsToButtonArea();
+
+  const buttonRoot = xTaskButtonArea || missionList;
+  const openButton = buttonRoot.querySelector(".open-task-btn");
+  const verifyButton = buttonRoot.querySelector(".verify-task-btn");
 
   if (openButton) {
     openButton.addEventListener("click", () => {
