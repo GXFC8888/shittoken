@@ -598,7 +598,7 @@ h6 {
 .overview-card-two h2,
 .overview-card .aligned-section-content h2,
 .overview-card-two .aligned-section-content h2 {
-  margin-bottom: 26 !important;
+  margin-bottom: 30px !important;
 }
 
 .referral-card h2 {
@@ -1884,7 +1884,7 @@ h6 {
   .overview-card-two h2,
   .overview-card .aligned-section-content h2,
   .overview-card-two .aligned-section-content h2 {
-    margin-bottom: 26px !important;
+    margin-bottom: 30px !important;
   }
 
   .referral-levels p {
