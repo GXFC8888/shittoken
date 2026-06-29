@@ -1994,3 +1994,62 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+.x-task-message,
+.mission-card .x-task-message,
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message,
+.x-task-mission-area .x-task-message,
+.x-task-mission-area .mission-card .x-task-message,
+.x-task-mission-area #missionList .x-task-message,
+.x-task-mission-area #missionList .mission-card .x-task-message {
+  transform: translateX(calc(-1 * var(--task-offset) / 2 - 32px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.mission-actions,
+.x-task-mission-area .mission-actions {
+  transform: translateX(calc(-1 * var(--task-offset) / 2 - 32px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  gap: 18px !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    transform: translateX(calc(-1 * var(--task-offset) / 2 - 32px)) !important;
+  }
+
+  .mission-actions,
+  .x-task-mission-area .mission-actions {
+    transform: translateX(calc(-1 * var(--task-offset) / 2 - 32px)) !important;
+    gap: 18px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    transform: translateX(calc(-1 * var(--task-offset) / 2 - 32px)) !important;
+  }
+
+  .mission-actions,
+  .x-task-mission-area .mission-actions {
+    transform: translateX(calc(-1 * var(--task-offset) / 2 - 32px)) !important;
+    gap: 18px !important;
+  }
+}
