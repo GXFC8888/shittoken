@@ -598,7 +598,7 @@ h6 {
 .overview-card-two h2,
 .overview-card .aligned-section-content h2,
 .overview-card-two .aligned-section-content h2 {
-  margin-bottom: 16px !important;
+  margin-bottom: 20px !important;
 }
 
 .referral-card h2 {
@@ -1543,7 +1543,7 @@ h6 {
   #project-overview-2 .overview-title-row,
   .overview-card .overview-title-row,
   .overview-card-two .overview-title-row {
-    margin-bottom: 16px !important;
+    margin-bottom: 20px !important;
   }
 
   #about h2,
@@ -1700,7 +1700,7 @@ h6 {
   .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
     font-size: clamp(20px, 5vw, 26px) !important;
     line-height: 1.2 !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 20px !important;
   }
 
   .token-number,
@@ -1884,7 +1884,7 @@ h6 {
   .overview-card-two h2,
   .overview-card .aligned-section-content h2,
   .overview-card-two .aligned-section-content h2 {
-    margin-bottom: 16px !important;
+    margin-bottom: 20px !important;
   }
 
   .referral-levels p {
