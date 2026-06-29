@@ -2012,7 +2012,7 @@ h6 {
   }
 
   .x-task-account-part .x-task-left-icon {
-    transform: translateY(16px) !important;
+    transform: translateY(20px) !important;
   }
 
   .x-task-account-part .x-task-right-text {
@@ -2024,7 +2024,7 @@ h6 {
   }
 
   .x-task-mission-part .x-task-left-icon {
-    transform: translateY(22px) !important;
+    transform: translateY(26px) !important;
   }
 
   .x-task-mission-area {
