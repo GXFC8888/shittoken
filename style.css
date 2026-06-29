@@ -2495,3 +2495,43 @@ h6 {
     margin-top: -34px !important;
   }
 }
+
+.x-task-account-part .x-task-left-icon {
+  transform: translateY(18px) !important;
+}
+
+.x-task-mission-part .x-task-left-icon {
+  transform: translateY(16px) !important;
+}
+
+.x-task-mission-area {
+  transform: translateY(10px) !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-account-part .x-task-left-icon {
+    transform: translateY(14px) !important;
+  }
+
+  .x-task-mission-part .x-task-left-icon {
+    transform: translateY(14px) !important;
+  }
+
+  .x-task-mission-area {
+    transform: translateY(8px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-account-part .x-task-left-icon {
+    transform: translateY(12px) !important;
+  }
+
+  .x-task-mission-part .x-task-left-icon {
+    transform: translateY(12px) !important;
+  }
+
+  .x-task-mission-area {
+    transform: translateY(8px) !important;
+  }
+}
