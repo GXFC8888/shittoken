@@ -1975,3 +1975,123 @@ h6 {
     margin-bottom: 44px !important;
   }
 }
+
+.x-task-layout {
+  gap: 64px !important;
+}
+
+.x-task-message,
+.mission-card .x-task-message,
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message,
+.x-task-mission-area .x-task-message,
+.x-task-mission-area .mission-card .x-task-message,
+.x-task-mission-area #missionList .x-task-message,
+.x-task-mission-area #missionList .mission-card .x-task-message {
+  padding: 18px 22px !important;
+  font-size: clamp(36px, 4.8vw, 54px) !important;
+  line-height: 1.18 !important;
+  margin: 0 auto 22px !important;
+}
+
+.mission-actions,
+.x-task-mission-area .mission-actions {
+  margin: 22px auto 0 !important;
+}
+
+.x-task-mission-area .mission-actions .btn,
+.x-task-mission-area .mission-actions button,
+.x-task-mission-area .open-task-btn,
+.x-task-mission-area .verify-task-btn,
+.x-right-content .mission-actions .btn,
+.x-right-content .mission-actions button,
+.x-right-content .open-task-btn,
+.x-right-content .verify-task-btn,
+.open-task-btn,
+.verify-task-btn {
+  font-size: clamp(20px, 4.8vw, 28px) !important;
+  min-height: 70px !important;
+  padding: 0 18px !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-layout {
+    gap: 58px !important;
+  }
+
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    padding: 16px 18px !important;
+    font-size: clamp(29px, 7vw, 39px) !important;
+    line-height: 1.18 !important;
+    margin: 0 auto 20px !important;
+  }
+
+  .mission-actions,
+  .x-task-mission-area .mission-actions {
+    margin: 20px auto 0 !important;
+  }
+
+  .x-task-mission-area .mission-actions .btn,
+  .x-task-mission-area .mission-actions button,
+  .x-task-mission-area .open-task-btn,
+  .x-task-mission-area .verify-task-btn,
+  .x-right-content .mission-actions .btn,
+  .x-right-content .mission-actions button,
+  .x-right-content .open-task-btn,
+  .x-right-content .verify-task-btn,
+  .open-task-btn,
+  .verify-task-btn {
+    font-size: clamp(18px, 4.7vw, 24px) !important;
+    min-height: 66px !important;
+    padding: 0 10px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-layout {
+    gap: 56px !important;
+  }
+
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    padding: 14px 16px !important;
+    font-size: clamp(27px, 6.7vw, 36px) !important;
+    line-height: 1.16 !important;
+    margin: 0 auto 18px !important;
+  }
+
+  .mission-actions,
+  .x-task-mission-area .mission-actions {
+    margin: 18px auto 0 !important;
+    gap: 18px !important;
+  }
+
+  .x-task-mission-area .mission-actions .btn,
+  .x-task-mission-area .mission-actions button,
+  .x-task-mission-area .open-task-btn,
+  .x-task-mission-area .verify-task-btn,
+  .x-right-content .mission-actions .btn,
+  .x-right-content .mission-actions button,
+  .x-right-content .open-task-btn,
+  .x-right-content .verify-task-btn,
+  .open-task-btn,
+  .verify-task-btn {
+    font-size: clamp(17px, 4.4vw, 23px) !important;
+    min-height: 66px !important;
+    padding: 0 10px !important;
+  }
+}
