@@ -2048,7 +2048,7 @@ h6 {
   .x-task-mission-area .mission-card .x-task-message,
   .x-task-mission-area #missionList .x-task-message,
   .x-task-mission-area #missionList .mission-card .x-task-message {
-    font-size: clamp(27px, 6.8vw, 36px) !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
     line-height: 1.15 !important;
     margin: 0 0 20px !important;
   }
