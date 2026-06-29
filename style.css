@@ -2123,3 +2123,95 @@ h6 {
     padding-bottom: 90px !important;
   }
 }
+
+.x-task-button-area {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 64px auto 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.x-task-button-area .mission-actions {
+  width: min(100% - 60px, 460px) !important;
+  max-width: 460px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 18px !important;
+  justify-items: stretch !important;
+  transform: none !important;
+}
+
+.x-task-button-area .mission-actions .btn,
+.x-task-button-area .mission-actions button,
+.x-task-button-area .open-task-btn,
+.x-task-button-area .verify-task-btn {
+  width: 100% !important;
+  max-width: 460px !important;
+  min-height: 70px !important;
+  margin: 0 auto !important;
+  padding: 0 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--ink) !important;
+  font-family: "EvermoreItalic", "Nebyla", Arial, sans-serif !important;
+  font-style: italic !important;
+  font-size: clamp(20px, 4.8vw, 28px) !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  text-transform: none !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.x-task-mission-area .mission-actions {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-button-area {
+    margin: 54px auto 0 !important;
+  }
+
+  .x-task-button-area .mission-actions {
+    width: min(100% - 60px, 460px) !important;
+    max-width: 460px !important;
+    gap: 18px !important;
+  }
+
+  .x-task-button-area .mission-actions .btn,
+  .x-task-button-area .mission-actions button,
+  .x-task-button-area .open-task-btn,
+  .x-task-button-area .verify-task-btn {
+    min-height: 66px !important;
+    padding: 0 10px !important;
+    font-size: clamp(18px, 4.7vw, 24px) !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-button-area {
+    margin: 52px auto 0 !important;
+  }
+
+  .x-task-button-area .mission-actions {
+    width: min(100% - 54px, 420px) !important;
+    max-width: 420px !important;
+  }
+
+  .x-task-button-area .mission-actions .btn,
+  .x-task-button-area .mission-actions button,
+  .x-task-button-area .open-task-btn,
+  .x-task-button-area .verify-task-btn {
+    min-height: 66px !important;
+    padding: 0 10px !important;
+    font-size: clamp(17px, 4.4vw, 23px) !important;
+  }
+}
