@@ -2497,15 +2497,15 @@ h6 {
 }
 
 .x-task-account-part .x-task-left-icon {
-  transform: translateY(20px) !important;
+  transform: translateY(22px) !important;
 }
 
 .x-task-mission-part .x-task-left-icon {
-  transform: translateY(20px) !important;
+  transform: translateY(26px) !important;
 }
 
 .x-task-mission-area {
-  transform: translateY(12px) !important;
+  transform: translateY(16px) !important;
 }
 
 @media (max-width: 760px) {
