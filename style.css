@@ -2026,3 +2026,62 @@ h6 {
     padding-bottom: 90px !important;
   }
 }
+
+.x-task-message,
+.mission-card .x-task-message,
+#missionList .x-task-message,
+#missionList .mission-card .x-task-message,
+.x-task-mission-area .x-task-message,
+.x-task-mission-area .mission-card .x-task-message,
+.x-task-mission-area #missionList .x-task-message,
+.x-task-mission-area #missionList .mission-card .x-task-message {
+  width: min(100% - 34px, 560px) !important;
+  max-width: 560px !important;
+  margin: 0 auto 22px !important;
+  padding: 18px 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--green) !important;
+  font-size: clamp(28px, 4.2vw, 42px) !important;
+  line-height: 1.16 !important;
+  text-align: center !important;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, .22) !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    width: min(100% - 26px, 520px) !important;
+    max-width: 520px !important;
+    padding: 16px 8px !important;
+    font-size: clamp(23px, 6vw, 32px) !important;
+    line-height: 1.16 !important;
+    margin: 0 auto 20px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    width: min(100% - 22px, 390px) !important;
+    max-width: 390px !important;
+    padding: 14px 6px !important;
+    font-size: clamp(20px, 5.4vw, 28px) !important;
+    line-height: 1.15 !important;
+    margin: 0 auto 18px !important;
+  }
+}
