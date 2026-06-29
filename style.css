@@ -2036,7 +2036,7 @@ h6 {
   #walletText,
   #xStatusText,
   .x-task-reward-line .reward {
-    font-size: clamp(31px, 7.8vw, 42px) !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
     line-height: 1.18 !important;
   }
 
@@ -2048,7 +2048,7 @@ h6 {
   .x-task-mission-area .mission-card .x-task-message,
   .x-task-mission-area #missionList .x-task-message,
   .x-task-mission-area #missionList .mission-card .x-task-message {
-    font-size: clamp(33px, 7.6vw, 43px) !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
     line-height: 1.15 !important;
     margin: 0 0 20px !important;
   }
@@ -2110,7 +2110,7 @@ h6 {
   .tokenomics-center-copy > p:nth-child(5),
   .tokenomics-center-copy > p:nth-child(6) {
     width: min(100% - 36px, 520px) !important;
-    font-size: clamp(31px, 8vw, 44px) !important;
+    font-size: clamp(33px, 8.3vw, 46px) !important;
     line-height: 1.3 !important;
   }
 
