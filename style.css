@@ -2463,3 +2463,35 @@ h6 {
     margin: 20px 0 0 !important;
   }
 }
+
+.x-task-account-part {
+  align-items: start !important;
+}
+
+.x-task-account-part .x-task-right-text {
+  transform: translateY(-28px) !important;
+}
+
+.x-task-mission-part {
+  margin-top: -42px !important;
+}
+
+@media (max-width: 760px) {
+  .x-task-account-part .x-task-right-text {
+    transform: translateY(-22px) !important;
+  }
+
+  .x-task-mission-part {
+    margin-top: -36px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .x-task-account-part .x-task-right-text {
+    transform: translateY(-20px) !important;
+  }
+
+  .x-task-mission-part {
+    margin-top: -34px !important;
+  }
+}
