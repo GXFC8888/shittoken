@@ -1699,11 +1699,11 @@ h6 {
   }
 
   .x-task-account-part .x-task-left-icon {
-    transform: translateY(14px) !important;
+    transform: translateY(18px) !important;
   }
 
   .x-task-account-part .x-task-right-text {
-    transform: translateY(-22px) !important;
+    transform: translateY(-24px) !important;
   }
 
   .x-task-mission-part {
@@ -1711,7 +1711,7 @@ h6 {
   }
 
   .x-task-mission-part .x-task-left-icon {
-    transform: translateY(14px) !important;
+    transform: translateY(22px) !important;
   }
 
   .x-task-mission-area {
