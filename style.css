@@ -2080,7 +2080,7 @@ h6 {
     width: min(100% - 22px, 390px) !important;
     max-width: 390px !important;
     padding: 14px 6px !important;
-    font-size: clamp(28px, 7vw, 38px) !important;
+    font-size: clamp(27px, 6.8vw, 36px) !important;
     line-height: 1.15 !important;
     margin: 0 auto 18px !important;
   }
