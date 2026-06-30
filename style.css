@@ -1920,3 +1920,20 @@ h6 {
     padding-bottom: 90px !important;
   }
 }
+
+@media (max-width: 430px) {
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
+    font-size: clamp(27px, 6.8vw, 36px) !important;
+    line-height: 1.15 !important;
+    margin: 0 0 20px !important;
+    text-align: left !important;
+    white-space: normal !important;
+  }
+}
