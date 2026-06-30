@@ -2176,3 +2176,17 @@ h6 {
     text-overflow: clip !important;
   }
 }
+
+@media (min-width: 768px) {
+  .top-wallet-link {
+    min-width: 210px !important;
+    max-width: 260px !important;
+    min-height: 48px !important;
+    padding: 9px 24px 6px !important;
+    font-size: clamp(13px, 1.2vw, 16px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
