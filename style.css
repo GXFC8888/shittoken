@@ -2067,11 +2067,11 @@ h6 {
   }
 
   .x-task-account-part .x-task-left-icon {
-    transform: translateY(30px) !important;
+    transform: translateY(20px) !important;
   }
 
   .x-task-account-part .x-task-right-text {
-    transform: translateY(-20px) !important;
+    transform: translateY(-30px) !important;
   }
 
   .x-task-mission-part {
