@@ -1818,6 +1818,14 @@ h6 {
     font-size: clamp(60px, 14.5vw, 86px) !important;
   }
 
+  .ref-link-box input,
+  .ref-link-box textarea,
+  #refLink,
+  .ref-link-box #refLink,
+  .ref-link-box input#refLink {
+    font-size: 10px !important;
+  }
+
   .x-task-layout {
     width: min(100% - 20px, 420px) !important;
   }
@@ -1875,10 +1883,19 @@ h6 {
     font-size: clamp(33px, 8.3vw, 46px) !important;
   }
 
-  .x-task-message {
+  .x-task-message,
+  .mission-card .x-task-message,
+  #missionList .x-task-message,
+  #missionList .mission-card .x-task-message,
+  .x-task-mission-area .x-task-message,
+  .x-task-mission-area .mission-card .x-task-message,
+  .x-task-mission-area #missionList .x-task-message,
+  .x-task-mission-area #missionList .mission-card .x-task-message {
     font-size: clamp(27px, 6.8vw, 36px) !important;
     line-height: 1.15 !important;
     margin: 0 0 20px !important;
+    text-align: left !important;
+    white-space: normal !important;
   }
 
   .x-task-button-area {
@@ -1918,32 +1935,5 @@ h6 {
 
   .overview-card-two {
     padding-bottom: 90px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .x-task-message,
-  .mission-card .x-task-message,
-  #missionList .x-task-message,
-  #missionList .mission-card .x-task-message,
-  .x-task-mission-area .x-task-message,
-  .x-task-mission-area .mission-card .x-task-message,
-  .x-task-mission-area #missionList .x-task-message,
-  .x-task-mission-area #missionList .mission-card .x-task-message {
-    font-size: clamp(27px, 6.8vw, 36px) !important;
-    line-height: 1.15 !important;
-    margin: 0 0 20px !important;
-    text-align: left !important;
-    white-space: normal !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #refLink,
-  .ref-link-box #refLink,
-  .ref-link-box input#refLink {
-    font-size: 10px !important;
   }
 }
