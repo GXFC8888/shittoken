@@ -2150,3 +2150,17 @@ h6 {
     text-overflow: clip !important;
   }
 }
+
+@media (min-width: 768px) {
+  .two-actions .btn,
+  #copyRefBtnMobile,
+  #claimReferralBtn,
+  .x-task-button-area .mission-actions .btn,
+  .x-task-button-area .mission-actions button,
+  .x-task-button-area .open-task-btn,
+  .x-task-button-area .verify-task-btn {
+    font-size: clamp(22px, 2.4vw, 28px) !important;
+    min-height: 66px !important;
+    padding: 0 18px !important;
+  }
+}
