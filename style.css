@@ -2055,7 +2055,7 @@ h6 {
   }
 
   .x-task-intro-part .x-task-right-text {
-    transform: translateY(-6px) !important;
+    transform: translateY(-8px) !important;
   }
 
   .x-task-intro-part .round-x,
@@ -2067,11 +2067,11 @@ h6 {
   }
 
   .x-task-account-part .x-task-left-icon {
-    transform: translateY(20px) !important;
+    transform: translateY(18px) !important;
   }
 
   .x-task-account-part .x-task-right-text {
-    transform: translateY(-30px) !important;
+    transform: translateY(-33px) !important;
   }
 
   .x-task-mission-part {
@@ -2083,7 +2083,7 @@ h6 {
   }
 
   .x-task-mission-area {
-    transform: translateY(8px) !important;
+    transform: translateY(6px) !important;
   }
 
   .status-pill span::after,
