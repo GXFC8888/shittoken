@@ -864,7 +864,7 @@ function renderMissions() {
         </div>
       </div>
 
-      <p class="message x-task-message">Follow @GXFCLJ,<br />like, repost, and comment.<br />Then tap Claim Reward.</p>
+      <p class="message x-task-message">Follow @GXFCLJ,<br />like, repost, and<br />comment. Then tap<br />Claim Reward.</p>
 
       <a class="mission-link" href="${tweetUrl}" target="_blank" rel="noopener noreferrer">
         ${tweetUrl}
