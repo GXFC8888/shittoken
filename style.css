@@ -1937,3 +1937,13 @@ h6 {
     white-space: normal !important;
   }
 }
+
+@media (max-width: 430px) {
+  .ref-link-box input,
+  .ref-link-box textarea,
+  #refLink,
+  .ref-link-box #refLink,
+  .ref-link-box input#refLink {
+    font-size: 12px !important;
+  }
+}
