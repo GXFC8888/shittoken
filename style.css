@@ -215,7 +215,6 @@ button:disabled {
   letter-spacing: .02em;
   text-align: center;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
-  transform: none !important;
 }
 
 .hero-oh-small {
@@ -995,41 +994,8 @@ h6 {
   margin-top: 0;
 }
 
-.mission-summary {
-  display: none !important;
-}
-
-.mission-card {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  text-align: left !important;
-}
-
-.mission-card.empty {
-  display: none !important;
-}
-
-.mission-card.empty h3,
-.mission-card h3 {
-  margin: 0 0 8px;
-  font-weight: 400 !important;
-  line-height: 1.25;
-  text-align: center;
-}
-
-.mission-card.empty p {
-  margin: 0;
-  font-weight: 400 !important;
-  line-height: 1.35;
-  text-align: center;
-}
-
+.mission-summary,
+.mission-card.empty,
 .mission-head,
 .mission-head h3,
 .x-task-mission-area .mission-head,
@@ -1043,6 +1009,20 @@ h6 {
   display: none !important;
 }
 
+.mission-card,
+.x-task-mission-area .mission-list,
+.x-task-mission-area .mission-card {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
 .x-task-mission-area {
   display: block !important;
   width: 100% !important;
@@ -1054,18 +1034,6 @@ h6 {
   transform: translateY(16px) !important;
 }
 
-.x-task-mission-area .mission-list,
-.x-task-mission-area .mission-card {
-  display: block !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  text-align: left !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}
-
 .x-task-message,
 .mission-card .x-task-message,
 #missionList .x-task-message,
@@ -1075,9 +1043,6 @@ h6 {
 .x-task-mission-area #missionList .x-task-message,
 .x-task-mission-area #missionList .mission-card .x-task-message {
   position: static !important;
-  left: auto !important;
-  right: auto !important;
-  transform: none !important;
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -1090,11 +1055,9 @@ h6 {
   color: var(--white) !important;
   background: transparent !important;
   font-family: "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
   font-size: clamp(34px, 4.6vw, 52px) !important;
   font-weight: 400 !important;
   line-height: 1.18 !important;
-  letter-spacing: 0 !important;
   text-align: left !important;
   text-shadow: 0 3px 4px rgba(0, 0, 0, .22) !important;
   white-space: normal !important;
@@ -1128,7 +1091,6 @@ h6 {
   grid-template-columns: 1fr !important;
   gap: 18px !important;
   justify-items: stretch !important;
-  transform: none !important;
 }
 
 .x-task-button-area .mission-actions .btn,
@@ -1220,11 +1182,9 @@ h6 {
   padding: 0 12px !important;
   color: var(--white) !important;
   font-family: "EvermoreRegular", "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
   font-weight: 400 !important;
   font-size: clamp(20px, 4.8vw, 28px) !important;
   line-height: 1.18 !important;
-  letter-spacing: 0 !important;
   margin: 12px auto 18px !important;
   text-align: center !important;
   text-transform: lowercase !important;
@@ -1242,11 +1202,9 @@ h6 {
   max-width: 100% !important;
   color: var(--white) !important;
   font-family: "EvermoreRegular", "Nebyla", Arial, sans-serif !important;
-  font-style: normal !important;
   font-weight: 400 !important;
   font-size: clamp(24px, 5.8vw, 34px) !important;
   line-height: 1.7 !important;
-  letter-spacing: 0 !important;
   text-align: center !important;
   white-space: normal !important;
   overflow-wrap: normal !important;
@@ -1399,10 +1357,6 @@ h6 {
     min-height: 48px !important;
     padding: 9px 24px 6px !important;
     font-size: clamp(13px, 1.2vw, 16px) !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
   }
 
   .two-actions {
@@ -1426,10 +1380,6 @@ h6 {
     margin: 0 auto !important;
     padding: 0 18px !important;
     font-size: clamp(22px, 2.4vw, 28px) !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
   }
 
   .x-task-button-area {
@@ -1445,8 +1395,6 @@ h6 {
   .exchange-name,
   .exchange-list .exchange-item .exchange-name {
     font-size: clamp(26px, 3.2vw, 38px) !important;
-    line-height: 1 !important;
-    transform: translateY(2px) !important;
   }
 
   .exchange-list .exchange-item:nth-of-type(6) .exchange-name {
@@ -1509,7 +1457,6 @@ h6 {
   .hero-oh {
     gap: 10px;
     margin-bottom: 20px;
-    line-height: 1;
   }
 
   .hero-oh-small {
@@ -1545,7 +1492,6 @@ h6 {
     min-height: 86px;
     margin-top: 16px;
     margin-bottom: 28px;
-    justify-content: space-between;
   }
 
   .three-social-icons .social-pill,
@@ -1557,36 +1503,11 @@ h6 {
     min-height: 62px;
   }
 
-  .three-social-icons .social-pill:nth-child(1) {
-    transform: translateY(14px);
-  }
-
-  .three-social-icons .social-pill:nth-child(2) {
-    transform: translateY(0);
-  }
-
-  .three-social-icons .social-pill:nth-child(3) {
-    transform: translateY(-14px);
-  }
-
   .exchange-list {
     width: min(100% - 74px, 360px);
     max-width: 360px;
     margin: 12px auto 66px;
     gap: 24px;
-  }
-
-  .exchange-list > .exchange-item:first-child {
-    transform: translateY(18px) !important;
-    margin-bottom: 28px !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:hover {
-    transform: translateY(18px) !important;
-  }
-
-  .exchange-list > .exchange-item:first-child:active {
-    transform: translateY(18px) scale(.99) !important;
   }
 
   .exchange-item {
@@ -1609,7 +1530,6 @@ h6 {
   .exchange-name,
   .exchange-list .exchange-item .exchange-name {
     font-size: clamp(23px, 6.2vw, 31px) !important;
-    transform: translateY(2px) !important;
   }
 
   .exchange-list .exchange-item:nth-of-type(6) {
@@ -1653,58 +1573,6 @@ h6 {
     margin-bottom: 44px !important;
   }
 
-  #about .overview-title-row,
-  #project-overview .overview-title-row,
-  #project-overview-2 .overview-title-row,
-  .overview-card .overview-title-row,
-  .overview-card-two .overview-title-row {
-    margin-bottom: 12px !important;
-  }
-
-  #about h2,
-  #project-overview h2,
-  #project-overview-2 h2,
-  .overview-card h2,
-  .overview-card-two h2,
-  .overview-card .aligned-section-content h2,
-  .overview-card-two .aligned-section-content h2 {
-    margin-bottom: 14px !important;
-  }
-
-  .referral-card h2 {
-    margin-bottom: 64px !important;
-  }
-
-  .referral-card .center-card-title-row {
-    margin-bottom: 46px !important;
-  }
-
-  .referral-intro {
-    margin-bottom: 42px !important;
-  }
-
-  .referral-levels p {
-    line-height: 1.05 !important;
-    margin: 0 auto 12px !important;
-  }
-
-  .ref-link-box {
-    width: min(100% - 60px, 460px) !important;
-    max-width: 460px !important;
-    min-height: 74px !important;
-    height: 74px !important;
-    border-radius: 28px !important;
-    padding: 10px 16px !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #refLink,
-  .ref-link-box #refLink,
-  .ref-link-box input#refLink {
-    font-size: 18px !important;
-  }
-
   .two-actions {
     grid-template-columns: 1fr;
     gap: 18px;
@@ -1743,21 +1611,15 @@ h6 {
 
   .x-task-left-icon .round-x,
   .x-task-left-icon .small-round-x,
-  .small-round-x {
-    width: 68px !important;
-    height: 68px !important;
-    min-width: 68px !important;
-    min-height: 68px !important;
-    border-width: 2px !important;
-  }
-
+  .small-round-x,
   .toaster-character-small,
   .x-task-guide-icon {
     width: 68px !important;
     height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
     max-width: 68px !important;
     max-height: 68px !important;
-    transform: none !important;
   }
 
   .x-task-account-part .x-task-left-icon {
@@ -1786,17 +1648,9 @@ h6 {
   #xStatusText,
   .x-task-reward-line .reward {
     font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.18 !important;
   }
 
-  .x-task-message,
-  .mission-card .x-task-message,
-  #missionList .x-task-message,
-  #missionList .mission-card .x-task-message,
-  .x-task-mission-area .x-task-message,
-  .x-task-mission-area .mission-card .x-task-message,
-  .x-task-mission-area #missionList .x-task-message,
-  .x-task-mission-area #missionList .mission-card .x-task-message {
+  .x-task-message {
     font-size: clamp(28px, 7vw, 38px) !important;
     line-height: 1.16 !important;
     margin: 0 0 22px !important;
@@ -1809,7 +1663,6 @@ h6 {
   .x-task-button-area .mission-actions {
     width: min(100% - 60px, 460px) !important;
     max-width: 460px !important;
-    gap: 18px !important;
   }
 
   .x-task-button-area .mission-actions .btn,
@@ -1830,43 +1683,18 @@ h6 {
     margin-bottom: 14px !important;
   }
 
-  .tokenomics-center-copy > p:nth-child(1),
-  .tokenomics-center-copy > p:nth-child(3),
-  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
-  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
-    font-size: clamp(20px, 5vw, 26px) !important;
-    line-height: 1.2 !important;
-    margin-bottom: 20px !important;
-  }
-
   .token-number,
   .token-number span,
   .tokenomics-card .token-number,
   .tokenomics-card .token-number span,
   .tokenomics-card > .tokenomics-center-copy .token-number {
     font-size: clamp(22px, 5.4vw, 28px) !important;
-    line-height: 1.7 !important;
-  }
-
-  .token-number,
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    margin-bottom: 62px !important;
-  }
-
-  .token-number span,
-  .tokenomics-card .token-number span {
-    line-height: 1.65 !important;
   }
 
   .tokenomics-center-copy > p:nth-child(5),
   .tokenomics-center-copy > p:nth-child(6) {
     width: min(100% - 36px, 520px) !important;
     font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.3 !important;
-  }
-
-  .tokenomics-center-copy > p:nth-child(5) {
-    margin-bottom: 54px !important;
   }
 
   .overview-card,
@@ -1876,6 +1704,12 @@ h6 {
 
   .overview-card-two {
     padding-bottom: 94px !important;
+  }
+
+  #project-overview-2 h2,
+  .overview-card-two h2,
+  .overview-card-two .aligned-section-content h2 {
+    margin-bottom: 52px !important;
   }
 
   .footer-note {
@@ -1964,12 +1798,6 @@ h6 {
   .exchange-name,
   .exchange-list .exchange-item .exchange-name {
     font-size: clamp(22px, 5.8vw, 29px) !important;
-    transform: translateY(2px) !important;
-  }
-
-  .exchange-list .exchange-item:nth-of-type(6) {
-    padding-left: 16px !important;
-    padding-right: 54px !important;
   }
 
   .exchange-list .exchange-item:nth-of-type(6) .exchange-name {
@@ -1988,57 +1816,10 @@ h6 {
   .tokenomics-card h2,
   .tokenomics-card .aligned-section-content h2 {
     font-size: clamp(60px, 14.5vw, 86px) !important;
-    line-height: 1.04 !important;
-  }
-
-  #about .overview-title-row,
-  #project-overview .overview-title-row,
-  #project-overview-2 .overview-title-row,
-  .overview-card .overview-title-row,
-  .overview-card-two .overview-title-row {
-    margin-bottom: 10px !important;
-  }
-
-  #about h2,
-  #project-overview h2,
-  #project-overview-2 h2,
-  .overview-card h2,
-  .overview-card-two h2,
-  .overview-card .aligned-section-content h2,
-  .overview-card-two .aligned-section-content h2 {
-    margin-bottom: 33px !important;
-  }
-
-  .referral-levels p {
-    margin-bottom: 10px !important;
-  }
-
-  .ref-link-box {
-    width: min(100% - 54px, 420px) !important;
-    max-width: 420px !important;
-    min-height: 70px !important;
-    height: 70px !important;
-    border-radius: 28px !important;
-  }
-
-  .ref-link-box input,
-  .ref-link-box textarea,
-  #refLink,
-  .ref-link-box #refLink,
-  .ref-link-box input#refLink {
-    font-size: 10px !important;
-  }
-
-  .btn,
-  .two-actions .btn,
-  #copyRefBtnMobile,
-  #claimReferralBtn {
-    font-size: clamp(17px, 4.4vw, 23px) !important;
   }
 
   .x-task-layout {
     width: min(100% - 20px, 420px) !important;
-    max-width: 420px !important;
   }
 
   .x-task-three-parts {
@@ -2092,17 +1873,9 @@ h6 {
   #xStatusText,
   .x-task-reward-line .reward {
     font-size: clamp(33px, 8.3vw, 46px) !important;
-    line-height: 1.18 !important;
   }
 
-  .x-task-message,
-  .mission-card .x-task-message,
-  #missionList .x-task-message,
-  #missionList .mission-card .x-task-message,
-  .x-task-mission-area .x-task-message,
-  .x-task-mission-area .mission-card .x-task-message,
-  .x-task-mission-area #missionList .x-task-message,
-  .x-task-mission-area #missionList .mission-card .x-task-message {
+  .x-task-message {
     font-size: clamp(27px, 6.8vw, 36px) !important;
     line-height: 1.15 !important;
     margin: 0 0 20px !important;
@@ -2121,8 +1894,6 @@ h6 {
   .x-task-button-area .mission-actions button,
   .x-task-button-area .open-task-btn,
   .x-task-button-area .verify-task-btn {
-    min-height: 66px !important;
-    padding: 0 10px !important;
     font-size: clamp(17px, 4.4vw, 23px) !important;
   }
 
@@ -2130,38 +1901,14 @@ h6 {
     padding-bottom: 30px !important;
   }
 
-  .tokenomics-center-copy > p:nth-child(1),
-  .tokenomics-center-copy > p:nth-child(3),
-  .tokenomics-card > .tokenomics-center-copy > p:nth-child(1),
-  .tokenomics-card > .tokenomics-center-copy > p:nth-child(3) {
-    font-size: clamp(18px, 4.6vw, 24px) !important;
-    margin-bottom: 16px !important;
-  }
-
-  .token-number,
-  .token-number span,
-  .tokenomics-card .token-number,
-  .tokenomics-card .token-number span,
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    font-size: clamp(21px, 5.2vw, 27px) !important;
-    line-height: 1.7 !important;
-  }
-
-  .token-number,
-  .tokenomics-card > .tokenomics-center-copy .token-number {
-    margin-bottom: 60px !important;
-  }
-
-  .token-number span,
-  .tokenomics-card .token-number span {
-    line-height: 1.65 !important;
+  .tokenomics-center-copy > p:nth-child(5) {
+    transform: translateY(-12px) !important;
   }
 
   .tokenomics-center-copy > p:nth-child(5),
   .tokenomics-center-copy > p:nth-child(6) {
     width: min(100% - 36px, 520px) !important;
     font-size: clamp(31px, 8vw, 44px) !important;
-    line-height: 1.3 !important;
   }
 
   .overview-card,
@@ -2171,19 +1918,5 @@ h6 {
 
   .overview-card-two {
     padding-bottom: 90px !important;
-  }
-}
-
-@media (max-width: 760px) {
-  #project-overview-2 h2,
-  .overview-card-two h2,
-  .overview-card-two .aligned-section-content h2 {
-    margin-bottom: 52px !important;
-  }
-}
-
-@media (max-width: 430px) {
-  .tokenomics-center-copy > p:nth-child(5) {
-    transform: translateY(-12px) !important;
   }
 }
