@@ -2181,3 +2181,9 @@ h6 {
     margin-bottom: 52px !important;
   }
 }
+
+@media (max-width: 430px) {
+  .tokenomics-center-copy > p:nth-child(5) {
+    transform: translateY(-24px) !important;
+  }
+}
