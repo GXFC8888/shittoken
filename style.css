@@ -2184,6 +2184,6 @@ h6 {
 
 @media (max-width: 430px) {
   .tokenomics-center-copy > p:nth-child(5) {
-    transform: translateY(-18px) !important;
+    transform: translateY(-12px) !important;
   }
 }
