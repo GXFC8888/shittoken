@@ -1259,6 +1259,29 @@ h6 {
   padding-bottom: 92px !important;
 }
 
+.overview-bottom-image {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: min(76.8vw, 672px) !important;
+  max-width: 76.8vw !important;
+  height: auto;
+  margin: 58px auto 34px;
+  object-fit: contain;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  outline: none;
+}
+
+.about-bottom-image {
+  margin: 58px auto 34px;
+}
+
+.community-bottom-image {
+  margin: 58px auto 34px;
+}
+
 .footer-note {
   position: relative;
   display: flex;
@@ -1547,10 +1570,26 @@ h6 {
     margin: -12px auto -12px !important;
   }
 
-  .hero-main-image {
+  .hero-main-image,
+  .overview-bottom-image {
     width: 69.6vw !important;
     max-width: 69.6vw !important;
+  }
+
+  .hero-main-image {
     margin: 0 auto 30px;
+  }
+
+  .overview-bottom-image {
+    margin: 54px auto 30px;
+  }
+
+  .about-bottom-image {
+    margin: 54px auto 30px;
+  }
+
+  .community-bottom-image {
+    margin: 54px auto 30px;
   }
 
   .referral-card,
@@ -1804,7 +1843,8 @@ h6 {
     font-size: clamp(18px, 4.7vw, 23px) !important;
   }
 
-  .hero-main-image {
+  .hero-main-image,
+  .overview-bottom-image {
     width: 67.2vw !important;
     max-width: 67.2vw !important;
   }
@@ -1936,35 +1976,16 @@ h6 {
   .overview-card-two {
     padding-bottom: 90px !important;
   }
-}
 
-.overview-bottom-image {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: min(76.8vw, 672px) !important;
-  max-width: 76.8vw !important;
-  height: auto;
-  margin: 58px auto 34px;
-  object-fit: contain;
-  background: transparent;
-  box-shadow: none;
-  border: none;
-  outline: none;
-}
-
-@media (max-width: 760px) {
   .overview-bottom-image {
-    width: 69.6vw !important;
-    max-width: 69.6vw !important;
-    margin: 54px auto 30px;
+    margin: 50px auto 28px;
   }
-}
 
-@media (max-width: 430px) {
-  .overview-bottom-image {
-    width: 67.2vw !important;
-    max-width: 67.2vw !important;
+  .about-bottom-image {
+    margin: 50px auto 28px;
+  }
+
+  .community-bottom-image {
     margin: 50px auto 28px;
   }
 }
