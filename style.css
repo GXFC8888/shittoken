@@ -1087,7 +1087,7 @@ h6 {
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
-  color: var(--green) !important;
+  color: var(--white) !important;
   background: transparent !important;
   font-family: "Nebyla", Arial, sans-serif !important;
   font-style: normal !important;
@@ -2160,15 +2160,4 @@ h6 {
   .overview-card-two {
     padding-bottom: 90px !important;
   }
-}
-
-.x-task-message,
-.mission-card .x-task-message,
-#missionList .x-task-message,
-#missionList .mission-card .x-task-message,
-.x-task-mission-area .x-task-message,
-.x-task-mission-area .mission-card .x-task-message,
-.x-task-mission-area #missionList .x-task-message,
-.x-task-mission-area #missionList .mission-card .x-task-message {
-  color: var(--white) !important;
 }
