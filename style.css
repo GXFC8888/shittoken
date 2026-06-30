@@ -2173,3 +2173,11 @@ h6 {
     padding-bottom: 90px !important;
   }
 }
+
+@media (max-width: 760px) {
+  #project-overview-2 h2,
+  .overview-card-two h2,
+  .overview-card-two .aligned-section-content h2 {
+    margin-bottom: 52px !important;
+  }
+}
