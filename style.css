@@ -2055,7 +2055,7 @@ h6 {
   }
 
   .x-task-intro-part .x-task-right-text {
-    transform: translateY(-8px) !important;
+    transform: translateY(-6px) !important;
   }
 
   .x-task-intro-part .round-x,
@@ -2071,7 +2071,7 @@ h6 {
   }
 
   .x-task-account-part .x-task-right-text {
-    transform: translateY(-10px) !important;
+    transform: translateY(-20px) !important;
   }
 
   .x-task-mission-part {
@@ -2083,7 +2083,7 @@ h6 {
   }
 
   .x-task-mission-area {
-    transform: translateY(18px) !important;
+    transform: translateY(8px) !important;
   }
 
   .status-pill span::after,
