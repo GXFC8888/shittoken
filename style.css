@@ -2194,12 +2194,12 @@ h6 {
 @media (min-width: 768px) {
   .exchange-name,
   .exchange-list .exchange-item .exchange-name {
-    font-size: clamp(30px, 3.8vw, 44px) !important;
+    font-size: clamp(26px, 3.2vw, 38px) !important;
     line-height: 1 !important;
     transform: translateY(2px) !important;
   }
 
   .exchange-list .exchange-item:nth-of-type(6) .exchange-name {
-    font-size: clamp(25px, 3.2vw, 38px) !important;
+    font-size: clamp(22px, 2.8vw, 34px) !important;
   }
 }
