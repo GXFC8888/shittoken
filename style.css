@@ -2169,9 +2169,9 @@ h6 {
 
   .x-task-intro-part .round-x,
   .x-task-intro-part .small-round-x {
-    width: 76px !important;
-    height: 76px !important;
-    min-width: 76px !important;
-    min-height: 76px !important;
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+    min-height: 60px !important;
   }
 }
