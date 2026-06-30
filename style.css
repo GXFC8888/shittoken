@@ -2161,3 +2161,17 @@ h6 {
     padding-bottom: 90px !important;
   }
 }
+
+@media (max-width: 430px) {
+  .x-task-intro-part .x-task-left-icon {
+    transform: translate(0px, 8px) !important;
+  }
+
+  .x-task-intro-part .round-x,
+  .x-task-intro-part .small-round-x {
+    width: 76px !important;
+    height: 76px !important;
+    min-width: 76px !important;
+    min-height: 76px !important;
+  }
+}
