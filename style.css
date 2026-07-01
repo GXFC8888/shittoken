@@ -1423,6 +1423,14 @@ h6 {
   .exchange-list .exchange-item:nth-of-type(6) .exchange-name {
     font-size: clamp(22px, 2.8vw, 34px) !important;
   }
+
+  .x-task-account-part .x-task-left-icon {
+    transform: translateY(52px) !important;
+  }
+
+  .x-task-mission-part .x-task-left-icon {
+    transform: translateY(72px) !important;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1987,15 +1995,5 @@ h6 {
 
   .community-bottom-image {
     margin: 60px auto 8px;
-  }
-}
-
-@media (min-width: 768px) {
-  .x-task-account-part .x-task-left-icon {
-    transform: translateY(52px) !important;
-  }
-
-  .x-task-mission-part .x-task-left-icon {
-    transform: translateY(72px) !important;
   }
 }
