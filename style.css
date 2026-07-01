@@ -1992,10 +1992,10 @@ h6 {
 
 @media (min-width: 768px) {
   .x-task-account-part .x-task-left-icon {
-    transform: translateY(42px) !important;
+    transform: translateY(52px) !important;
   }
 
   .x-task-mission-part .x-task-left-icon {
-    transform: translateY(52px) !important;
+    transform: translateY(62px) !important;
   }
 }
