@@ -1389,6 +1389,40 @@ function handleUrlStatus() {
   }
 }
 
+(function () {
+  const bgMusic = document.getElementById("bgMusic");
+
+  if (!bgMusic) return;
+
+  let bgMusicStarted = false;
+
+  async function startBgMusicOnce() {
+    if (bgMusicStarted) return;
+
+    try {
+      bgMusic.volume = 0.35;
+      await bgMusic.play();
+      bgMusicStarted = true;
+    } catch (error) {
+      console.log("Background music blocked:", error);
+    }
+  }
+
+  document.addEventListener("pointerdown", startBgMusicOnce, {
+    capture: true,
+    passive: true
+  });
+
+  document.addEventListener("click", startBgMusicOnce, {
+    capture: true
+  });
+
+  document.addEventListener("touchstart", startBgMusicOnce, {
+    capture: true,
+    passive: true
+  });
+})();
+
 bindComingSoonLinks();
 
 if (connectBtn) {
