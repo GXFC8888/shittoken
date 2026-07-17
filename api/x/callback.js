@@ -3,7 +3,7 @@ import { supabase } from "../../lib/supabase.js";
 
 const WALLET_ADDRESS_PATTERN = /^0x[a-f0-9]{40}$/i;
 const CONFIGURED_OFFICIAL_X_USERNAME = String(
-  process.env.X_OFFICIAL_USERNAME || "GXFCLJ"
+  process.env.X_OFFICIAL_USERNAME || "GXFCRS"
 )
   .trim()
   .replace(/^@+/, "");
