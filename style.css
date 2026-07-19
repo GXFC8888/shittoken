@@ -89,7 +89,7 @@ button:disabled {
   font-size: clamp(78px, 9.2vw, 126px); font-weight: 900; text-shadow: 0 4px 5px rgba(0, 0, 0, .34);
 }
 #walletText, #xStatusText, .aligned-card-copy p, .hero-copy, .message, .overview-copy p, .referral-intro, .referral-levels p, .reward, .small-message, .status-pill span, .status-pill strong, .x-task-intro p {
-  color: var(--white); font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.28; text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
+  color: var(--white); font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.26; text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
 }
 .hero-copy {
   display: block; max-width: 100%; margin-top: 0; overflow-wrap: break-word;
@@ -376,7 +376,7 @@ h2, h3 {
   display: block; width: 100%; margin: 0; padding: 0; background: transparent; border: 0; text-align: left;
 }
 #walletText, #xStatusText, .status-pill span, .status-pill strong {
-  display: block; margin: 0; padding: 0; color: var(--white); font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.18; text-align: left; text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
+  display: block; margin: 0; padding: 0; color: var(--white); font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.26; text-align: left; text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
 }
 #walletText, #xStatusText, .status-pill strong {
   width: 100%; white-space: nowrap; overflow-wrap: normal;
@@ -385,7 +385,7 @@ h2, h3 {
   width: 100%; margin: 0; padding: 0; text-align: left;
 }
 .x-task-reward-line .reward {
-  display: block; color: var(--white); font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.18; white-space: nowrap; text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
+  display: block; color: var(--white); font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.26; white-space: nowrap; text-shadow: 0 3px 4px rgba(0, 0, 0, .32);
 }
 .mission-list {
   margin-top: 0;
@@ -406,7 +406,7 @@ h2, h3 {
   max-width: 100%; overflow: visible; transform: translateY(16px);
 }
 #missionList .mission-card .x-task-message, #missionList .x-task-message, .mission-card .x-task-message, .x-task-message, .x-task-mission-area #missionList .mission-card .x-task-message, .x-task-mission-area #missionList .x-task-message, .x-task-mission-area .mission-card .x-task-message, .x-task-mission-area .x-task-message {
-  position: static; display: block; width: 100%; max-width: 100%; height: auto; min-height: 0; margin: 0 0 28px; padding: 0; border: 0; border-radius: 0; color: var(--white); background: transparent; font-family: Nebyla, Arial, sans-serif; font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.18; text-align: left; text-shadow: 0 3px 4px rgba(0, 0, 0, .32); white-space: normal; overflow-wrap: normal; opacity: 1; visibility: visible; box-shadow: none; box-sizing: border-box;
+  position: static; display: block; width: 100%; max-width: 100%; height: auto; min-height: 0; margin: 0 0 28px; padding: 0; border: 0; border-radius: 0; color: var(--white); background: transparent; font-family: Nebyla, Arial, sans-serif; font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.26; text-align: left; text-shadow: 0 3px 4px rgba(0, 0, 0, .32); white-space: normal; overflow-wrap: normal; opacity: 1; visibility: visible; box-shadow: none; box-sizing: border-box;
 }
 .x-task-mission-area .mission-actions {
   display: none;
@@ -748,7 +748,7 @@ h2, h3 {
     font-size: clamp(33px, 8.3vw, 46px);
   }
   .x-task-message {
-    font-size: clamp(33px, 8.3vw, 46px); line-height: 1.16; margin: 0 0 22px;
+    font-size: clamp(33px, 8.3vw, 46px); line-height: 1.26; margin: 0 0 22px;
   }
   .x-task-button-area {
     margin: 54px auto 0;
@@ -951,7 +951,7 @@ h2, h3 {
     font-size: clamp(33px, 8.3vw, 46px);
   }
   #missionList .mission-card .x-task-message, #missionList .x-task-message, .mission-card .x-task-message, .x-task-message, .x-task-mission-area #missionList .mission-card .x-task-message, .x-task-mission-area #missionList .x-task-message, .x-task-mission-area .mission-card .x-task-message, .x-task-mission-area .x-task-message {
-    font-size: clamp(33px, 8.3vw, 46px); line-height: 1.15; margin: 0 0 20px; text-align: left; white-space: normal;
+    font-size: clamp(33px, 8.3vw, 46px); line-height: 1.26; margin: 0 0 20px; text-align: left; white-space: normal;
   }
   .x-task-button-area {
     margin: 52px auto 0;
