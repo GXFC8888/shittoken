@@ -406,7 +406,7 @@ h2, h3 {
   max-width: 100%; overflow: visible; transform: translateY(16px);
 }
 #missionList .mission-card .x-task-message, #missionList .x-task-message, .mission-card .x-task-message, .x-task-message, .x-task-mission-area #missionList .mission-card .x-task-message, .x-task-mission-area #missionList .x-task-message, .x-task-mission-area .mission-card .x-task-message, .x-task-mission-area .x-task-message {
-  position: static; display: block; width: 100%; max-width: 100%; height: auto; min-height: 0; margin: 0 0 28px; padding: 0; border: 0; border-radius: 0; color: var(--white); background: transparent; font-family: Nebyla, Arial, sans-serif; font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.18; text-align: left; text-shadow: 0 3px 4px rgba(0, 0, 0, .22); white-space: normal; overflow-wrap: normal; opacity: 1; visibility: visible; box-shadow: none; box-sizing: border-box;
+  position: static; display: block; width: 100%; max-width: 100%; height: auto; min-height: 0; margin: 0 0 28px; padding: 0; border: 0; border-radius: 0; color: var(--white); background: transparent; font-family: Nebyla, Arial, sans-serif; font-size: clamp(44px, 5.4vw, 66px); font-weight: 400; line-height: 1.18; text-align: left; text-shadow: 0 3px 4px rgba(0, 0, 0, .32); white-space: normal; overflow-wrap: normal; opacity: 1; visibility: visible; box-shadow: none; box-sizing: border-box;
 }
 .x-task-mission-area .mission-actions {
   display: none;
