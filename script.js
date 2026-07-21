@@ -45,12 +45,16 @@ let currentTasks = [];
 let currentProgress = [];
 let currentXConnected = false;
 let currentXUsername = null;
+let pendingXCallback = null;
 
 const X_BINDING_CONFLICT_STORAGE_PREFIX = "x_binding_conflict_";
 
 let isConnectingWallet = false;
 let isLoadingTasks = false;
 let isVerifying = false;
+let taskLoadRequestId = 0;
+let activeTaskLoadCount = 0;
+let isRefreshingAfterX = false;
 
 let noNewMissionLocked = false;
 let noNewMissionTaskId = null;
@@ -351,6 +355,19 @@ function escapeHtml(value) {
 
 function normalizeWallet(address) {
   return String(address || "").toLowerCase();
+}
+
+function isValidWalletAddress(address) {
+  return /^0x[a-f0-9]{40}$/i.test(String(address || "").trim());
+}
+
+function clearWalletTaskState() {
+  taskLoadRequestId += 1;
+  currentProgress = [];
+  currentXConnected = false;
+  currentXUsername = null;
+  noNewMissionLocked = false;
+  noNewMissionTaskId = null;
 }
 
 function setCurrentTweetId(tweetId) {
@@ -708,13 +725,39 @@ async function setupWalletAfterConnected(runPendingActions = false) {
   provider = new ethers.providers.Web3Provider(walletProvider, "any");
 
   signer = provider.getSigner();
-  userAddress = await signer.getAddress();
+  const nextAddress = await signer.getAddress();
+  const previousAddress =
+    userAddress || localStorage.getItem("wallet_address") || "";
+  const walletChanged =
+    previousAddress &&
+    normalizeWallet(previousAddress) !== normalizeWallet(nextAddress);
+
+  clearWalletTaskState();
+  userAddress = nextAddress;
+
+  if (walletChanged) {
+    clearPendingXState();
+  }
 
   localStorage.setItem("wallet_connected", "true");
 
   localStorage.setItem("wallet_address", userAddress);
 
+  if (pendingXCallback && pendingXCallback.wallet) {
+    if (
+      normalizeWallet(pendingXCallback.wallet) === normalizeWallet(userAddress)
+    ) {
+      clearXBindingConflict(userAddress);
+    } else {
+      setXBindingConflict(
+        userAddress,
+        shortAddress(pendingXCallback.wallet),
+      );
+    }
+  }
+
   updateWalletUI();
+  renderMissions();
 
   await loadTasks(runPendingActions);
 }
@@ -949,18 +992,19 @@ async function claimReferralAirdrop() {
 }
 
 async function loadTasks(runPendingActions = true) {
-  if (isLoadingTasks) return;
+  const requestId = ++taskLoadRequestId;
+  const requestWallet = normalizeWallet(
+    userAddress || localStorage.getItem("wallet_address") || "",
+  );
 
   try {
+    activeTaskLoadCount += 1;
     isLoadingTasks = true;
-
-    const activeWallet =
-      userAddress || localStorage.getItem("wallet_address") || "";
 
     const params = new URLSearchParams();
 
-    if (activeWallet) {
-      params.set("wallet", activeWallet);
+    if (requestWallet) {
+      params.set("wallet", requestWallet);
     }
 
     params.set("_t", String(Date.now()));
@@ -975,6 +1019,14 @@ async function loadTasks(runPendingActions = true) {
 
     if (!data.success) {
       throw new Error(data.detail || data.error || "Failed to load missions");
+    }
+
+    const activeWalletNow = normalizeWallet(
+      userAddress || localStorage.getItem("wallet_address") || "",
+    );
+
+    if (requestId !== taskLoadRequestId || activeWalletNow !== requestWallet) {
+      return false;
     }
 
     const configuredOfficialUsername = normalizeXUsername(
@@ -1008,15 +1060,16 @@ async function loadTasks(runPendingActions = true) {
       }
     }
 
-    if (activeWallet) {
+    if (requestWallet) {
       if (currentXConnected) {
-        setXConnected(activeWallet);
+        setXConnected(requestWallet);
+        clearXBindingConflict(requestWallet);
 
         if (currentXUsername) {
           localStorage.setItem("x_username", currentXUsername);
         }
       } else {
-        clearXConnected(activeWallet);
+        clearXConnected(requestWallet);
 
         localStorage.removeItem("x_username");
 
@@ -1035,19 +1088,27 @@ async function loadTasks(runPendingActions = true) {
       clearPendingXState();
     }
 
-    if (activeWallet && currentXConnected) {
+    if (requestWallet && currentXConnected) {
       showMessage("");
-    } else if (activeWallet && !currentXConnected) {
+    } else if (requestWallet && !currentXConnected) {
       showMessage("", "ok");
     } else {
       showMessage("Connect your wallet to load missions.", "err");
     }
+
+    return true;
   } catch (error) {
+    if (requestId !== taskLoadRequestId) {
+      return false;
+    }
+
     console.error(error);
 
     showMessage("Load missions failed: " + getReadableError(error), "err");
+    return false;
   } finally {
-    isLoadingTasks = false;
+    activeTaskLoadCount = Math.max(0, activeTaskLoadCount - 1);
+    isLoadingTasks = activeTaskLoadCount > 0;
   }
 }
 
@@ -1602,6 +1663,12 @@ async function verifyAndClaim(task) {
     return;
   }
 
+  if (!currentXConnected) {
+    showCustomAlert("Please tap Link X first.");
+
+    return;
+  }
+
   const latestTask = getLatestTask();
 
   if (!task || !task.id || !latestTask) {
@@ -1805,7 +1872,7 @@ async function verifyAndClaim(task) {
   }
 }
 
-function handleReturnFromX() {
+async function handleReturnFromX() {
   const pendingX = localStorage.getItem("pending_official_x");
 
   const activeWallet = userAddress || localStorage.getItem("wallet_address");
@@ -1817,11 +1884,24 @@ function handleReturnFromX() {
     return;
   }
 
-  if (pendingX && activeWallet) {
-    showMessage(
-      `Follow @${OFFICIAL_X_USERNAME}, like, repost, and comment. Then tap Claim Reward.`,
-      "ok",
+  if (!pendingX || !activeWallet || isRefreshingAfterX) return;
+
+  try {
+    isRefreshingAfterX = true;
+
+    await loadTasks(false);
+
+    const walletAfterRefresh = normalizeWallet(
+      userAddress || localStorage.getItem("wallet_address") || "",
     );
+
+    if (walletAfterRefresh !== normalizeWallet(activeWallet)) return;
+
+    if (currentXConnected) {
+      showMessage("");
+    }
+  } finally {
+    isRefreshingAfterX = false;
   }
 }
 
@@ -1829,35 +1909,23 @@ function handleUrlStatus() {
   const params = new URLSearchParams(window.location.search);
 
   if (params.get("x_connected") === "1") {
-    const walletFromUrl = params.get("wallet");
+    const walletFromUrl = normalizeWallet(params.get("wallet"));
 
     const xUsernameFromUrl = params.get("x_username");
 
     showMessage("");
 
-    const activeWallet =
-      walletFromUrl ||
-      userAddress ||
-      localStorage.getItem("wallet_address") ||
-      localStorage.getItem("pending_x_wallet");
+    if (isValidWalletAddress(walletFromUrl)) {
+      pendingXCallback = {
+        wallet: walletFromUrl,
+        xUsername: xUsernameFromUrl || null,
+      };
 
-    if (activeWallet) {
-      localStorage.setItem("wallet_connected", "true");
-
-      localStorage.setItem("wallet_address", activeWallet);
-
-      localStorage.setItem("pending_x_wallet", activeWallet);
-
-      setXConnected(activeWallet);
-
-      currentXConnected = true;
-
-      clearXBindingConflict(activeWallet);
+      localStorage.setItem("pending_x_wallet", walletFromUrl);
+      setXConnected(walletFromUrl);
     }
 
     if (xUsernameFromUrl) {
-      currentXUsername = xUsernameFromUrl;
-
       localStorage.setItem("x_username", xUsernameFromUrl);
     }
 
@@ -2069,6 +2137,7 @@ if (copyHeroContractBtn) {
 }
 
 window.addEventListener("focus", handleReturnFromX);
+window.addEventListener("pageshow", handleReturnFromX);
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
@@ -2086,14 +2155,14 @@ window.addEventListener("load", async () => {
   }
 
   handleUrlStatus();
-  updateWalletUI();
-  renderMissions();
 
   const tasksLoadedForWallet = await autoConnectWallet();
 
   if (!tasksLoadedForWallet) {
     await loadTasks(true);
   }
+
+  pendingXCallback = null;
 
   listenWalletChange();
 });
