@@ -121,6 +121,21 @@ async function getClaimableProgress(wallet, task) {
   return data || null;
 }
 
+async function reconcileClaimedProgress(progress) {
+  const { error } = await supabase
+    .from("task_progress")
+    .update({
+      claimed: true,
+      claimed_at: progress.claimed_at || new Date().toISOString()
+    })
+    .eq("id", progress.id)
+    .eq("claimed", false);
+
+  if (error) {
+    throw error;
+  }
+}
+
 async function getAlreadyClaimedOnChain(claimContract, wallet, tweetHash) {
   try {
     return await claimContract.claimedTweet(wallet, tweetHash);
@@ -281,6 +296,12 @@ export default async function handler(req, res) {
     );
 
     if (chainState.alreadyClaimedOnChain) {
+      // The on-chain transaction can succeed even if the browser closes or
+      // loses its connection before /api/claim records the result. Treat the
+      // contract as the source of truth and repair the database state here so
+      // the page no longer keeps offering an impossible second claim.
+      await reconcileClaimedProgress(progress);
+
       return res.status(400).json({
         success: false,
         error: "Already claimed on chain",
