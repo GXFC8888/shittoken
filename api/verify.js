@@ -118,6 +118,10 @@ async function refreshUserAccessToken(user) {
 
 async function getValidUserAccessToken(user) {
   if (!user?.x_access_token) {
+    if (user?.x_refresh_token) {
+      return refreshUserAccessToken(user);
+    }
+
     throw createXAuthorizationError("X access token missing");
   }
 
@@ -130,6 +134,21 @@ async function getValidUserAccessToken(user) {
   }
 
   return refreshUserAccessToken(user);
+}
+
+async function withUserAccessTokenRetry(user, operation) {
+  let accessToken = await getValidUserAccessToken(user);
+
+  try {
+    return await operation(accessToken);
+  } catch (error) {
+    if (error?.status !== 401 || !user?.x_refresh_token) {
+      throw error;
+    }
+
+    accessToken = await refreshUserAccessToken(user);
+    return operation(accessToken);
+  }
 }
 
 async function getOfficialUser(token) {
@@ -498,7 +517,7 @@ export default async function handler(req, res) {
       });
     }
 
-    if (!user?.x_access_token) {
+    if (!user?.x_access_token && !user?.x_refresh_token) {
       return res.status(400).json({
         success: false,
         code: "X_TOKEN_MISSING",
@@ -508,8 +527,33 @@ export default async function handler(req, res) {
       });
     }
 
-    const accessToken = await getValidUserAccessToken(user);
-    const latest = await ensureLatestTaskFromX(accessToken);
+    const verification = await withUserAccessTokenRetry(
+      user,
+      async (accessToken) => {
+        const latest = await ensureLatestTaskFromX(accessToken);
+
+        if (!latest.task) {
+          return {
+            latest,
+            result: null
+          };
+        }
+
+        const result = await checkTaskStatus({
+          tweetId: String(latest.task.tweet_id),
+          official: latest.official,
+          xUserId: String(user.x_user_id),
+          accessToken
+        });
+
+        return {
+          latest,
+          result
+        };
+      }
+    );
+
+    const { latest, result } = verification;
 
     if (!latest.task) {
       return res.status(404).json({
@@ -522,13 +566,6 @@ export default async function handler(req, res) {
     const tweetId = String(task.tweet_id);
     const xUserId = String(user.x_user_id);
     const xUsername = String(user.x_username);
-
-    const result = await checkTaskStatus({
-      tweetId,
-      official: latest.official,
-      xUserId,
-      accessToken
-    });
 
     const savedProgress = await saveProgress({
       task_id: task.id,
