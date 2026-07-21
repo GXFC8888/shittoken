@@ -530,6 +530,13 @@ function getXTargetAppUrl(tweetId = null) {
     : `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
 }
 
+function getXTargetAndroidIntentUrl(tweetId = null) {
+  const appUrl = getXTargetAppUrl(tweetId).replace(/^twitter:\/\//, "");
+  const fallbackUrl = encodeURIComponent(getXTargetUrl(tweetId));
+
+  return `intent://${appUrl}#Intent;scheme=twitter;package=com.twitter.android;S.browser_fallback_url=${fallbackUrl};end`;
+}
+
 function openOfficialXProfileInApp() {
   const targetAppUrl = `twitter://user?screen_name=${OFFICIAL_X_USERNAME}`;
 
@@ -1545,7 +1552,7 @@ function openTaskX(tweetId) {
   openTaskXDirect(tweetId);
 }
 
-function openTaskXDirect(tweetId) {
+function openTaskXDirect(tweetId, message = "") {
   const latestTask = getLatestTask();
 
   if (
@@ -1557,7 +1564,8 @@ function openTaskXDirect(tweetId) {
   }
 
   showMessage(
-    `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest post, then manually return here to claim.`,
+    message ||
+      `Opening @${OFFICIAL_X_USERNAME}. Follow, like, repost, and comment on the latest post, then manually return here to claim.`,
     "ok",
   );
 
@@ -1572,6 +1580,7 @@ function openTaskXDirect(tweetId) {
   const userAgent = navigator.userAgent || "";
 
   const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+  const isAndroid = /Android/i.test(userAgent);
 
   let appOpened = false;
 
@@ -1590,6 +1599,11 @@ function openTaskXDirect(tweetId) {
   });
 
   window.addEventListener("pagehide", onPageHide, { once: true });
+
+  if (isAndroid) {
+    window.location.href = getXTargetAndroidIntentUrl(tweetId);
+    return;
+  }
 
   if (isIOS) {
     window.location.href = targetAppUrl;
@@ -1625,12 +1639,10 @@ function openCurrentMissionTweet(tweetId, message = "") {
   localStorage.setItem("pending_official_x", "true");
   setCurrentTweetId(targetTweetId);
 
-  showMessage(
+  openTaskXDirect(
+    targetTweetId,
     message || "Mission is not completed yet. Opening the current X post...",
-    "ok",
   );
-
-  window.location.href = getXTargetUrl(targetTweetId);
   return true;
 }
 
