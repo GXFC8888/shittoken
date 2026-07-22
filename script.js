@@ -7,7 +7,7 @@ const REFERRAL_AIRDROP_CONTRACT = "0x1BcbC7eEa6983742d6302E9D82D370Cf0E6B4C7C";
 
 const TOKEN_CONTRACT_ADDRESS = "0xe198cab05ddd117c6b4f67e24e329f2730c13dd3";
 
-const HERO_CONTRACT_ADDRESS = "0x6b036CB8165aF95847Cb286Eca5e837EABf1842C";
+const HERO_CONTRACT_ADDRESS = "0xD6C6160cD8726629C836c29C4D310336DfE52297";
 
 function formatContractAddress(address, visiblePrefixLength = 10) {
   return `${address.slice(0, visiblePrefixLength)}...${address.slice(-4)}`;
